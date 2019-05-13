@@ -12,7 +12,7 @@ import java.util.List;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
- * An entity that represents a Tweet.
+ * An entity that represents a {@link Tweet}.
  */
 
 @Entity

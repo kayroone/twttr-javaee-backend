@@ -14,7 +14,7 @@ import java.util.List;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
- * An entity that represents a User.
+ * An entity that represents a {@link User}.
  */
 
 @Entity

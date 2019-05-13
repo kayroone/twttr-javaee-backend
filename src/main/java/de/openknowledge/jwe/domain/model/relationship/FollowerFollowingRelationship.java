@@ -5,6 +5,10 @@ import de.openknowledge.jwe.domain.model.user.User;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * An entity that represents the relationship between a Users followers and followings.
+ */
+
 @Entity
 @Table(name = "FOLLOWER_FOLLOWING_RELATIONSHIP")
 public class FollowerFollowingRelationship implements Serializable {
