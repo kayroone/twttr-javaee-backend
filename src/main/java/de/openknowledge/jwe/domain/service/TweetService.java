@@ -7,6 +7,7 @@ import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
 import org.wildfly.common.annotation.NotNull;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  * Service that provides {@link Tweet} operations.
  */
 
+@ApplicationScoped
 public class TweetService {
 
     @Inject
@@ -28,7 +30,8 @@ public class TweetService {
      * @return An ordered list of {@link Tweet} representing the given users timeline.
      */
 
-    public List<Tweet> getTimeLineForUser(@NotNull User user, @NotNull int offset, @NotNull int limit) {
+    public List<Tweet> getTimeLineForUser(@NotNull User user, @NotNull int offset,
+                                          @NotNull int limit) {
 
         List<FollowerFollowingRelationship> followerFollowingRelationships = user.getFollowings();
         List<User> followings = new ArrayList<>();
@@ -59,13 +62,26 @@ public class TweetService {
     }
 
     /**
+     * Find a {@link Tweet} by it's Id.
+     *
+     * @param id
+     * @return
+     * @throws EntityNotFoundException
+     */
+
+    public Tweet findById(@NotNull Long id) throws EntityNotFoundException {
+
+        return tweetRepository.find(id);
+    }
+
+    /**
      * Create a new {@link Tweet}.
      *
      * @param tweet
      * @return The created {@link Tweet}.
      */
 
-    public Tweet create(Tweet tweet) {
+    public Tweet create(@NotNull Tweet tweet) {
 
         return tweetRepository.create(tweet);
     }
@@ -77,7 +93,7 @@ public class TweetService {
      * @return The updated {@link Tweet}.
      */
 
-    public Tweet update(Tweet tweet) {
+    public Tweet update(@NotNull Tweet tweet) {
 
         return tweetRepository.update(tweet);
     }
@@ -88,21 +104,8 @@ public class TweetService {
      * @param tweet
      */
 
-    public void delete(Tweet tweet) {
+    public void delete(@NotNull Tweet tweet) {
 
         tweetRepository.delete(tweet);
-    }
-
-    /**
-     * Find a {@link Tweet} by it's Id.
-     *
-     * @param id
-     * @return
-     * @throws EntityNotFoundException
-     */
-
-    public Tweet find(Long id) throws EntityNotFoundException {
-
-        return tweetRepository.find(id);
     }
 }
