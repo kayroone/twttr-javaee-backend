@@ -102,7 +102,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
 
         // Order by date:
         criteriaQuery.select(from);
-        criteriaQuery.where(criteriaBuilder.equal(from.get("username"), username))
+        criteriaQuery.where(criteriaBuilder.equal(from.get("username"), username));
 
         return criteriaQuery;
     }
