@@ -4,6 +4,7 @@ import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wildfly.common.annotation.NotNull;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -47,7 +48,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return results;
     }
 
-    public List<Tweet> findPartial(int offset, int limit) {
+    public List<Tweet> findPartial(@NotNull int offset, @NotNull int limit) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
@@ -65,7 +66,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return results;
     }
 
-    public List<Tweet> findPartialOrderByDateTime(int offset, int limit) {
+    public List<Tweet> findPartialOrderByDate(@NotNull int offset, @NotNull int limit) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
@@ -83,7 +84,8 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return results;
     }
 
-    public List<Tweet> findPartialByIdsOrderByDateTime(int offset, int limit, List<Long> ids) {
+    public List<Tweet> findPartialByIdsOrderByDate(@NotNull int offset, @NotNull int limit,
+                                                   @NotNull List<Long> ids) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
@@ -129,7 +131,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return criteriaQuery;
     }
 
-    private CriteriaQuery<Tweet> getFindByIdsOrderByDateQuery(List<Long> ids) {
+    private CriteriaQuery<Tweet> getFindByIdsOrderByDateQuery(@NotNull List<Long> ids) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);

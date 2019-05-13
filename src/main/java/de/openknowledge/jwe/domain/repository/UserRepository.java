@@ -4,6 +4,7 @@ import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wildfly.common.annotation.NotNull;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -47,7 +48,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return results;
     }
 
-    public List<User> findPartial(int offset, int limit) {
+    public List<User> findPartial(@NotNull int offset, @NotNull int limit) {
 
         LOG.debug("Searching for Users");
 
@@ -65,7 +66,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return results;
     }
 
-    public User findByUsername(String username) {
+    public User findByUsername(@NotNull String username) {
 
         LOG.debug("Searching for User {}", username);
 
@@ -93,7 +94,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return criteriaQuery;
     }
 
-    private CriteriaQuery<User> getFindByUsernameQuery(String username) {
+    private CriteriaQuery<User> getFindByUsernameQuery(@NotNull String username) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
