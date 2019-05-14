@@ -85,6 +85,30 @@ public class TweetService {
     }
 
     /**
+     * Like an existing {@link Tweet}.
+     *
+     * @param tweet
+     */
+
+    public void like(@NotNull Tweet tweet, @NotNull User user) {
+
+        tweet.getLiker().add(user);
+        tweetRepository.update(tweet);
+    }
+
+    /**
+     * Unlike an existing {@link Tweet}.
+     *
+     * @param tweet
+     */
+
+    public void unlike(@NotNull Tweet tweet, @NotNull User user) {
+
+        tweet.getLiker().remove(user);
+        tweetRepository.update(tweet);
+    }
+
+    /**
      * Find a {@link Tweet} by it's Id.
      *
      * @param id
