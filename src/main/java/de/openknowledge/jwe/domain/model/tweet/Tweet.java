@@ -40,41 +40,12 @@ public class Tweet extends AbstractEntity<Long> {
     private User author;
 
     @OneToMany
-    @Column(name = "TWEET_RETWEETER", nullable = false)
-    private List<User> retweeter;
-
-    @OneToMany
     @Column(name = "TWEET_LIKER", nullable = false)
     private List<User> liker;
 
     @OneToMany
     @Column(name = "TWEET_RETWEETS", nullable = false)
     private List<Tweet> retweets;
-
-    // METHODS --------------------------------------------------------------------------------------------------------
-
-    /**
-     * Retweet this {@link Tweet}.
-     *
-     * @param retweeter
-     * @param retweetMessage
-     */
-
-    public void retweet(User retweeter, String retweetMessage) {
-
-        getRetweeter().add(retweeter);
-
-        Tweet retweet = new TweetBuilder()
-                .withMessage(retweetMessage)
-                .withAuthor(retweeter)
-                .withMessage(retweetMessage)
-                .withLikerList(this.getLiker())
-                .withRetweeterList(this.getRetweeter())
-                .withPostTime(LocalDateTime.now())
-                .build();
-
-        getRetweets().add(retweet);
-    }
 
     // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
 
@@ -115,14 +86,6 @@ public class Tweet extends AbstractEntity<Long> {
 
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public List<User> getRetweeter() {
-        return retweeter;
-    }
-
-    public void setRetweeter(List<User> retweeter) {
-        this.retweeter = retweeter;
     }
 
     public List<Tweet> getRetweets() {

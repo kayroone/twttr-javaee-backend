@@ -9,6 +9,7 @@ import org.wildfly.common.annotation.NotNull;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +60,27 @@ public class TweetService {
     public List<Tweet> getMainTimeLine() {
 
         return tweetRepository.findPartialOrderByDate(0, 100);
+    }
+
+    /**
+     * Retweet an existing {@link Tweet}.
+     *
+     * @param tweet
+     */
+
+    public void retweet(@NotNull Tweet tweet, @NotNull User user, @NotNull String message) {
+
+        Tweet retweet = new Tweet.TweetBuilder()
+                .withMessage(message)
+                .withAuthor(user)
+                .withLikerList(tweet.getLiker())
+                .withPostTime(LocalDateTime.now())
+                .build();
+
+        tweet.getRetweets().add(retweet);
+
+        tweetRepository.create(retweet);
+        tweetRepository.update(tweet);
     }
 
     /**
