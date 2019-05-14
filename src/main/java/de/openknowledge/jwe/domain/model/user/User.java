@@ -75,40 +75,6 @@ public class User extends AbstractEntity<Long> {
         this.iconPath = iconPath;
     }
 
-    /**
-     * Follow another {@link User}.
-     *
-     * @param userToFollow
-     */
-
-    public void follow(User userToFollow) {
-
-        FollowerFollowingRelationship followerFollowingRelationship = new FollowerFollowingRelationship();
-
-        followerFollowingRelationship.setFollowing(userToFollow);
-        followerFollowingRelationship.setFollower(this);
-
-        getFollowings().add(followerFollowingRelationship);
-        userToFollow.getFollowers().add(followerFollowingRelationship);
-    }
-
-    /**
-     * Unfollow a {@link User}.
-     *
-     * @param userToUnfollow
-     */
-
-    public void unfollow(User userToUnfollow) {
-
-        FollowerFollowingRelationship followerFollowingRelationship = new FollowerFollowingRelationship();
-
-        followerFollowingRelationship.setFollowing(userToUnfollow);
-        followerFollowingRelationship.setFollower(this);
-
-        getFollowings().remove(followerFollowingRelationship);
-        userToUnfollow.getFollowers().remove(followerFollowingRelationship);
-    }
-
     // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
 
     public User() {

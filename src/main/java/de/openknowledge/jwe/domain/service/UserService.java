@@ -1,5 +1,6 @@
 package de.openknowledge.jwe.domain.service;
 
+import de.openknowledge.jwe.domain.model.relationship.FollowerFollowingRelationship;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.repository.UserRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
@@ -18,6 +19,48 @@ public class UserService {
 
     @Inject
     UserRepository userRepository;
+
+    /**
+     * Follow a {@link User}.
+     *
+     * @param user The user that wants to follow.
+     * @param userToFollow The user that will be followed.
+     */
+
+    public void follow(@NotNull User user, @NotNull User userToFollow) {
+
+        FollowerFollowingRelationship followerFollowingRelationship = new FollowerFollowingRelationship();
+
+        followerFollowingRelationship.setFollowing(userToFollow);
+        followerFollowingRelationship.setFollower(user);
+
+        user.getFollowings().add(followerFollowingRelationship);
+        userToFollow.getFollowers().add(followerFollowingRelationship);
+
+        userRepository.update(user);
+        userRepository.update(userToFollow);
+    }
+
+    /**
+     * Unfollow a {@link User}.
+     *
+     * @param user The user that wants to unfollow.
+     * @param userToUnfollow The user that will be unfollowed.
+     */
+
+    public void unfollow(@NotNull User user, @NotNull User userToUnfollow) {
+
+        FollowerFollowingRelationship followerFollowingRelationship = new FollowerFollowingRelationship();
+
+        followerFollowingRelationship.setFollowing(userToUnfollow);
+        followerFollowingRelationship.setFollower(user);
+
+        user.getFollowings().remove(followerFollowingRelationship);
+        userToUnfollow.getFollowers().remove(followerFollowingRelationship);
+
+        userRepository.update(user);
+        userRepository.update(userToUnfollow);
+    }
 
     /**
      * Find all existing {@link User}.
