@@ -75,6 +75,7 @@ public class TweetService {
                 .withAuthor(user)
                 .withLikerList(tweet.getLiker())
                 .withPostTime(LocalDateTime.now())
+                .withRootTweet(tweet)
                 .build();
 
         tweet.getRetweets().add(retweet);

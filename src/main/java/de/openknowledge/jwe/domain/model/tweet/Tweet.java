@@ -47,6 +47,10 @@ public class Tweet extends AbstractEntity<Long> {
     @Column(name = "TWEET_RETWEETS", nullable = false)
     private List<Tweet> retweets;
 
+    @ManyToOne
+    @Column(name = "TWEET_RETWEETS", nullable = false)
+    private Tweet rootTweet;
+
     // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
 
     protected Tweet() {
@@ -104,6 +108,10 @@ public class Tweet extends AbstractEntity<Long> {
         this.liker = liker;
     }
 
+    public Tweet getRootTweet() { return rootTweet; }
+
+    public void setRootTweet(Tweet rootTweet) { this.rootTweet = rootTweet; }
+
     // BUILDER --------------------------------------------------------------------------------------------------------
 
     /**
@@ -131,8 +139,8 @@ public class Tweet extends AbstractEntity<Long> {
             return this;
         }
 
-        public TweetBuilder withRetweeterList(final List<User> retweeter) {
-            this.instance.retweeter = retweeter;
+        public TweetBuilder withRootTweet(final Tweet tweet) {
+            this.instance.rootTweet = notNull(tweet, "Tweet must not be null");
             return this;
         }
 
