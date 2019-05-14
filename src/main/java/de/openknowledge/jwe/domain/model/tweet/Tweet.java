@@ -51,6 +51,13 @@ public class Tweet extends AbstractEntity<Long> {
     @Column(name = "TWEET_RETWEETS", nullable = false)
     private Tweet rootTweet;
 
+    // METHODS --------------------------------------------------------------------------------------------------------
+
+    public static TweetBuilder newBuilder() {
+
+        return new TweetBuilder();
+    }
+
     // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
 
     protected Tweet() {

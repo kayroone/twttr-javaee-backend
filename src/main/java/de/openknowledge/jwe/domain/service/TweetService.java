@@ -70,7 +70,7 @@ public class TweetService {
 
     public void retweet(@NotNull Tweet tweet, @NotNull User user, @NotNull String message) {
 
-        Tweet retweet = new Tweet.TweetBuilder()
+        Tweet retweet = Tweet.newBuilder()
                 .withMessage(message)
                 .withAuthor(user)
                 .withLikerList(tweet.getLiker())

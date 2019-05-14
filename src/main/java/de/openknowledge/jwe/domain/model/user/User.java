@@ -75,6 +75,11 @@ public class User extends AbstractEntity<Long> {
         this.iconPath = iconPath;
     }
 
+    public static UserBuilder newBuilder() {
+
+        return new UserBuilder();
+    }
+
     // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
 
     public User() {
@@ -156,8 +161,13 @@ public class User extends AbstractEntity<Long> {
 
     public static class UserBuilder extends DefaultBuilder<User> {
 
-        public UserBuilder(String username) {
+        public UserBuilder() {
+            super();
+        }
+
+        public UserBuilder withUsername(String username) {
             this.instance.username = notNull(username, "Username must not be null");
+            return this;
         }
 
         public UserBuilder withPassword(final String password) {
