@@ -120,7 +120,6 @@
           <element id="library" level="project" name="Maven: io.thorntail:microprofile-config-wildfly-config-api:1.6.1" />
           <element id="library" level="project" name="Maven: io.thorntail:config-api-runtime:1.6.1" />
           <element id="library" level="project" name="Maven: io.smallrye:smallrye-config:1.3.5" />
-          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.2" />
           <element id="library" level="project" name="Maven: org.eclipse.microprofile.config:microprofile-config-api:1.3" />
           <element id="library" level="project" name="Maven: io.thorntail:microprofile-health:2.3.0.Final" />
           <element id="library" level="project" name="Maven: io.thorntail:spi:2.3.0.Final" />
@@ -129,7 +128,6 @@
           <element id="library" level="project" name="Maven: org.jboss.msc:jboss-msc:1.4.5.Final" />
           <element id="library" level="project" name="Maven: org.jboss.threads:jboss-threads:2.3.2.Final" />
           <element id="library" level="project" name="Maven: io.smallrye:smallrye-health:1.0.2" />
-          <element id="library" level="project" name="Maven: org.eclipse.microprofile.health:microprofile-health-api:1.0" />
           <element id="library" level="project" name="Maven: io.thorntail:management:2.3.0.Final" />
           <element id="library" level="project" name="Maven: io.thorntail:naming:2.3.0.Final" />
           <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.1.2" />
@@ -138,11 +136,14 @@
           <element id="library" level="project" name="Maven: io.smallrye:smallrye-metrics:1.1.3" />
           <element id="library" level="project" name="Maven: io.thorntail:microprofile-openapi:2.3.0.Final" />
           <element id="library" level="project" name="Maven: io.smallrye:smallrye-open-api:1.0.3" />
-          <element id="library" level="project" name="Maven: org.eclipse.microprofile.openapi:microprofile-openapi-api:1.0.1" />
-          <element id="library" level="project" name="Maven: org.osgi:org.osgi.annotation.versioning:1.0.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.2" />
           <element id="library" level="project" name="Maven: commons-beanutils:commons-beanutils:1.9.3" />
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.2" />
+          <element id="library" level="project" name="Maven: javax.json:javax.json-api:1.1" />
+          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.3" />
+          <element id="library" level="project" name="Maven: org.osgi:org.osgi.annotation.versioning:1.0.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.microprofile.health:microprofile-health-api:1.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.microprofile.openapi:microprofile-openapi-api:1.0" />
           <element id="library" level="project" name="Maven: com.h2database:h2:1.4.197" />
           <element id="library" level="project" name="Maven: io.thorntail:swagger-webapp:2.3.0.Final" />
           <element id="library" level="project" name="Maven: org.webjars:swagger-ui:3.2.2" />
@@ -150,7 +151,6 @@
           <element id="library" level="project" name="Maven: io.thorntail:logging:2.3.0.Final" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.1" />
           <element id="library" level="project" name="Maven: org.yaml:snakeyaml:1.16" />
-          <element id="library" level="project" name="Maven: javax.json:javax.json-api:1.1.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">

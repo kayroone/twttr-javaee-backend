@@ -145,7 +145,6 @@
     <orderEntry type="library" name="Maven: io.thorntail:microprofile-config-wildfly-config-api:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:config-api-runtime:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-config:1.3.5" level="project" />
-    <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.microprofile.config:microprofile-config-api:1.3" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:microprofile-health:2.3.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:spi:2.3.0.Final" level="project" />
@@ -154,7 +153,6 @@
     <orderEntry type="library" name="Maven: org.jboss.msc:jboss-msc:1.4.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.threads:jboss-threads:2.3.2.Final" level="project" />
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-health:1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.microprofile.health:microprofile-health-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:management:2.3.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:naming:2.3.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.json:1.1.2" level="project" />
@@ -163,11 +161,20 @@
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-metrics:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:microprofile-openapi:2.3.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-open-api:1.0.3" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.microprofile.openapi:microprofile-openapi-api:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.osgi:org.osgi.annotation.versioning:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.3" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.fault-tolerance:microprofile-fault-tolerance-api:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.osgi:org.osgi.annotation.versioning:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.microprofile.health:microprofile-health-api:1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.jwt:microprofile-jwt-auth-api:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.microprofile.openapi:microprofile-openapi-api:1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.rest.client:microprofile-rest-client-api:1.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.opentracing:microprofile-opentracing-api:1.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.specs:geronimo-atinject_1.0_spec:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.4.197" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:swagger-webapp:2.3.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:swagger-ui:3.2.2" level="project" />
@@ -219,7 +226,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:eclipselink:2.7.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:javax.persistence:2.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:rest-assured:3.0.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy:2.4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy-xml:2.4.12" level="project" />

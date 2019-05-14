@@ -63,6 +63,17 @@ public class UserService {
     }
 
     /**
+     * Find a {@link User} by it's username.
+     *
+     * @return The {@link User}.
+     */
+
+    public User findbyUsername(@NotNull String username) {
+
+        return userRepository.findByUsername(username);
+    }
+
+    /**
      * Find {@link User} by a keyword.
      *
      * @return A list of {@link User} containing the keyword in their usernames.

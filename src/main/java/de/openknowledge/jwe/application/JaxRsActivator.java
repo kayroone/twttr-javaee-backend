@@ -15,6 +15,7 @@
  */
 package de.openknowledge.jwe.application;
 
+import org.eclipse.microprofile.auth.LoginConfig;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -22,21 +23,25 @@ import org.eclipse.microprofile.openapi.annotations.info.License;
 import org.eclipse.microprofile.openapi.annotations.servers.Server;
 import org.eclipse.microprofile.openapi.annotations.servers.ServerVariable;
 
+import javax.annotation.security.DeclareRoles;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 /**
  * JAX-RS Activator
  */
+
+@LoginConfig(authMethod = "MP-JWT")
 @ApplicationPath("api")
+@DeclareRoles({"USER", "MODERATOR", "GUEST"})
 @OpenAPIDefinition(info =
 @Info(title = "CHANGE ME", description = "Provides access to the API operations", version = "1.1.0-SNAPSHOT.1.0-SNAPSHOT",
-    contact = @Contact(email = "kontakt@openknowledge.de"),
-    license = @License(name = "Apache 2.1.0-SNAPSHOT", url = "http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT.html")),
-    servers = @Server(url = "http://{host}:{port}/{context-root}", variables = {
-        @ServerVariable(name = "host", defaultValue = "localhost"),
-        @ServerVariable(name = "port", defaultValue = "81.0-SNAPSHOT81.0-SNAPSHOT"),
-        @ServerVariable(name = "context-root", defaultValue = "twttr-2.3.1.0-SNAPSHOT-archetype")
-    }))
+        contact = @Contact(email = "kontakt@openknowledge.de"),
+        license = @License(name = "Apache 2.1.0-SNAPSHOT", url = "http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT.html")),
+        servers = @Server(url = "http://{host}:{port}/{context-root}", variables = {
+                @ServerVariable(name = "host", defaultValue = "localhost"),
+                @ServerVariable(name = "port", defaultValue = "81.0-SNAPSHOT81.0-SNAPSHOT"),
+                @ServerVariable(name = "context-root", defaultValue = "twttr-2.3.1.0-SNAPSHOT-archetype")
+        }))
 public class JaxRsActivator extends Application {
 }
