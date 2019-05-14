@@ -115,7 +115,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
 
         Root<User> from = criteriaQuery.from(User.class);
 
-        // Order by date:
+        // Equal to username:
         criteriaQuery.select(from);
         criteriaQuery.where(criteriaBuilder.equal(from.get("username"), username));
 
@@ -129,7 +129,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
 
         Root<User> from = criteriaQuery.from(User.class);
 
-        // Order by date:
+        // Username containing keyword:
         criteriaQuery.select(from);
         criteriaQuery.where(criteriaBuilder.like(from.get("username"), "%" + keyword + "%"));
 
