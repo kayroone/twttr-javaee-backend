@@ -23,7 +23,7 @@ public class UserService {
     /**
      * Follow a {@link User}.
      *
-     * @param user The user that wants to follow.
+     * @param user         The user that wants to follow.
      * @param userToFollow The user that will be followed.
      */
 
@@ -44,7 +44,7 @@ public class UserService {
     /**
      * Unfollow a {@link User}.
      *
-     * @param user The user that wants to unfollow.
+     * @param user           The user that wants to unfollow.
      * @param userToUnfollow The user that will be unfollowed.
      */
 
@@ -60,6 +60,17 @@ public class UserService {
 
         userRepository.update(user);
         userRepository.update(userToUnfollow);
+    }
+
+    /**
+     * Find {@link User} by a keyword.
+     *
+     * @return A list of {@link User} containing the keyword in their usernames.
+     */
+
+    public List<User> search(@NotNull String keyword) {
+
+        return userRepository.findByKeyword(keyword);
     }
 
     /**

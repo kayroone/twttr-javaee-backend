@@ -80,6 +80,20 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return result;
     }
 
+    public List<User> findByKeyword(@NotNull String keyword) {
+
+        LOG.debug("Searching for User containing the keyword {} in it's username", keyword);
+
+        CriteriaQuery<User> criteriaQuery = getFindByKeywordQuery(keyword);
+        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
+
+        List<User> result = query.getResultList();
+
+        LOG.debug("Located Users {}", result);
+
+        return result;
+    }
+
     // INTERNAL HELPER ------------------------------------------------------------------------------------------------
 
     private CriteriaQuery<User> getDefaultQuery() {
@@ -104,6 +118,20 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         // Order by date:
         criteriaQuery.select(from);
         criteriaQuery.where(criteriaBuilder.equal(from.get("username"), username));
+
+        return criteriaQuery;
+    }
+
+    private CriteriaQuery<User> getFindByKeywordQuery(@NotNull String keyword) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+        Root<User> from = criteriaQuery.from(User.class);
+
+        // Order by date:
+        criteriaQuery.select(from);
+        criteriaQuery.where(criteriaBuilder.like(from.get("username"), "%" + keyword + "%"));
 
         return criteriaQuery;
     }
