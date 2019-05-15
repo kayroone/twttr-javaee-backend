@@ -5,7 +5,6 @@ import de.openknowledge.jwe.domain.model.role.UserRole;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.service.TweetService;
-import de.openknowledge.jwe.domain.service.UserService;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -40,9 +39,6 @@ public class TweetResource {
 
     @Inject
     TweetService tweetService;
-
-    @Inject
-    UserService userService;
 
     @Context
     SecurityContext securityContext;

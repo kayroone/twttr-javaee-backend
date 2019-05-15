@@ -2,7 +2,7 @@ thorntail:
   http:
     port: 8080
   context:
-    path: thorntail-2.3.0-archetype
+    path: /
 
   datasources:
     data-sources:

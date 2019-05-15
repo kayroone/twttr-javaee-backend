@@ -22,7 +22,7 @@
         <thorntail.bind.address>0.0.0.0</thorntail.bind.address>
         <thorntail.http.port>8080</thorntail.http.port>
         <thorntail.port.offset>0</thorntail.port.offset>
-        <thorntail.context.path>twttr-2.3.0-archetype</thorntail.context.path>
+        <thorntail.context.path>/</thorntail.context.path>
 
         <version.thorntail>2.4.0.Final</version.thorntail>
         <version.resteasy>3.6.3.SP1</version.resteasy>
@@ -245,6 +245,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${version.slf4j}</version>
+        </dependency>
+
+        <!-- Build -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.2.2</version>
         </dependency>
 
         <!-- unit testing -->

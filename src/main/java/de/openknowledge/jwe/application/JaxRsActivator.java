@@ -35,13 +35,13 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("api")
 @DeclareRoles({"USER", "MODERATOR", "GUEST"})
 @OpenAPIDefinition(info =
-@Info(title = "TWTTR APP", description = "Provides access to the API operations", version = "1.0",
+@Info(title = "Twttr Application", description = "Provides access to the API operations", version = "1.0",
         contact = @Contact(email = "jan.wiegmann@openknowledge.de"),
         license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")),
         servers = @Server(url = "http://{host}:{port}/{context-root}", variables = {
                 @ServerVariable(name = "host", defaultValue = "localhost"),
                 @ServerVariable(name = "port", defaultValue = "8080"),
-                @ServerVariable(name = "context-root", defaultValue = "twttr-2.3.0-archetype")
+                @ServerVariable(name = "context-root", defaultValue = "/")
         }))
 public class JaxRsActivator extends Application {
 }

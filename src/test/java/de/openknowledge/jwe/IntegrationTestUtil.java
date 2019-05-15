@@ -70,6 +70,6 @@ public final class IntegrationTestUtil {
   }
 
   private static String getContextRoot() {
-    return System.getProperty("twttr.test.context-path", "twttr-2.3.0-archetype");
+    return System.getProperty("twttr.test.context-path", "/");
   }
 }
