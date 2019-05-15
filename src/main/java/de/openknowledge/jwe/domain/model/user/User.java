@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Entity
-@Table(name = "USER")
+@Table(name = "TAB_USER")
 public class User extends AbstractEntity<Long> {
 
     @Id

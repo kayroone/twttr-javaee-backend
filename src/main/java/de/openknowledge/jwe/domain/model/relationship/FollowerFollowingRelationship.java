@@ -1,9 +1,9 @@
 package de.openknowledge.jwe.domain.model.relationship;
 
 import de.openknowledge.jwe.domain.model.user.User;
+import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * An entity that represents the relationship between a Users followers and followings.
@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "FOLLOWER_FOLLOWING_RELATIONSHIP")
-public class FollowerFollowingRelationship implements Serializable {
+public class FollowerFollowingRelationship extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,8 @@ public class FollowerFollowingRelationship implements Serializable {
 
     // GETTER AND SETTER ----------------------------------------------------------------------------------------------
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 

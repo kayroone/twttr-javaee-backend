@@ -2,6 +2,7 @@ package de.openknowledge.jwe.domain.repository;
 
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
+import de.openknowledge.jwe.infrastructure.domain.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wildfly.common.annotation.NotNull;
@@ -20,6 +21,7 @@ import java.util.List;
  * Repository to access {@link User} entities.
  */
 
+@Repository
 @ApplicationScoped
 public class UserRepository extends AbstractRepository<User> implements Serializable {
 

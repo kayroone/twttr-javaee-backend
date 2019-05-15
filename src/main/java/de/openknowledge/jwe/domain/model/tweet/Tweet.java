@@ -16,7 +16,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Entity
-@Table(name = "TWEET")
+@Table(name = "TAB_TWEET")
 public class Tweet extends AbstractEntity<Long> {
 
     @Id
@@ -36,7 +36,6 @@ public class Tweet extends AbstractEntity<Long> {
 
     @OneToOne
     @NotNull
-    @Column(name = "TWEET_AUTHOR", nullable = false)
     private User author;
 
     @OneToMany
@@ -48,7 +47,6 @@ public class Tweet extends AbstractEntity<Long> {
     private List<Tweet> retweets;
 
     @ManyToOne
-    @Column(name = "TWEET_RETWEETS", nullable = false)
     private Tweet rootTweet;
 
     // METHODS --------------------------------------------------------------------------------------------------------
