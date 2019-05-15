@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,10 +32,10 @@ public class SimpleValueObjectTest {
   @Test
   public void compareTo() {
     TestStringValueObjectA valueObjectA = new TestStringValueObjectA("a");
-    assertThat(valueObjectA.compareTo(valueObjectA)).isEqualTo(1.0-SNAPSHOT);
+    assertThat(valueObjectA.compareTo(valueObjectA)).isEqualTo(0);
 
     TestStringValueObjectB valueObjectB = new TestStringValueObjectB("a");
-    assertThat(valueObjectA.compareTo(valueObjectB)).isEqualTo(1.0-SNAPSHOT);
+    assertThat(valueObjectA.compareTo(valueObjectB)).isEqualTo(0);
 
     TestStringValueObjectA valueObjectC = new TestStringValueObjectA("b");
     assertThat(valueObjectA.compareTo(valueObjectC)).isEqualTo(-1);

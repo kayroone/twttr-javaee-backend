@@ -15,8 +15,10 @@
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping>
-          <factory-entry name="default" value="47d51abc-11c9-412a-ad64-1c9624b10b18" />
+          <factory-entry name="Entities" />
+          <factory-entry name="default" />
         </datasource-mapping>
         <naming-strategy-map />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
@@ -34,38 +36,38 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: io.thorntail:cdi:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:container:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:cdi:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:container:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:config-api:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.wildfly.common:wildfly-common:1.4.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:cdi-config:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:bean-validation:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:ee:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:cdi-config:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:bean-validation:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:ee:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.enterprise.concurrent:jboss-concurrency-api_1.0_spec:1.0.2.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.2_spec:1.0.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.el:jboss-el-api_3.0_spec:1.0.13.Final" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.el-impl:3.0.1-b08-jbossorg-1" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:transactions:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:transactions:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:1.1.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.narayana.jts:narayana-jts-idlj:5.9.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.openjdk-orb:openjdk-orb:8.0.4.Final" level="project" />
     <orderEntry type="library" name="Maven: javax.enterprise:cdi-api:2.0.SP1" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:meta-spi:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:meta-spi:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-impl-javaee:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-impl-base:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-spi:2.0.0" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:jaxrs:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:undertow:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:io:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:request-controller:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:jaxrs:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:undertow:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:io:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:request-controller:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-jboss:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-impl-jboss:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-javaee:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-base:2.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:6.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm-tree:6.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm-analysis:6.2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-tree:7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-analysis:7.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.servlet:jboss-servlet-api_4.0_spec:1.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.websocket:jboss-websocket-api_1.1_spec:1.1.3.Final" level="project" />
     <orderEntry type="library" name="Maven: io.undertow:undertow-servlet:2.0.15.Final" level="project" />
@@ -73,39 +75,40 @@
     <orderEntry type="library" name="Maven: org.jboss.xnio:xnio-api:3.3.8.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jboss.xnio:xnio-nio:3.3.8.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.annotation:jboss-annotations-api_1.2_spec:1.0.2.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:security:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:elytron:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:jaxrs-cdi:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm:6.2.1" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:security:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:elytron:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:jaxrs-cdi:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:7.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec:1.0.2.Final" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.5" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:jaxrs-jsonb:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:jaxrs-jsonb:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: javax.json.bind:javax.json.bind-api:1.0" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:jpa:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:datasources:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:jca:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:connector:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:jpa:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:datasources:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:jca:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:connector:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.resource:jboss-connector-api_1.7_spec:1.0.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.ironjacamar:ironjacamar-jdbc:1.4.11.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:infinispan:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:infinispan:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.infinispan:infinispan-core:9.4.3.Final" level="project" />
     <orderEntry type="library" name="Maven: org.infinispan:infinispan-commons:9.4.3.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:jmx:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:remoting:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:bootstrap:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:jmx:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:remoting:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:bootstrap:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:thorntail-runner:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:tools:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:fraction-metadata:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:thorntail-runner:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:tools:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:fraction-metadata:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: com.eclipsesource.minimal-json:minimal-json:0.9.4" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-api:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-spi:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-impl-base:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: net.lingala.zip4j:zip4j:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail.jdk-specific:thorntail-jdk-specific:1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-resolver-provider:3.6.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.6.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-model-builder:3.6.0" level="project" />
@@ -128,8 +131,8 @@
     <orderEntry type="library" name="Maven: org.sonatype.plexus:plexus-sec-dispatcher:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.sonatype.plexus:plexus-cipher:1.4" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:25.0-jre" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:maven-utils:2.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.resteasy:resteasy-jaxrs:3.6.3.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:maven-utils:2.4.0.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.resteasy:resteasy-jaxrs:3.6.3.SP1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec:1.0.1.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.reactivestreams:reactive-streams:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:2.0.1.Final" level="project" />
@@ -141,27 +144,27 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.3.2.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:microprofile-config:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:microprofile-config:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:microprofile-config-wildfly-config-api:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: io.thorntail:config-api-runtime:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-config:1.3.5" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.microprofile.config:microprofile-config-api:1.3" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:microprofile-health:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:spi:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:microprofile-health:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:spi:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss:jandex:2.0.5.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:msc:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:msc:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.msc:jboss-msc:1.4.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.threads:jboss-threads:2.3.2.Final" level="project" />
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-health:1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:management:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:naming:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:management:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:naming:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.json:1.1.2" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:microprofile-metrics:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:microprofile-metrics:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.microprofile.metrics:microprofile-metrics-api:1.1" level="project" />
     <orderEntry type="library" name="Maven: io.smallrye:smallrye-metrics:1.1.3" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:microprofile-openapi:2.3.0.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.smallrye:smallrye-open-api:1.0.3" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.2" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:microprofile-openapi:2.4.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.smallrye:smallrye-open-api:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1" level="project" />
@@ -175,44 +178,47 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.rest.client:microprofile-rest-client-api:1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.opentracing:microprofile-opentracing-api:1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.specs:geronimo-atinject_1.0_spec:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.197" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:swagger-webapp:2.3.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.199" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:swagger-webapp:2.4.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:swagger-ui:3.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.6" level="project" />
-    <orderEntry type="library" name="Maven: io.thorntail:logging:2.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.6.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:jcl-over-slf4j:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.9" level="project" />
+    <orderEntry type="library" name="Maven: io.thorntail:logging:2.4.0.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.26" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:jcl-over-slf4j:1.7.26" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.26" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.9.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.18.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.8.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.8.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.12.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.27.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.9.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.9.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.6" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.tomakehurst:wiremock:2.6.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-server:9.2.13.v20150730" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.tomakehurst:wiremock:2.23.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-server:9.2.26.v20180806" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-http:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-io:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-servlet:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-security:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-servlets:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-continuation:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-util:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-webapp:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-xml:9.2.13.v20150730" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.3.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-legacy:2.3.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.jayway.jsonpath:json-path:2.2.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.minidev:json-smart:2.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.minidev:accessors-smart:1.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.sf.jopt-simple:jopt-simple:4.9" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.flipkart.zjsonpatch:zjsonpatch:0.3.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.jknack:handlebars:4.0.6" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.antlr:antlr4-runtime:4.5.1-1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.database-rider:rider-core:1.4.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-http:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-io:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-servlet:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-security:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-servlets:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-continuation:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-util:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-webapp:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-xml:9.2.26.v20180806" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.6.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-legacy:2.6.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-placeholders:2.6.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.jayway.jsonpath:json-path:2.4.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.minidev:json-smart:2.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.sf.jopt-simple:jopt-simple:5.0.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.flipkart.zjsonpatch:zjsonpatch:0.4.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.jknack:handlebars:4.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.antlr:antlr4-runtime:4.7.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.jknack:handlebars-helpers:4.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-all:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.database-rider:rider-core:1.5.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.dbunit:dbunit:2.5.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.poi:poi-ooxml:3.14" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.poi:poi:3.14" level="project" />
@@ -223,35 +229,37 @@
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.16" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.jackson:jackson-mapper-lgpl:1.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.jackson:jackson-core-lgpl:1.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:eclipselink:2.7.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:javax.persistence:2.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:eclipselink:2.7.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:jakarta.persistence:2.2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:rest-assured:3.0.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy:2.4.12" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy-xml:2.4.12" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.apache.httpcomponents:httpmime:4.5.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-library:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:rest-assured:4.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy:2.5.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy-xml:2.5.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.httpcomponents:httpmime:4.5.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-library:2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.ccil.cowan.tagsoup:tagsoup:1.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:json-path:3.0.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy-json:2.4.12" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:rest-assured-common:3.0.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:xml-path:3.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:json-path:4.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy-json:2.5.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:rest-assured-common:4.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:xml-path:4.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.xml.bind:jaxb-api:2.2.12" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:json-schema-validator:3.0.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:json-schema-validator:2.2.6" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.google.code.findbugs:jsr305:3.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: joda-time:joda-time:2.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.googlecode.libphonenumber:libphonenumber:6.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:json-schema-core:1.2.5" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:uri-template:0.9" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.sun.xml.bind:jaxb-osgi:2.2.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.sling:org.apache.sling.javax.activation:0.1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.rest-assured:json-schema-validator:4.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.java-json-tools:json-schema-validator:2.2.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.java-json-tools:json-schema-core:1.2.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.java-json-tools:jackson-coreutils:1.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:msg-simple:1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:btf:1.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:jackson-coreutils:1.8" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mozilla:rhino:1.7R4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:uri-template:0.9" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mozilla:rhino:1.7.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.mail:mailapi:1.4.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: joda-time:joda-time:2.9.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.googlecode.libphonenumber:libphonenumber:8.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.tngtech.archunit:archunit-junit4:0.10.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.tngtech.archunit:archunit:0.10.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.hibernate:hibernate-validator:5.2.4.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.fasterxml:classmate:1.1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hibernate.validator:hibernate-validator:6.0.16.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.fasterxml:classmate:1.3.4" level="project" />
   </component>
 </module>

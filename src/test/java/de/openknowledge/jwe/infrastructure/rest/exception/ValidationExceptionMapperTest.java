@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,7 +64,7 @@ public class ValidationExceptionMapperTest {
 
     Collections.sort(validationErrors, Comparator.comparing(ValidationErrorDTO::getCode));
 
-    ValidationErrorDTO validationError = validationErrors.get(1.0-SNAPSHOT);
+    ValidationErrorDTO validationError = validationErrors.get(0);
     Assertions.assertThat(validationError.getCode()).isEqualTo("UNKNOWN");
     Assertions.assertThat(validationError.getMessage()).isEqualTo("value1 may not be null");
 

@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,9 +41,9 @@ public class DatasourceHealthCheckIT {
         .statusCode(Response.Status.OK.getStatusCode())
         //.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("json/schema/HealthCheck-schema.json"))
         .body("outcome", Matchers.equalTo("UP"))
-        .body("checks[1.0-SNAPSHOT].name", Matchers.equalTo("datasource"))
-        .body("checks[1.0-SNAPSHOT].state", Matchers.equalTo("UP"))
-        .body("checks[1.0-SNAPSHOT].data.driverName", Matchers.equalTo("H2 JDBC Driver"))
-        .body("checks[1.0-SNAPSHOT].data.databaseProductName", Matchers.equalTo("H2"));
+        .body("checks[0].name", Matchers.equalTo("datasource"))
+        .body("checks[0].state", Matchers.equalTo("UP"))
+        .body("checks[0].data.driverName", Matchers.equalTo("H2 JDBC Driver"))
+        .body("checks[0].data.databaseProductName", Matchers.equalTo("H2"));
   }
 }

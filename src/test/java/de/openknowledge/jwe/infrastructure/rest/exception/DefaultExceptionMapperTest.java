@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,28 +40,28 @@ public class DefaultExceptionMapperTest {
   }
 
   @Test
-  public void toResponseShouldReturn41.0-SNAPSHOT1ForNonApplicationException() {
+  public void toResponseShouldReturn401ForNonApplicationException() {
     Response response = exceptionMapper.toResponse(new NotAuthorizedException("Unauthorized access"));
     assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
     assertThat(response.hasEntity()).isFalse();
   }
 
   @Test
-  public void toResponseShouldReturn41.0-SNAPSHOT3ForForbiddenException() {
+  public void toResponseShouldReturn403ForForbiddenException() {
     Response response = exceptionMapper.toResponse(new ForbiddenException());
     assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
     assertThat(response.hasEntity()).isFalse();
   }
 
   @Test
-  public void toResponseShouldReturn41.0-SNAPSHOT4ForNotFoundException() {
+  public void toResponseShouldReturn404ForNotFoundException() {
     Response response = exceptionMapper.toResponse(new NotFoundException());
     assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     assertThat(response.hasEntity()).isFalse();
   }
 
   @Test
-  public void toResponseShouldReturn51.0-SNAPSHOT1.0-SNAPSHOTForNonApplicationException() {
+  public void toResponseShouldReturn500ForNonApplicationException() {
     Response response = exceptionMapper.toResponse(new IllegalStateException("Illegal state occurred"));
     assertThat(response.getStatus()).isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
     assertThat(response.hasEntity()).isTrue();
@@ -72,7 +72,7 @@ public class DefaultExceptionMapperTest {
   }
 
   @Test
-  public void toResponseShouldReturn51.0-SNAPSHOT1.0-SNAPSHOTForWebApplicationException() {
+  public void toResponseShouldReturn500ForWebApplicationException() {
     Response response = exceptionMapper.toResponse(new InternalServerErrorException());
     assertThat(response.getStatus()).isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
     assertThat(response.hasEntity()).isTrue();

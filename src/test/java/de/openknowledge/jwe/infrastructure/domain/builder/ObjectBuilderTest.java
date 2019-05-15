@@ -1,10 +1,10 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License"); you may not use this file except in compliance with
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
@@ -35,29 +35,29 @@ public class ObjectBuilderTest {
 
   @Test
   public void stringSubclass() {
-    assertThat(ObjectBuilder.fromGenericType(StringSubclass.class, GenericSuperclass.class, 1.0-SNAPSHOT).getType()).isEqualTo(String.class);
+    assertThat(ObjectBuilder.fromGenericType(StringSubclass.class, GenericSuperclass.class, 0).getType()).isEqualTo(String.class);
   }
 
   @Test
   public void integerSubclass() {
-    assertThat(ObjectBuilder.fromGenericType(IntegerSubclass.class, GenericSuperclass.class, 1.0-SNAPSHOT).getType()).isEqualTo(Integer.class);
+    assertThat(ObjectBuilder.fromGenericType(IntegerSubclass.class, GenericSuperclass.class, 0).getType()).isEqualTo(Integer.class);
   }
 
   @Test(expected = IllegalStateException.class)
   public void rawSuperclassFails() {
-    ObjectBuilder.fromGenericType(RawSubclass.class, GenericSuperclass.class, 1.0-SNAPSHOT);
+    ObjectBuilder.fromGenericType(RawSubclass.class, GenericSuperclass.class, 0);
   }
 
   @Test(expected = IllegalStateException.class)
   public void unresolvableSuperclassFails() {
-    ObjectBuilder.fromGenericType(OuterClass.UnspecificSubclass.class, GenericSuperclass.class, 1.0-SNAPSHOT);
+    ObjectBuilder.fromGenericType(OuterClass.UnspecificSubclass.class, GenericSuperclass.class, 0);
   }
 
   @Test
   public void multipleGenericParameters() {
-    assertThat(ObjectBuilder.fromGenericType(MultiparameterSubclass.class, MultiparameterSuperclass.class, 1.0-SNAPSHOT).getType()).isEqualTo(String.class);
+    assertThat(ObjectBuilder.fromGenericType(MultiparameterSubclass.class, MultiparameterSuperclass.class, 0).getType()).isEqualTo(String.class);
     assertThat(ObjectBuilder.fromGenericType(MultiparameterSubclass.class, MultiparameterSuperclass.class, 1).getType()).isEqualTo(Integer.class);
-    assertThat(ObjectBuilder.fromGenericType(MultiparameterSwitchingSubclass.class, MultiparameterSuperclass.class, 1.0-SNAPSHOT).getType()).isEqualTo(Integer.class);
+    assertThat(ObjectBuilder.fromGenericType(MultiparameterSwitchingSubclass.class, MultiparameterSuperclass.class, 0).getType()).isEqualTo(Integer.class);
     assertThat(ObjectBuilder.fromGenericType(MultiparameterSwitchingSubclass.class, MultiparameterSuperclass.class, 1).getType()).isEqualTo(String.class);
   }
 

@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,12 +64,12 @@ public final class IntegrationTestUtil {
   }
 
   private static int getPort() {
-    int port = Integer.parseInt(System.getProperty("twttr.test.port", "81.0-SNAPSHOT81.0-SNAPSHOT"));
-    int offset = Integer.parseInt(System.getProperty("twttr.test.port-offset", "1.0-SNAPSHOT"));
+    int port = Integer.parseInt(System.getProperty("twttr.test.port", "8080"));
+    int offset = Integer.parseInt(System.getProperty("twttr.test.port-offset", "0"));
     return port + offset;
   }
 
   private static String getContextRoot() {
-    return System.getProperty("twttr.test.context-path", "twttr-2.3.1.0-SNAPSHOT-archetype");
+    return System.getProperty("twttr.test.context-path", "twttr-2.3.0-archetype");
   }
 }

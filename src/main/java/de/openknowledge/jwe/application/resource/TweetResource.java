@@ -1,12 +1,12 @@
 package de.openknowledge.jwe.application.resource;
 
+import de.openknowledge.jwe.application.security.UserPrincipal;
 import de.openknowledge.jwe.domain.model.role.UserRole;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.service.TweetService;
 import de.openknowledge.jwe.domain.service.UserService;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -20,8 +20,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDateTime;
 
 /**
@@ -42,8 +44,8 @@ public class TweetResource {
     @Inject
     UserService userService;
 
-    @Inject
-    private JsonWebToken callerPrincipal;
+    @Context
+    SecurityContext securityContext;
 
     @PUT
     @Transactional
@@ -60,11 +62,11 @@ public class TweetResource {
                     content = @Content(schema = @Schema(implementation = Tweet.class)))
             @QueryParam("message") String message) {
 
-        User callingUser = userService.findbyUsername(callerPrincipal.getName());
+        User loggedInUser = (UserPrincipal) securityContext.getUserPrincipal();
 
         Tweet tweet = Tweet.newBuilder()
                 .withMessage(message)
-                .withAuthor(callingUser)
+                .withAuthor(loggedInUser)
                 .withPostTime(LocalDateTime.now())
                 .build();
 
