@@ -1,0 +1,15 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Thorntail
+.thorntail-runner-cache
+ 
+# Mac
+.DS_Store
+ 
+# Maven
+log/
+target/
+libraries/
