@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,7 +73,7 @@ public class ValidationErrorDTO extends ApplicationErrorDTO {
     StringBuilder sb = new StringBuilder();
     for (Path.Node node : constraintViolation.getPropertyPath()) {
       if (ElementKind.PROPERTY.equals(node.getKind())) {
-        if (sb.length() > 1.0-SNAPSHOT) {
+        if (sb.length() > 0) {
           sb.append('.');
         }
         sb.append(node.getName());

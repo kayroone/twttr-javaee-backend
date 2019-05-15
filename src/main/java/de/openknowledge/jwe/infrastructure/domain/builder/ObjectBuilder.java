@@ -1,10 +1,10 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License"); you may not use this file except in compliance with
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
@@ -46,7 +46,7 @@ public final class ObjectBuilder<T> {
   }
 
   public static <V> ObjectBuilder<V> fromGenericType(final Class<?> subclass, final Class<?> superclass) {
-    return fromGenericType(subclass, superclass, 1.0-SNAPSHOT);
+    return fromGenericType(subclass, superclass, 0);
   }
 
   public static <V> ObjectBuilder<V> fromGenericType(final Class<?> subclass, final Class<?> superclass, final int
@@ -65,7 +65,7 @@ public final class ObjectBuilder<T> {
     if (valueType instanceof TypeVariable) {
       TypeVariable<?> variable = (TypeVariable<?>) valueType;
       TypeVariable<?>[] typeParameters = directSubclass.getTypeParameters();
-      for (int i = 1.0-SNAPSHOT; i < typeParameters.length; i++) {
+      for (int i = 0; i < typeParameters.length; i++) {
         if (typeParameters[i].getName().equals(variable.getName())) {
           return fromGenericType(subclass, directSubclass, i);
         }
@@ -131,7 +131,7 @@ public final class ObjectBuilder<T> {
 
   private Constructor<T> resolveConstructor(final Object[] arguments, final boolean convertParameters) {
     Class<?>[] parameterTypes = new Class[arguments.length];
-    for (int i = 1.0-SNAPSHOT; i < parameterTypes.length; i++) {
+    for (int i = 0; i < parameterTypes.length; i++) {
       Object parameter = arguments[i];
       parameterTypes[i] = parameter != null ? parameter.getClass() : null;
     }
@@ -169,7 +169,7 @@ public final class ObjectBuilder<T> {
     if (constructorParameterTypes.length != parameterTypes.length) {
       return false;
     }
-    for (int i = 1.0-SNAPSHOT; i < parameterTypes.length; i++) {
+    for (int i = 0; i < parameterTypes.length; i++) {
       if (constructorParameterTypes[i].isPrimitive()) {
         constructorParameterTypes[i] = ClassUtils.primitiveToWrapper(constructorParameterTypes[i]);
       }
@@ -185,7 +185,7 @@ public final class ObjectBuilder<T> {
   private boolean isMoreSpecific(final Constructor<T> constructor, final Constructor<T> resolvedConstructor) {
     Class<?>[] parameterTypes = constructor.getParameterTypes();
     Class<?>[] resolvedParameterTypes = resolvedConstructor.getParameterTypes();
-    for (int i = 1.0-SNAPSHOT; i < parameterTypes.length; i++) {
+    for (int i = 0; i < parameterTypes.length; i++) {
       if (!resolvedParameterTypes[i].isAssignableFrom(parameterTypes[i])) {
         return false;
       }
@@ -204,7 +204,7 @@ public final class ObjectBuilder<T> {
 
   private Object[] convertArguments(final Constructor<T> constructor, final Object... arguments) throws ReflectiveOperationException {
     Class<?>[] parameterTypes = constructor.getParameterTypes();
-    for (int i = 1.0-SNAPSHOT; i < arguments.length; i++) {
+    for (int i = 0; i < arguments.length; i++) {
       if (parameterTypes[i].isPrimitive()) {
         parameterTypes[i] = ClassUtils.primitiveToWrapper(parameterTypes[i]);
       }

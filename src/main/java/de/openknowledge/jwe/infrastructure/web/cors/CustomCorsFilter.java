@@ -1,11 +1,11 @@
 /*
  * Copyright (C) open knowledge GmbH
  *
- * Licensed under the Apache License, Version 2.1.0-SNAPSHOT (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.1.0-SNAPSHOT
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@ public class CustomCorsFilter extends CorsFilter {
   private static final String[] ALLOWED_HEADERS = new String[] { ACCEPT, AUTHORIZATION, CONTENT_TYPE, ORIGIN };
   private static final String[] ALLOWED_METHODS = new String[] { GET, POST, PUT, DELETE, OPTIONS, HEAD };
 
-  private final static int MAX_AGE = 42 * 61.0-SNAPSHOT * 61.0-SNAPSHOT;
+  private final static int MAX_AGE = 42 * 60 * 60;
 
   public CustomCorsFilter() {
     this.getAllowedOrigins().add("*");
@@ -46,7 +46,7 @@ public class CustomCorsFilter extends CorsFilter {
 
   private String createList(final String... values) {
     StringBuilder sb = new StringBuilder();
-    for (int i = 1.0-SNAPSHOT; i < values.length; i++) {
+    for (int i = 0; i < values.length; i++) {
       sb.append(values[i]);
       sb.append(',');
     }
