@@ -5,9 +5,7 @@ import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
 import de.openknowledge.jwe.infrastructure.domain.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wildfly.common.annotation.NotNull;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -22,7 +20,6 @@ import java.util.List;
  */
 
 @Repository
-@ApplicationScoped
 public class UserRepository extends AbstractRepository<User> implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserRepository.class);
@@ -38,26 +35,20 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
 
     public List<User> findAll() {
 
-        LOG.debug("Searching for Users");
-
-        CriteriaQuery<User> criteriaQuery = getDefaultQuery();
-        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
-
-        List<User> results = query.getResultList();
-
-        LOG.debug("Located {} Users", results.size());
-
-        return results;
+        return findPartial(0, 100);
     }
 
-    public List<User> findPartial(@NotNull int offset, @NotNull int limit) {
+    public List<User> findPartial(int offset, int limit) {
 
         LOG.debug("Searching for Users");
 
-        CriteriaQuery<User> criteriaQuery = getDefaultQuery();
-        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
 
-        // Set limitations:
+        Root<User> from = criteriaQuery.from(User.class);
+        criteriaQuery.select(from);
+
+        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         query.setFirstResult(offset);
         query.setMaxResults(limit);
 
@@ -68,13 +59,18 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return results;
     }
 
-    public User findByUsername(@NotNull String username) {
+    public User findByUsername(String username) {
 
         LOG.debug("Searching for User {}", username);
 
-        CriteriaQuery<User> criteriaQuery = getFindByUsernameQuery(username);
-        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
 
+        Root<User> from = criteriaQuery.from(User.class);
+        criteriaQuery.select(from);
+        criteriaQuery.where(criteriaBuilder.equal(from.get("username"), username));
+
+        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         User result = query.getSingleResult();
 
         LOG.debug("Located User {}", result);
@@ -82,59 +78,22 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return result;
     }
 
-    public List<User> findByKeyword(@NotNull String keyword) {
+    public List<User> findByKeyword(String keyword) {
 
         LOG.debug("Searching for User containing the keyword {} in it's username", keyword);
 
-        CriteriaQuery<User> criteriaQuery = getFindByKeywordQuery(keyword);
-        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
 
+        Root<User> from = criteriaQuery.from(User.class);
+        criteriaQuery.select(from);
+        criteriaQuery.where(criteriaBuilder.like(from.get("username"), "%" + keyword + "%"));
+
+        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         List<User> result = query.getResultList();
 
         LOG.debug("Located Users {}", result);
 
         return result;
-    }
-
-    // INTERNAL HELPER ------------------------------------------------------------------------------------------------
-
-    private CriteriaQuery<User> getDefaultQuery() {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-
-        // Only select table:
-        Root<User> from = criteriaQuery.from(User.class);
-        criteriaQuery.select(from);
-
-        return criteriaQuery;
-    }
-
-    private CriteriaQuery<User> getFindByUsernameQuery(@NotNull String username) {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-
-        Root<User> from = criteriaQuery.from(User.class);
-
-        // Equal to username:
-        criteriaQuery.select(from);
-        criteriaQuery.where(criteriaBuilder.equal(from.get("username"), username));
-
-        return criteriaQuery;
-    }
-
-    private CriteriaQuery<User> getFindByKeywordQuery(@NotNull String keyword) {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-
-        Root<User> from = criteriaQuery.from(User.class);
-
-        // Username containing keyword:
-        criteriaQuery.select(from);
-        criteriaQuery.where(criteriaBuilder.like(from.get("username"), "%" + keyword + "%"));
-
-        return criteriaQuery;
     }
 }

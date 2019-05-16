@@ -5,9 +5,7 @@ import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
 import de.openknowledge.jwe.infrastructure.domain.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wildfly.common.annotation.NotNull;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -22,7 +20,6 @@ import java.util.List;
  */
 
 @Repository
-@ApplicationScoped
 public class TweetRepository extends AbstractRepository<Tweet> implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TweetRepository.class);
@@ -38,114 +35,73 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
     public List<Tweet> findAll() {
 
-        LOG.debug("Searching for Tweets");
-
-        CriteriaQuery<Tweet> criteriaQuery = getOrderByDateQuery();
-        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
-
-        List<Tweet> results = query.getResultList();
-
-        LOG.debug("Located {} Tweets", results.size());
-
-        return results;
+        return findPartial(0, 100);
     }
 
-    public List<Tweet> findPartial(@NotNull int offset, @NotNull int limit) {
+    public List<Tweet> findPartial(int offset, int limit) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
-
-        CriteriaQuery<Tweet> criteriaQuery = getDefaultQuery();
-        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
-
-        // Set limitations:
-        query.setFirstResult(offset);
-        query.setMaxResults(limit);
-
-        List<Tweet> results = query.getResultList();
-
-        LOG.debug("Located {} Tweets", results.size());
-
-        return results;
-    }
-
-    public List<Tweet> findPartialOrderByDate(@NotNull int offset, @NotNull int limit) {
-
-        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
-
-        CriteriaQuery<Tweet> criteriaQuery = getOrderByDateQuery();
-        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
-
-        // Set limitations:
-        query.setFirstResult(offset);
-        query.setMaxResults(limit);
-
-        List<Tweet> results = query.getResultList();
-
-        LOG.debug("Located {} Tweets", results.size());
-
-        return results;
-    }
-
-    public List<Tweet> findPartialByIdsOrderByDate(@NotNull int offset, @NotNull int limit,
-                                                   @NotNull List<Long> ids) {
-
-        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
-
-        CriteriaQuery<Tweet> criteriaQuery = getFindByIdsOrderByDateQuery(ids);
-        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
-
-        // Set limitations:
-        query.setFirstResult(offset);
-        query.setMaxResults(limit);
-
-        List<Tweet> results = query.getResultList();
-
-        LOG.debug("Located {} Tweets", results.size());
-
-        return results;
-    }
-
-    // INTERNAL HELPER ------------------------------------------------------------------------------------------------
-
-    private CriteriaQuery<Tweet> getDefaultQuery() {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
 
-        // Only select table:
         Root<Tweet> from = criteriaQuery.from(Tweet.class);
         criteriaQuery.select(from);
 
-        return criteriaQuery;
+        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult(offset);
+        query.setMaxResults(limit);
+
+        List<Tweet> results = query.getResultList();
+
+        LOG.debug("Located {} Tweets", results.size());
+
+        return results;
     }
 
-    private CriteriaQuery<Tweet> getOrderByDateQuery() {
+    public List<Tweet> findPartialOrderByDate(int offset, int limit) {
+
+        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
 
         Root<Tweet> from = criteriaQuery.from(Tweet.class);
-
-        // Order by date:
         criteriaQuery.select(from);
         criteriaQuery.orderBy(criteriaBuilder.desc(from.get("date")));
 
-        return criteriaQuery;
+        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult(offset);
+        query.setMaxResults(limit);
+
+        List<Tweet> results = query.getResultList();
+
+        LOG.debug("Located {} Tweets", results.size());
+
+        return results;
     }
 
-    private CriteriaQuery<Tweet> getFindByIdsOrderByDateQuery(@NotNull List<Long> ids) {
+    public List<Tweet> findPartialByIdsOrderByDate(int offset, int limit,
+                                                   List<Long> ids) {
+
+        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
 
         Root<Tweet> from = criteriaQuery.from(Tweet.class);
-
-        // Order by date:
         criteriaQuery.select(from);
         criteriaQuery.orderBy(criteriaBuilder.desc(from.get("date")));
-
         criteriaQuery.where(from.get("id").in(ids));
 
-        return criteriaQuery;
+        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult(offset);
+        query.setMaxResults(limit);
+
+        List<Tweet> results = query.getResultList();
+
+        LOG.debug("Located {} Tweets", results.size());
+
+        return results;
     }
 }
