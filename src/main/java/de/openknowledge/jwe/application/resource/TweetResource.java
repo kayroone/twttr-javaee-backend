@@ -1,6 +1,6 @@
 package de.openknowledge.jwe.application.resource;
 
-import de.openknowledge.jwe.application.security.UserPrincipal;
+import de.openknowledge.jwe.application.security.TwttrSecurityContext;
 import de.openknowledge.jwe.domain.model.role.UserRole;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
@@ -19,10 +19,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDateTime;
 
 /**
@@ -40,8 +38,8 @@ public class TweetResource {
     @Inject
     TweetService tweetService;
 
-    @Context
-    SecurityContext securityContext;
+    @Inject
+    TwttrSecurityContext twttrSecurityContext;
 
     @PUT
     @Transactional
@@ -58,7 +56,7 @@ public class TweetResource {
                     content = @Content(schema = @Schema(implementation = Tweet.class)))
             @QueryParam("message") String message) {
 
-        User loggedInUser = (UserPrincipal) securityContext.getUserPrincipal();
+        User loggedInUser = twttrSecurityContext.getUser();
 
         Tweet tweet = Tweet.newBuilder()
                 .withMessage(message)
