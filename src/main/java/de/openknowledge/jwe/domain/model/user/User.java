@@ -1,6 +1,5 @@
 package de.openknowledge.jwe.domain.model.user;
 
-import de.openknowledge.jwe.domain.model.relationship.FollowerFollowingRelationship;
 import de.openknowledge.jwe.domain.model.role.UserRole;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
@@ -10,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -36,15 +36,17 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "USER_PASSWORD", length = 500)
     private String password;
 
-    @NotNull
-    @Column(name = "USER_ROLE")
-    private UserRole role;
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))
+    @Column(name = "USER_ROLE", nullable = false)
+    private Set<UserRole> roles;
 
-    @OneToMany(mappedBy = "following")
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
     @Column(name = "USER_FOLLOWING")
     private List<FollowerFollowingRelationship> followings;
 
-    @OneToMany(mappedBy = "follower")
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
     @Column(name = "USER_FOLLOWER")
     private List<FollowerFollowingRelationship> followers;
 
@@ -56,22 +58,20 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "USER_ICON_PATH", length = 500)
     private String iconPath;
 
-    // METHODS --------------------------------------------------------------------------------------------------------
-
     /**
      * Update this {@link User}.
      *
      * @param username
      * @param password
-     * @param role
+     * @param roles
      * @param iconPath
      */
 
-    public void updateUser(String username, String password, UserRole role, String iconPath) {
+    public void updateUser(String username, String password, Set<UserRole> roles, String iconPath) {
 
         this.username = notNull(username, "Username must nut be null");
         this.password = notNull(password, "Password must not be null");
-        this.role = notNull(role, "Role must not be null");
+        this.roles = notNull(roles, "Role must not be null");
         this.iconPath = iconPath;
     }
 
@@ -80,13 +80,9 @@ public class User extends AbstractEntity<Long> {
         return new UserBuilder();
     }
 
-    // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
-
     public User() {
         super();
     }
-
-    // GETTER AND SETTER ----------------------------------------------------------------------------------------------
 
     @Override
     public Long getId() {
@@ -113,12 +109,12 @@ public class User extends AbstractEntity<Long> {
         this.password = password;
     }
 
-    public UserRole getRole() {
-        return role;
+    public Set<UserRole> getRoles() {
+        return roles;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
     }
 
     public void setFollowers(List<FollowerFollowingRelationship> followers) {
@@ -153,8 +149,6 @@ public class User extends AbstractEntity<Long> {
         this.iconPath = iconPath;
     }
 
-    // BUILDER --------------------------------------------------------------------------------------------------------
-
     /**
      * Builder for the entity {@link User}.
      */
@@ -175,8 +169,8 @@ public class User extends AbstractEntity<Long> {
             return this;
         }
 
-        public UserBuilder withRole(final UserRole role) {
-            this.instance.role = role;
+        public UserBuilder withRole(final Set<UserRole> roles) {
+            this.instance.roles = roles;
             return this;
         }
 

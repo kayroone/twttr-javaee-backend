@@ -1,6 +1,5 @@
-package de.openknowledge.jwe.domain.model.relationship;
+package de.openknowledge.jwe.domain.model.user;
 
-import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 
 import javax.persistence.*;
@@ -18,15 +17,13 @@ public class FollowerFollowingRelationship extends AbstractEntity<Long> {
     @Column(name = "ID_FOLLOWER_FOLLOWING_RELATIONSHIP")
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_FOLLOWER")
     private User follower;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_FOLLOWING")
     private User following;
-
-    // GETTER AND SETTER ----------------------------------------------------------------------------------------------
 
     @Override
     public Long getId() {

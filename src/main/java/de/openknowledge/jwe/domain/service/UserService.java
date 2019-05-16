@@ -1,10 +1,9 @@
 package de.openknowledge.jwe.domain.service;
 
-import de.openknowledge.jwe.domain.model.relationship.FollowerFollowingRelationship;
+import de.openknowledge.jwe.domain.model.user.FollowerFollowingRelationship;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.repository.UserRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
-import org.wildfly.common.annotation.NotNull;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,7 +17,7 @@ import java.util.List;
 public class UserService {
 
     @Inject
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     /**
      * Follow a {@link User}.
@@ -27,7 +26,7 @@ public class UserService {
      * @param userToFollow The user that will be followed.
      */
 
-    public void follow(@NotNull User user, @NotNull User userToFollow) {
+    public void follow(User user, User userToFollow) {
 
         FollowerFollowingRelationship followerFollowingRelationship = new FollowerFollowingRelationship();
 
@@ -38,7 +37,6 @@ public class UserService {
         userToFollow.getFollowers().add(followerFollowingRelationship);
 
         userRepository.update(user);
-        userRepository.update(userToFollow);
     }
 
     /**
@@ -48,7 +46,7 @@ public class UserService {
      * @param userToUnfollow The user that will be unfollowed.
      */
 
-    public void unfollow(@NotNull User user, @NotNull User userToUnfollow) {
+    public void unfollow(User user, User userToUnfollow) {
 
         FollowerFollowingRelationship followerFollowingRelationship = new FollowerFollowingRelationship();
 
@@ -59,7 +57,6 @@ public class UserService {
         userToUnfollow.getFollowers().remove(followerFollowingRelationship);
 
         userRepository.update(user);
-        userRepository.update(userToUnfollow);
     }
 
     /**
@@ -68,7 +65,7 @@ public class UserService {
      * @return The {@link User}.
      */
 
-    public User findbyUsername(@NotNull String username) {
+    public User findbyUsername(String username) {
 
         return userRepository.findByUsername(username);
     }
@@ -79,7 +76,7 @@ public class UserService {
      * @return A list of {@link User} containing the keyword in their usernames.
      */
 
-    public List<User> search(@NotNull String keyword) {
+    public List<User> search(String keyword) {
 
         return userRepository.findByKeyword(keyword);
     }
@@ -101,7 +98,7 @@ public class UserService {
      * @return The single {@link User}.
      */
 
-    public User findById(@NotNull Long id) throws EntityNotFoundException {
+    public User findById(Long id) throws EntityNotFoundException {
 
         return userRepository.find(id);
     }
@@ -113,7 +110,7 @@ public class UserService {
      * @return The created {@link User}.
      */
 
-    public User create(@NotNull User user) {
+    public User create(User user) {
 
         return userRepository.create(user);
     }
@@ -125,7 +122,7 @@ public class UserService {
      * @return The updated {@link User}.
      */
 
-    public User update(@NotNull User user) {
+    public User update(User user) {
 
         return userRepository.update(user);
     }
@@ -136,7 +133,7 @@ public class UserService {
      * @param user
      */
 
-    public void delete(@NotNull User user) {
+    public void delete(User user) {
 
         userRepository.delete(user);
     }

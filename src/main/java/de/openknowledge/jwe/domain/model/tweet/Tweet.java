@@ -42,27 +42,20 @@ public class Tweet extends AbstractEntity<Long> {
     @Column(name = "TWEET_LIKER", nullable = false)
     private List<User> liker;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @Column(name = "TWEET_RETWEETS", nullable = false)
     private List<Tweet> retweets;
 
     @ManyToOne
     private Tweet rootTweet;
 
-    // METHODS --------------------------------------------------------------------------------------------------------
-
     public static TweetBuilder newBuilder() {
-
         return new TweetBuilder();
     }
-
-    // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
 
     protected Tweet() {
         super();
     }
-
-    // GETTER AND SETTER ----------------------------------------------------------------------------------------------
 
     @Override
     public Long getId() {
@@ -113,11 +106,13 @@ public class Tweet extends AbstractEntity<Long> {
         this.liker = liker;
     }
 
-    public Tweet getRootTweet() { return rootTweet; }
+    public Tweet getRootTweet() {
+        return rootTweet;
+    }
 
-    public void setRootTweet(Tweet rootTweet) { this.rootTweet = rootTweet; }
-
-    // BUILDER --------------------------------------------------------------------------------------------------------
+    public void setRootTweet(Tweet rootTweet) {
+        this.rootTweet = rootTweet;
+    }
 
     /**
      * Builder for the entity {@link Tweet}.

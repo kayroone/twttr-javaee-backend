@@ -1,11 +1,10 @@
 package de.openknowledge.jwe.domain.service;
 
-import de.openknowledge.jwe.domain.model.relationship.FollowerFollowingRelationship;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
+import de.openknowledge.jwe.domain.model.user.FollowerFollowingRelationship;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
-import org.wildfly.common.annotation.NotNull;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class TweetService {
 
     @Inject
-    TweetRepository tweetRepository;
+    private TweetRepository tweetRepository;
 
     /**
      * Get the timeline (max 100 items) for a given {@link User}.
@@ -31,8 +30,8 @@ public class TweetService {
      * @return An ordered list of {@link Tweet} representing the given users timeline.
      */
 
-    public List<Tweet> getTimeLineForUser(@NotNull User user, @NotNull int offset,
-                                          @NotNull int limit) {
+    public List<Tweet> getTimeLineForUser(User user, int offset,
+                                          int limit) {
 
         List<FollowerFollowingRelationship> followerFollowingRelationships = user.getFollowings();
         List<User> followings = new ArrayList<>();
@@ -68,7 +67,7 @@ public class TweetService {
      * @param tweet
      */
 
-    public void retweet(@NotNull Tweet tweet, @NotNull User user, @NotNull String message) {
+    public void retweet(Tweet tweet, User user, String message) {
 
         Tweet retweet = Tweet.newBuilder()
                 .withMessage(message)
@@ -80,7 +79,6 @@ public class TweetService {
 
         tweet.getRetweets().add(retweet);
 
-        tweetRepository.create(retweet);
         tweetRepository.update(tweet);
     }
 
@@ -90,7 +88,7 @@ public class TweetService {
      * @param tweet
      */
 
-    public void like(@NotNull Tweet tweet, @NotNull User user) {
+    public void like(Tweet tweet, User user) {
 
         tweet.getLiker().add(user);
         tweetRepository.update(tweet);
@@ -102,7 +100,7 @@ public class TweetService {
      * @param tweet
      */
 
-    public void unlike(@NotNull Tweet tweet, @NotNull User user) {
+    public void unlike(Tweet tweet, User user) {
 
         tweet.getLiker().remove(user);
         tweetRepository.update(tweet);
@@ -116,7 +114,7 @@ public class TweetService {
      * @throws EntityNotFoundException
      */
 
-    public Tweet findById(@NotNull Long id) throws EntityNotFoundException {
+    public Tweet findById(Long id) throws EntityNotFoundException {
 
         return tweetRepository.find(id);
     }
@@ -128,7 +126,7 @@ public class TweetService {
      * @return The created {@link Tweet}.
      */
 
-    public Tweet create(@NotNull Tweet tweet) {
+    public Tweet create(Tweet tweet) {
 
         return tweetRepository.create(tweet);
     }
@@ -140,7 +138,7 @@ public class TweetService {
      * @return The updated {@link Tweet}.
      */
 
-    public Tweet update(@NotNull Tweet tweet) {
+    public Tweet update(Tweet tweet) {
 
         return tweetRepository.update(tweet);
     }
@@ -151,7 +149,7 @@ public class TweetService {
      * @param tweet
      */
 
-    public void delete(@NotNull Tweet tweet) {
+    public void delete(Tweet tweet) {
 
         tweetRepository.delete(tweet);
     }
