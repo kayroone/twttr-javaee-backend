@@ -20,7 +20,7 @@ thorntail:
       CONSOLE:
         named-formatter: PATTERN
     root-logger:
-      level: INFO
+      level: FINE
       handlers:
       - CONSOLE
 
