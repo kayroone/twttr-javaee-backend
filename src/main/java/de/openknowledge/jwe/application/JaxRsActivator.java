@@ -15,8 +15,7 @@
  */
 package de.openknowledge.jwe.application;
 
-import de.openknowledge.jwe.domain.model.role.UserRole;
-import org.eclipse.microprofile.auth.LoginConfig;
+import de.openknowledge.jwe.domain.model.user.UserRole;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -32,9 +31,8 @@ import javax.ws.rs.core.Application;
  * JAX-RS Activator
  */
 
-@LoginConfig(authMethod = "MP-JWT", realmName = "twttr-webapp")
 @ApplicationPath("api")
-@DeclareRoles({ UserRole.Names.USER, UserRole.Names.MODERATOR, UserRole.Names.GUEST })
+@DeclareRoles({UserRole.USER, UserRole.MODERATOR})
 @OpenAPIDefinition(info =
 @Info(title = "Twttr Application", description = "Provides access to the API operations", version = "1.0",
         contact = @Contact(email = "jan.wiegmann@openknowledge.de"),

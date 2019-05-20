@@ -1,6 +1,5 @@
 package de.openknowledge.jwe.domain.model.user;
 
-import de.openknowledge.jwe.domain.model.role.UserRole;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
@@ -36,11 +35,10 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "USER_PASSWORD", length = 500)
     private String password;
 
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "TAB_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))
     @Column(name = "USER_ROLE", nullable = false)
-    private Set<UserRole> roles;
+    private Set<String> roles;
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
     @Column(name = "USER_FOLLOWING")
@@ -67,7 +65,7 @@ public class User extends AbstractEntity<Long> {
      * @param iconPath
      */
 
-    public void updateUser(String username, String password, Set<UserRole> roles, String iconPath) {
+    public void updateUser(String username, String password, Set<String> roles, String iconPath) {
 
         this.username = notNull(username, "Username must nut be null");
         this.password = notNull(password, "Password must not be null");
@@ -85,48 +83,24 @@ public class User extends AbstractEntity<Long> {
     }
 
     @Override
-    public Long getId() {
-        return null;
-    }
+    public Long getId() { return id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<UserRole> getRoles() {
+    public Set<String> getRoles() {
         return roles;
-    }
-
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
-    }
-
-    public void setFollowers(List<FollowerFollowingRelationship> followers) {
-        this.followers = followers;
     }
 
     public List<FollowerFollowingRelationship> getFollowers() {
         return followers;
-    }
-
-    public void setFollowings(List<FollowerFollowingRelationship> followings) {
-        this.followings = followings;
     }
 
     public List<FollowerFollowingRelationship> getFollowings() {
@@ -137,16 +111,8 @@ public class User extends AbstractEntity<Long> {
         return tweets;
     }
 
-    public void setTweets(List<Tweet> tweets) {
-        this.tweets = tweets;
-    }
-
     public String getIconPath() {
         return iconPath;
-    }
-
-    public void setIconPath(String iconPath) {
-        this.iconPath = iconPath;
     }
 
     /**
@@ -169,7 +135,7 @@ public class User extends AbstractEntity<Long> {
             return this;
         }
 
-        public UserBuilder withRole(final Set<UserRole> roles) {
+        public UserBuilder withRole(final Set<String> roles) {
             this.instance.roles = roles;
             return this;
         }

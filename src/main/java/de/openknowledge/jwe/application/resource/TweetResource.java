@@ -1,10 +1,11 @@
 package de.openknowledge.jwe.application.resource;
 
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
-import de.openknowledge.jwe.domain.model.user.User;
-import de.openknowledge.jwe.domain.service.TweetService;
-import de.openknowledge.jwe.domain.service.UserService;
+import de.openknowledge.jwe.domain.model.user.UserRole;
+import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
+import de.openknowledge.jwe.infrastructure.security.AuthenticatedUser;
+import de.openknowledge.jwe.infrastructure.security.AuthenticatedUserAdapter;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -14,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -36,18 +37,15 @@ public class TweetResource {
     private static final Logger LOG = LoggerFactory.getLogger(TweetResource.class);
 
     @Inject
-    TweetService tweetService;
+    private TweetRepository tweetRepository;
 
     @Inject
-    UserService userService;
+    @AuthenticatedUser
+    private AuthenticatedUserAdapter authenticatedUserAdapter;
 
-    @Context
-    SecurityContext securityContext;
-
-    @PUT
+    @POST
     @Transactional
-    //@RolesAllowed(UserRole.Names.USER)
-    @PermitAll
+    @RolesAllowed(UserRole.USER)
     @Operation(description = "Create a new tweet")
     @APIResponses({
             @APIResponse(responseCode = "201", description = "Tweet created",
@@ -58,18 +56,15 @@ public class TweetResource {
     public Response createTweet(
             @RequestBody(description = "New tweet", required = true,
                     content = @Content(schema = @Schema(implementation = Tweet.class)))
-            @QueryParam("message") String message) {
-
-        String userName = securityContext.getUserPrincipal().getName();
-        User loggedInUser = userService.findbyUsername(userName);
+            @QueryParam("message") String message, @Context SecurityContext securityContext) {
 
         Tweet tweet = Tweet.newBuilder()
                 .withMessage(message)
-                .withAuthor(loggedInUser)
+                .withAuthor(authenticatedUserAdapter.getUser())
                 .withPostTime(LocalDateTime.now())
                 .build();
 
-        tweetService.create(tweet);
+        tweetRepository.create(tweet);
 
         LOG.info("Tweet created {}", tweet);
 

@@ -20,13 +20,13 @@
         <timestamp>${maven.build.timestamp}</timestamp>
 
         <thorntail.bind.address>0.0.0.0</thorntail.bind.address>
-        <thorntail.http.port>8080</thorntail.http.port>
+        <thorntail.http.port>8081</thorntail.http.port>
         <thorntail.port.offset>0</thorntail.port.offset>
-        <thorntail.context.path>/</thorntail.context.path>
+        <thorntail.context.path>twttr-service</thorntail.context.path>
 
         <version.thorntail>2.4.0.Final</version.thorntail>
         <version.resteasy>3.6.3.SP1</version.resteasy>
-        <version.h2>1.4.199</version.h2>
+        <version.postgresql>42.2.5</version.postgresql>
 
         <version.apache_commons-lang>3.9</version.apache_commons-lang>
 
@@ -170,49 +170,61 @@
             <artifactId>jpa</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>thorntail-runner</artifactId>
-            <version>${version.thorntail}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
             <version>${version.resteasy}</version>
             <scope>provided</scope>
         </dependency>
 
+        <!-- Security -->
+        <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>keycloak</artifactId>
+            <version>${version.thorntail}</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>keycloak-server</artifactId>
+            <version>${version.thorntail}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-wildfly-adapter</artifactId>
+            <version>6.0.1</version>
+        </dependency>
+
         <!-- Microprofiles -->
         <dependency>
             <groupId>io.thorntail</groupId>
             <artifactId>microprofile-config</artifactId>
+            <version>${version.thorntail}</version>
         </dependency>
         <dependency>
             <groupId>io.thorntail</groupId>
             <artifactId>microprofile-health</artifactId>
+            <version>${version.thorntail}</version>
         </dependency>
         <dependency>
             <groupId>io.thorntail</groupId>
             <artifactId>microprofile-metrics</artifactId>
+            <version>${version.thorntail}</version>
         </dependency>
         <dependency>
             <groupId>io.thorntail</groupId>
             <artifactId>microprofile-openapi</artifactId>
+            <version>${version.thorntail}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <version>2.0.1</version>
-            <type>pom</type>
-            <scope>provided</scope>
+            <groupId>io.thorntail</groupId>
+            <artifactId>microprofile-jwt</artifactId>
+            <version>${version.thorntail}</version>
         </dependency>
 
         <!-- Database -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${version.h2}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${version.postgresql}</version>
         </dependency>
 
         <!-- Swagger -->
@@ -328,10 +340,11 @@
 
         <!-- other testing dependencies -->
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${version.hibernate-validator}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>
