@@ -1,4 +1,4 @@
-package de.openknowledge.jwe.application.resource;
+package de.openknowledge.jwe.application.tweet;
 
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.UserRole;
@@ -18,12 +18,13 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import java.time.LocalDateTime;
 
 /**
  * A resource that provides access to the {@link Tweet} entity.
@@ -55,13 +56,13 @@ public class TweetResource {
     })
     public Response createTweet(
             @RequestBody(description = "New tweet", required = true,
-                    content = @Content(schema = @Schema(implementation = Tweet.class)))
-            @QueryParam("message") String message, @Context SecurityContext securityContext) {
+                    content = @Content(schema = @Schema(implementation = NewTweet.class)))
+            @Valid final NewTweet newTweet) {
 
         Tweet tweet = Tweet.newBuilder()
-                .withMessage(message)
+                .withPostTime(newTweet.getPostTime())
+                .withMessage(newTweet.getMessage())
                 .withAuthor(authenticatedUserAdapter.getUser())
-                .withPostTime(LocalDateTime.now())
                 .build();
 
         tweetRepository.create(tweet);
