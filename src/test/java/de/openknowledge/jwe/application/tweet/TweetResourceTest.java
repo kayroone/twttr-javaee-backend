@@ -5,6 +5,7 @@ import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.domain.repository.UserRepository;
+import de.openknowledge.jwe.infrastructure.security.TestPrincipal;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -54,7 +55,9 @@ public class TweetResourceTest {
         newTweet.setAuthor(defaultTweet.getAuthor());
         newTweet.setMessage(defaultTweet.getMessage());
 
-        Mockito.doReturn(defaultUser.getUsername()).when(securityContext.getUserPrincipal()).getName();
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+
         Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
         Mockito.doReturn(defaultTweet).when(tweetRepository).create(any(Tweet.class));
 
