@@ -45,7 +45,6 @@ public class UserResourceTest {
 
         users.add(defaultUser);
 
-        Mockito.doReturn(defaultUser.getUsername()).when(securityContext.getUserPrincipal()).getName();
         Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
         Mockito.doReturn(users).when(userRepository).search(any(String.class), any(Integer.class), any(Integer.class));
 
@@ -60,19 +59,12 @@ public class UserResourceTest {
     }
 
     @Test
-    public void searchUserShouldReturn404() {
+    public void searchUserShouldReturn204() {
 
         String keyword = "foo";
-        User defaultUser = TestUser.newDefaultUser();
-        List<User> users = new ArrayList<>();
-
-        users.add(defaultUser);
-
-        Mockito.doReturn(defaultUser.getUsername()).when(securityContext.getUserPrincipal()).getName();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
 
         Response response = resource.searchUser(keyword);
-        assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(userRepository).search(captor.capture(), any(Integer.class), any(Integer.class));

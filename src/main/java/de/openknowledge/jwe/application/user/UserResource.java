@@ -42,11 +42,11 @@ public class UserResource {
     @GET
     @Transactional
     @PermitAll
-    @Operation(description = "Search a user")
+    @Operation(description = "Search for user by a given keyword")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "User found",
                     content = @Content(schema = @Schema(implementation = User.class))),
-            @APIResponse(responseCode = "404", description = "User not found",
+            @APIResponse(responseCode = "204", description = "User not found",
                     content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
     })
     public Response searchUser(@QueryParam("keyword") final String keyword) {
@@ -54,11 +54,11 @@ public class UserResource {
         List<User> usersFound = userRepository.search(keyword, -1, -1);
 
         if (usersFound.size() > 0) {
-            LOG.info("Users found {}", usersFound);
+            LOG.info("User found {}", usersFound);
             return Response.status(Response.Status.OK).entity(usersFound).build();
         } else {
-            LOG.info("No Users found with keyword {}", keyword);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            LOG.info("No User found with keyword {}", keyword);
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
     }
 }
