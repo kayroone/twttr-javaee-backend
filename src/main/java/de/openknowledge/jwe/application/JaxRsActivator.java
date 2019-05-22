@@ -16,6 +16,7 @@
 package de.openknowledge.jwe.application;
 
 import de.openknowledge.jwe.domain.model.user.UserRole;
+import de.openknowledge.jwe.infrastructure.constants.Constants;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -31,7 +32,7 @@ import javax.ws.rs.core.Application;
  * JAX-RS Activator
  */
 
-@ApplicationPath("api")
+@ApplicationPath(Constants.ROOT_API_URI)
 @DeclareRoles({UserRole.USER, UserRole.MODERATOR})
 @OpenAPIDefinition(info =
 @Info(title = "Twttr Application", description = "Provides access to the API operations", version = "1.0",

@@ -1,11 +1,12 @@
 package de.openknowledge.jwe.application.tweet;
 
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
+import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.model.user.UserRole;
 import de.openknowledge.jwe.domain.repository.TweetRepository;
+import de.openknowledge.jwe.domain.repository.UserRepository;
+import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
-import de.openknowledge.jwe.infrastructure.security.AuthenticatedUser;
-import de.openknowledge.jwe.infrastructure.security.AuthenticatedUserAdapter;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -23,14 +24,16 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * A resource that provides access to the {@link Tweet} entity.
  */
 
-@Path("tweet")
+@Path(Constants.TWEETS_API_URI)
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 public class TweetResource {
@@ -41,8 +44,10 @@ public class TweetResource {
     private TweetRepository tweetRepository;
 
     @Inject
-    @AuthenticatedUser
-    private AuthenticatedUserAdapter authenticatedUserAdapter;
+    private UserRepository userRepository;
+
+    @Context
+    private SecurityContext securityContext;
 
     @POST
     @Transactional
@@ -59,16 +64,17 @@ public class TweetResource {
                     content = @Content(schema = @Schema(implementation = NewTweet.class)))
             @Valid final NewTweet newTweet) {
 
+        User author = userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
+
         Tweet tweet = Tweet.newBuilder()
                 .withPostTime(newTweet.getPostTime())
                 .withMessage(newTweet.getMessage())
-                .withAuthor(authenticatedUserAdapter.getUser())
+                .withAuthor(author)
                 .build();
 
         tweetRepository.create(tweet);
 
         LOG.info("Tweet created {}", tweet);
-
         return Response.status(Response.Status.CREATED).entity(tweet).build();
     }
 }

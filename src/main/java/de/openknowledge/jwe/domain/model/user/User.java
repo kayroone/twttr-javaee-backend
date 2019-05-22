@@ -3,6 +3,7 @@ package de.openknowledge.jwe.domain.model.user;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
+import de.openknowledge.jwe.infrastructure.util.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -56,6 +57,10 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "USER_ICON_PATH", length = 500)
     private String iconPath;
 
+    public static UserBuilder newBuilder() {
+        return new UserBuilder();
+    }
+
     /**
      * Update this {@link User}.
      *
@@ -73,19 +78,18 @@ public class User extends AbstractEntity<Long> {
         this.iconPath = iconPath;
     }
 
-    public static UserBuilder newBuilder() {
-
-        return new UserBuilder();
-    }
-
     public User() {
         super();
     }
 
     @Override
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -130,8 +134,17 @@ public class User extends AbstractEntity<Long> {
             return this;
         }
 
+        public UserBuilder withId(Long id) {
+            this.instance.id = notNull(id, "Id must not be null");
+            return this;
+        }
+
         public UserBuilder withPassword(final String password) {
-            this.instance.password = notNull(password, "Password must not be null");
+
+            // Never store user passwords in clear text:
+            PasswordEncoder passwordEncoder = new PasswordEncoder();
+            this.instance.password = passwordEncoder
+                    .hashPassword(notNull(password, "Password must not be null"));
             return this;
         }
 

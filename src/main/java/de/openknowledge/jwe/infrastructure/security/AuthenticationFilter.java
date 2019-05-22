@@ -2,8 +2,6 @@ package de.openknowledge.jwe.infrastructure.security;
 
 import org.wildfly.swarm.keycloak.deployment.KeycloakSecurityContextAssociation;
 
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.SecurityContext;
@@ -11,16 +9,11 @@ import javax.ws.rs.ext.Provider;
 import java.security.Principal;
 
 /**
- * Fire user authenticated event -> Will be processed in {@link AuthenticatedUserProducer} and propagate the
- * {@link SecurityContext} for this application.
+ * Propagate the {@link SecurityContext} holding user information of the authenticated user.
  */
 
 @Provider
 public class AuthenticationFilter implements ContainerRequestFilter {
-
-    @Inject
-    @AuthenticatedUser
-    Event<String> userAuthenticatedEvent;
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -28,9 +21,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         SecurityContext securityContext = requestContext.getSecurityContext();
         String username = KeycloakSecurityContextAssociation.get().getToken().getPreferredUsername();
         Principal userPrincipal = () -> username;
-
-        // Fire auth event:
-        userAuthenticatedEvent.fire(username);
 
         // Propagate user security context:
         requestContext.setSecurityContext(new SecurityContext() {

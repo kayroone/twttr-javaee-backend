@@ -3,6 +3,10 @@
 *.iml
 *.iws
 
+# Keycloak
+keycloak.mv.db
+keycloak.trace.db
+
 # Thorntail
 .thorntail-runner-cache
  

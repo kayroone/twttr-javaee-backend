@@ -11,8 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return findPartial(0, 100);
     }
 
-    public List<User> findPartial(int offset, int limit) {
+    public List<User> findPartial(final int offset, final int limit) {
 
         LOG.debug("Searching for Users");
 
@@ -59,7 +61,7 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return results;
     }
 
-    public User findByUsername(String username) {
+    public User findByUsername(final String username) {
 
         LOG.debug("Searching for User {}", username);
 
@@ -78,22 +80,43 @@ public class UserRepository extends AbstractRepository<User> implements Serializ
         return result;
     }
 
-    public List<User> findByKeyword(String keyword) {
+    public User getReferenceByUsername(final String username) {
 
-        LOG.debug("Searching for User containing the keyword {} in it's username", keyword);
+        LOG.debug("Searching for User {}", username);
 
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        User user = findByUsername(username);
+        User reference = getReference(user.getId());
 
-        Root<User> from = criteriaQuery.from(User.class);
-        criteriaQuery.select(from);
-        criteriaQuery.where(criteriaBuilder.like(from.get("username"), "%" + keyword + "%"));
+        LOG.debug("Located User {}", reference);
 
-        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
-        List<User> result = query.getResultList();
+        return reference;
+    }
 
-        LOG.debug("Located Users {}", result);
+    public List<User> search(final String keyword, final int firstResult, final int maxResults) {
 
-        return result;
+        LOG.debug("Locating Users with search {}", keyword);
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+
+        Root<User> from = cq.from(User.class);
+
+        Predicate predicateUserName = cb.like(cb.lower(from.get("username")), "%" + keyword.toLowerCase() + "%");
+        cq.select(from).where(cb.or(predicateUserName));
+
+        TypedQuery<User> query = entityManager.createQuery(cq);
+
+        if (firstResult != -1) {
+            query.setFirstResult(firstResult);
+        }
+        if (maxResults != -1) {
+            query.setMaxResults(maxResults);
+        }
+
+        List<User> users = query.getResultList();
+
+        LOG.debug("Found Users {}", users);
+
+        return Collections.unmodifiableList(users);
     }
 }

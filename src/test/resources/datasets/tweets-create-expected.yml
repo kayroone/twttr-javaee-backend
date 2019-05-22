@@ -1,0 +1,4 @@
+TAB_TWEET:
+  - TWEET_ID: 1
+    TWEET_MESSAGE: Today is a good day!
+    AUTHOR_USER_ID: 1

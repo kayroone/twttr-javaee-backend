@@ -64,12 +64,12 @@ public final class IntegrationTestUtil {
   }
 
   private static int getPort() {
-    int port = Integer.parseInt(System.getProperty("twttr.test.port", "8080"));
+    int port = Integer.parseInt(System.getProperty("twttr.test.port", "8081"));
     int offset = Integer.parseInt(System.getProperty("twttr.test.port-offset", "0"));
     return port + offset;
   }
 
   private static String getContextRoot() {
-    return System.getProperty("twttr.test.context-path", "/");
+    return System.getProperty("twttr.test.context-path", "twttr-service");
   }
 }

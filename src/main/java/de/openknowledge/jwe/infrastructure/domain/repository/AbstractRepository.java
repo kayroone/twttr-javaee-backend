@@ -115,4 +115,16 @@ public abstract class AbstractRepository<E extends Identifiable> implements Seri
 
     return entityManager.merge(entity);
   }
+
+  /**
+   * Retrieve the reference of the given entity.
+   *
+   * @param identifier the given identifier.
+   * @return An reference object of the entity.
+   */
+  public E getReference(final Long identifier) {
+
+    LOG.debug("Retrieving reference of entity {} with identifier {}", clazz.getSimpleName(), identifier);
+    return  entityManager.getReference(clazz, identifier);
+  }
 }

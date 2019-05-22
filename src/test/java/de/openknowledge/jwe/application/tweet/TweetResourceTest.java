@@ -1,24 +1,21 @@
-package de.openknowledge.jwe.application.resource;
+package de.openknowledge.jwe.application.tweet;
 
-import de.openknowledge.jwe.application.tweet.NewTweet;
-import de.openknowledge.jwe.application.tweet.TweetResource;
 import de.openknowledge.jwe.domain.model.tweet.TestTweet;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.repository.TweetRepository;
-import de.openknowledge.jwe.infrastructure.security.AuthenticatedUserAdapter;
+import de.openknowledge.jwe.domain.repository.UserRepository;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,17 +26,19 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
  * Test class for the resource {@link TweetResource}.
  */
 
-@RunWith(MockitoJUnitRunner.class)
 public class TweetResourceTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
-    private TweetRepository repository = new TweetRepository();
+    private TweetRepository tweetRepository = new TweetRepository();
 
     @Mock
-    private AuthenticatedUserAdapter authenticatedUserAdapter;
+    private UserRepository userRepository = new UserRepository();
+
+    @Mock
+    private SecurityContext securityContext;
 
     @InjectMocks
     private TweetResource resource;
@@ -55,15 +54,16 @@ public class TweetResourceTest {
         newTweet.setAuthor(defaultTweet.getAuthor());
         newTweet.setMessage(defaultTweet.getMessage());
 
-        Mockito.doReturn(defaultUser).when(authenticatedUserAdapter).getUser();
-        Mockito.doReturn(defaultTweet).when(repository).create(any(Tweet.class));
+        Mockito.doReturn(defaultUser.getUsername()).when(securityContext.getUserPrincipal()).getName();
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
+        Mockito.doReturn(defaultTweet).when(tweetRepository).create(any(Tweet.class));
 
         Response response = resource.createTweet(newTweet);
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
         ArgumentCaptor<Tweet> captor = ArgumentCaptor.forClass(Tweet.class);
-        verify(repository).create(captor.capture());
-        verifyNoMoreInteractions(repository);
+        verify(tweetRepository).create(captor.capture());
+        verifyNoMoreInteractions(tweetRepository);
 
         Tweet createdTweet = captor.getValue();
         assertThat(createdTweet.getPostTime()).isEqualTo(defaultTweet.getPostTime());

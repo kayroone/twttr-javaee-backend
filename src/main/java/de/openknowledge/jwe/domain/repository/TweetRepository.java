@@ -38,7 +38,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return findPartial(0, 100);
     }
 
-    public List<Tweet> findPartial(int offset, int limit) {
+    public List<Tweet> findPartial(final int offset, final int limit) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
@@ -59,7 +59,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return results;
     }
 
-    public List<Tweet> findPartialOrderByDate(int offset, int limit) {
+    public List<Tweet> findPartialOrderByDate(final int offset, final int limit) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
@@ -81,8 +81,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
         return results;
     }
 
-    public List<Tweet> findPartialByIdsOrderByDate(int offset, int limit,
-                                                   List<Long> ids) {
+    public List<Tweet> findPartialByIdsOrderByDate(final int offset, final int limit, final List<Long> ids) {
 
         LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
 
