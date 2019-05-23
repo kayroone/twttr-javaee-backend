@@ -14,8 +14,8 @@ public class TestUser {
 
         User user = Mockito.spy(User.newBuilder()
                 .withId(1L)
-                .withUsername("test")
-                .withPassword("foobar")
+                .withUsername("jw")
+                .withPassword("password")
                 .withRole(Collections.singleton(UserRole.USER))
                 .build());
 

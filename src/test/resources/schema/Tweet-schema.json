@@ -1,0 +1,292 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Tweet",
+  "description": "Tweet schema with identifier used as response object",
+  "required": [
+    "id",
+    "postTime",
+    "message",
+    "author",
+    "liker",
+    "retweets",
+    "rootTweet"
+  ],
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "postTime": {
+      "$id": "#/properties/postTime",
+      "type": "object",
+      "title": "The Posttime Schema",
+      "required": [
+        "year",
+        "month",
+        "dayOfMonth",
+        "dayOfWeek",
+        "monthValue",
+        "hour",
+        "minute",
+        "second",
+        "nano",
+        "dayOfYear",
+        "chronology"
+      ],
+      "properties": {
+        "year": {
+          "$id": "#/properties/postTime/properties/year",
+          "type": "integer",
+          "title": "The Year Schema",
+          "default": 0,
+          "examples": [
+            2019
+          ]
+        },
+        "month": {
+          "$id": "#/properties/postTime/properties/month",
+          "type": "string",
+          "title": "The Month Schema",
+          "default": "",
+          "examples": [
+            "MAY"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "dayOfMonth": {
+          "$id": "#/properties/postTime/properties/dayOfMonth",
+          "type": "integer",
+          "title": "The Dayofmonth Schema",
+          "default": 0,
+          "examples": [
+            23
+          ]
+        },
+        "dayOfWeek": {
+          "$id": "#/properties/postTime/properties/dayOfWeek",
+          "type": "string",
+          "title": "The Dayofweek Schema",
+          "default": "",
+          "examples": [
+            "THURSDAY"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "monthValue": {
+          "$id": "#/properties/postTime/properties/monthValue",
+          "type": "integer",
+          "title": "The Monthvalue Schema",
+          "default": 0,
+          "examples": [
+            5
+          ]
+        },
+        "hour": {
+          "$id": "#/properties/postTime/properties/hour",
+          "type": "integer",
+          "title": "The Hour Schema",
+          "default": 0,
+          "examples": [
+            12
+          ]
+        },
+        "minute": {
+          "$id": "#/properties/postTime/properties/minute",
+          "type": "integer",
+          "title": "The Minute Schema",
+          "default": 0,
+          "examples": [
+            38
+          ]
+        },
+        "second": {
+          "$id": "#/properties/postTime/properties/second",
+          "type": "integer",
+          "title": "The Second Schema",
+          "default": 0,
+          "examples": [
+            43
+          ]
+        },
+        "nano": {
+          "$id": "#/properties/postTime/properties/nano",
+          "type": "integer",
+          "title": "The Nano Schema",
+          "default": 0,
+          "examples": [
+            246000000
+          ]
+        },
+        "dayOfYear": {
+          "$id": "#/properties/postTime/properties/dayOfYear",
+          "type": "integer",
+          "title": "The Dayofyear Schema",
+          "default": 0,
+          "examples": [
+            143
+          ]
+        },
+        "chronology": {
+          "$id": "#/properties/postTime/properties/chronology",
+          "type": "object",
+          "title": "The Chronology Schema",
+          "required": [
+            "id",
+            "calendarType"
+          ],
+          "properties": {
+            "id": {
+              "$id": "#/properties/postTime/properties/chronology/properties/id",
+              "type": "string",
+              "title": "The Id Schema",
+              "default": "",
+              "examples": [
+                "ISO"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "calendarType": {
+              "$id": "#/properties/postTime/properties/chronology/properties/calendarType",
+              "type": "string",
+              "title": "The Calendartype Schema",
+              "default": "",
+              "examples": [
+                "iso8601"
+              ],
+              "pattern": "^(.*)$"
+            }
+          }
+        }
+      }
+    },
+    "message": {
+      "$id": "#/properties/message",
+      "type": "string",
+      "title": "The Message Schema",
+      "default": "",
+      "examples": [
+        "Foobar"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "author": {
+      "$id": "#/properties/author",
+      "type": "object",
+      "title": "The Author Schema",
+      "required": [
+        "id",
+        "username",
+        "password",
+        "roles",
+        "followings",
+        "followers",
+        "tweets",
+        "iconPath"
+      ],
+      "properties": {
+        "id": {
+          "$id": "#/properties/author/properties/id",
+          "type": "integer",
+          "title": "The Id Schema",
+          "default": 0,
+          "examples": [
+            1
+          ]
+        },
+        "username": {
+          "$id": "#/properties/author/properties/username",
+          "type": "string",
+          "title": "The Username Schema",
+          "default": "",
+          "examples": [
+            "jw"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "password": {
+          "$id": "#/properties/author/properties/password",
+          "type": "string",
+          "title": "The Password Schema",
+          "default": "",
+          "examples": [
+            "password"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "roles": {
+          "$id": "#/properties/author/properties/roles",
+          "type": "array",
+          "title": "The Roles Schema",
+          "items": {
+            "$id": "#/properties/author/properties/roles/items",
+            "type": "string",
+            "title": "The Items Schema",
+            "default": "",
+            "examples": [
+              "USER"
+            ],
+            "pattern": "^(.*)$"
+          }
+        },
+        "followings": {
+          "$id": "#/properties/author/properties/followings",
+          "type": "array",
+          "title": "The Followings Schema"
+        },
+        "followers": {
+          "$id": "#/properties/author/properties/followers",
+          "type": "array",
+          "title": "The Followers Schema"
+        },
+        "tweets": {
+          "$id": "#/properties/author/properties/tweets",
+          "type": "array",
+          "title": "The Tweets Schema"
+        },
+        "iconPath": {
+          "$id": "#/properties/author/properties/iconPath",
+          "type": "null",
+          "title": "The Iconpath Schema",
+          "default": null,
+          "examples": [
+            null
+          ]
+        }
+      }
+    },
+    "liker": {
+      "$id": "#/properties/liker",
+      "type": "null",
+      "title": "The Liker Schema",
+      "default": null,
+      "examples": [
+        null
+      ]
+    },
+    "retweets": {
+      "$id": "#/properties/retweets",
+      "type": "null",
+      "title": "The Retweets Schema",
+      "default": null,
+      "examples": [
+        null
+      ]
+    },
+    "rootTweet": {
+      "$id": "#/properties/rootTweet",
+      "type": "null",
+      "title": "The Roottweet Schema",
+      "default": null,
+      "examples": [
+        null
+      ]
+    }
+  }
+}

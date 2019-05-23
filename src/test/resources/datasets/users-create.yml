@@ -1,5 +1,5 @@
 TAB_USER:
   - USER_ID: 1
-    USER_NAME: test
-    USER_PASSWORD: foobar9000!
+    USER_NAME: jw
+    USER_PASSWORD: password
     USER_ROLE: USER

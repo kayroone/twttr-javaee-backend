@@ -22,54 +22,63 @@ import javax.ws.rs.core.UriBuilder;
  */
 public final class IntegrationTestUtil {
 
-  private IntegrationTestUtil() {
-    super();
-  }
+    private IntegrationTestUtil() {
+        super();
+    }
 
-  public static String getBaseURI() {
-    String uri = "http://{host}:{port}/{context-root}";
-    return UriBuilder.fromUri(uri)
-        .resolveTemplate("host", getHost())
-        .resolveTemplate("port", getPort())
-        .resolveTemplate("context-root", getContextRoot())
-        .toTemplate();
-  }
+    public static String getKeyCloakAccessTokenURL() {
+        String uri = "http://{host}:{port}/auth/realms/{realm}/protocol/openid-connect/token";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", "localhost")
+                .resolveTemplate("port", "8080")
+                .resolveTemplate("realm", "twttr")
+                .toTemplate();
+    }
 
-  public static String getHealthCheckURI() {
-    String uri = "http://{host}:{port}/health";
-    return UriBuilder.fromUri(uri)
-        .resolveTemplate("host", getHost())
-        .resolveTemplate("port", getPort())
-        .toTemplate();
-  }
+    public static String getBaseURI() {
+        String uri = "http://{host}:{port}/{context-root}";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", getHost())
+                .resolveTemplate("port", getPort())
+                .resolveTemplate("context-root", getContextRoot())
+                .toTemplate();
+    }
 
-  public static String getMetricsURI() {
-    String uri = "http://{host}:{port}/metrics";
-    return UriBuilder.fromUri(uri)
-        .resolveTemplate("host", getHost())
-        .resolveTemplate("port", getPort())
-        .toTemplate();
-  }
+    public static String getHealthCheckURI() {
+        String uri = "http://{host}:{port}/health";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", getHost())
+                .resolveTemplate("port", getPort())
+                .toTemplate();
+    }
 
-  public static String getOpenApiURI() {
-    String uri = "http://{host}:{port}/openapi";
-    return UriBuilder.fromUri(uri)
-        .resolveTemplate("host", getHost())
-        .resolveTemplate("port", getPort())
-        .toTemplate();
-  }
+    public static String getMetricsURI() {
+        String uri = "http://{host}:{port}/metrics";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", getHost())
+                .resolveTemplate("port", getPort())
+                .toTemplate();
+    }
 
-  private static String getHost() {
-    return System.getProperty("twttr.test.host", "localhost");
-  }
+    public static String getOpenApiURI() {
+        String uri = "http://{host}:{port}/openapi";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", getHost())
+                .resolveTemplate("port", getPort())
+                .toTemplate();
+    }
 
-  private static int getPort() {
-    int port = Integer.parseInt(System.getProperty("twttr.test.port", "8081"));
-    int offset = Integer.parseInt(System.getProperty("twttr.test.port-offset", "0"));
-    return port + offset;
-  }
+    private static String getHost() {
+        return System.getProperty("twttr.test.host", "localhost");
+    }
 
-  private static String getContextRoot() {
-    return System.getProperty("twttr.test.context-path", "twttr-service");
-  }
+    private static int getPort() {
+        int port = Integer.parseInt(System.getProperty("twttr.test.port", "8081"));
+        int offset = Integer.parseInt(System.getProperty("twttr.test.port-offset", "0"));
+        return port + offset;
+    }
+
+    private static String getContextRoot() {
+        return System.getProperty("twttr.test.context-path", "twttr-service");
+    }
 }
