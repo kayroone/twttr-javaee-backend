@@ -9,20 +9,20 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "FOLLOWER_FOLLOWING_RELATIONSHIP")
-public class FollowerFollowingRelationship extends AbstractEntity<Long> {
+@Table(name = "TAB_USER_FOLLOWER_FOLLOWING_RELATIONSHIP")
+public class UserFollowerFollowingRelationship extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_FOLLOWER_FOLLOWING_RELATIONSHIP")
+    @Column(name = "USER_ID_FOLLOWER_FOLLOWING_RELATIONSHIP")
     private long id;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "ID_FOLLOWER")
+    @JoinColumn(name = "USER_ID_FOLLOWER")
     private User follower;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "ID_FOLLOWING")
+    @JoinColumn(name = "USER_ID_FOLLOWING")
     private User following;
 
     @Override

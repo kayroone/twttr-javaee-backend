@@ -20,8 +20,8 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class Tweet extends AbstractEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
-    @TableGenerator(name = "TABLE_GEN", table = "TABLE_GEN", pkColumnName = "ID_GEN",
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TAB_GEN")
+    @TableGenerator(name = "TAB_GEN", table = "TAB_GEN", pkColumnName = "ID_GEN",
             pkColumnValue = "VALUE_GEN", allocationSize = 1)
     @Column(name = "TWEET_ID", nullable = false)
     private Long id;
@@ -34,19 +34,21 @@ public class Tweet extends AbstractEntity<Long> {
     @Column(name = "TWEET_MESSAGE", nullable = false)
     private String message;
 
-    @OneToOne
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TWEET_AUTHOR")
     private User author;
 
-    @OneToMany
-    @Column(name = "TWEET_LIKER", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "TWEET_LIKER")
     private List<User> liker;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @Column(name = "TWEET_RETWEETS", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "TWEET_RETWEETS")
     private List<Tweet> retweets;
 
     @ManyToOne
+    @JoinColumn(name = "TWEET_ROOT_TWEET")
     private Tweet rootTweet;
 
     public static TweetBuilder newBuilder() {

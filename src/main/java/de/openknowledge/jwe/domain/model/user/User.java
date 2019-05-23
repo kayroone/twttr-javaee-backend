@@ -22,7 +22,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class User extends AbstractEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TAB_GEN")
     @Column(name = "USER_ID", nullable = false)
     private Long id;
 
@@ -38,26 +38,22 @@ public class User extends AbstractEntity<Long> {
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "TAB_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))
-    @Column(name = "USER_ROLE", nullable = false)
     private Set<String> roles;
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
-    @Column(name = "USER_FOLLOWING")
-    private List<FollowerFollowingRelationship> followings;
+    private List<UserFollowerFollowingRelationship> followings;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
-    @Column(name = "USER_FOLLOWER")
-    private List<FollowerFollowingRelationship> followers;
+    private List<UserFollowerFollowingRelationship> followers;
 
-    @OneToMany
-    @Column(name = "USER_TWEETS")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Tweet> tweets;
 
     @Size(max = 500)
     @Column(name = "USER_ICON_PATH", length = 500)
     private String iconPath;
 
-    public static UserBuilder newBuilder() {
+    static UserBuilder newBuilder() {
         return new UserBuilder();
     }
 
@@ -103,11 +99,11 @@ public class User extends AbstractEntity<Long> {
         return roles;
     }
 
-    public List<FollowerFollowingRelationship> getFollowers() {
+    public List<UserFollowerFollowingRelationship> getFollowers() {
         return followers;
     }
 
-    public List<FollowerFollowingRelationship> getFollowings() {
+    public List<UserFollowerFollowingRelationship> getFollowings() {
         return followings;
     }
 
@@ -153,12 +149,12 @@ public class User extends AbstractEntity<Long> {
             return this;
         }
 
-        public UserBuilder withFollowings(final List<FollowerFollowingRelationship> followings) {
+        public UserBuilder withFollowings(final List<UserFollowerFollowingRelationship> followings) {
             this.instance.followings = notNull(followings, "dueDate must not be null");
             return this;
         }
 
-        public UserBuilder withFollowers(final List<FollowerFollowingRelationship> followers) {
+        public UserBuilder withFollowers(final List<UserFollowerFollowingRelationship> followers) {
             this.instance.followers = notNull(followers, "dueDate must not be null");
             return this;
         }
