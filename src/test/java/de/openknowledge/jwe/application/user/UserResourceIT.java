@@ -1,21 +1,25 @@
 package de.openknowledge.jwe.application.user;
 
-import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import de.openknowledge.jwe.IntegrationTestUtil;
-import de.openknowledge.jwe.domain.model.user.User;
+import de.openknowledge.jwe.domain.model.user.TestUser;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
+import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
-import org.junit.Rule;
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.io.IOException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,37 +28,49 @@ public class UserResourceIT {
 
     private String baseURI = IntegrationTestUtil.getBaseURI();
 
-    @Rule
-    public EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
+    private static String accessToken;
 
-    @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(() -> entityManagerProvider.connection());
+    @BeforeClass
+    public static void initEntityManager() throws DatabaseUnitException {
 
-    @Test
-    @DataSet(strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, transactional = true)
-    @ExpectedDataSet(value = "src/test/resources/datasets/users-create-expected.yml")
-    public void searchUserShouldReturn200() {
+        EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
+        IDatabaseConnection dbUnitConn = new DatabaseConnection(entityManagerProvider.connection(), "public");
+        DatabaseConfig databaseConfig = dbUnitConn.getConfig();
 
-        String keyword = "jw";
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
+    }
 
-        User[] users = RestAssured.given()
-                .param("keyword", keyword)
-                .when()
-                .post(getUsersApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("json/schema/Tweet-schema.json"))
-                .extract()
-                .as(User[].class);
+    @BeforeClass
+    public static void getKeyCloakAccessToken() throws IOException {
 
-        assertThat(users).hasSize(1);
-        assertThat(users[0].getUsername()).isEqualTo(keyword);
+        accessToken = new KeyCloakResourceLoader().getKeyCloakAccessToken();
     }
 
     @Test
-    @DataSet(strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, transactional = true)
-    @ExpectedDataSet(value = "src/test/resources/datasets/users-create-expected.yml")
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    public void searchUserShouldReturn200() {
+
+        String keyword = "j";
+
+        LightUser[] users = RestAssured.given()
+                .param("keyword", keyword)
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                //.contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/User-schema.json"))
+                .extract()
+                .as(LightUser[].class);
+
+        assertThat(users).hasSize(1);
+        assertThat(users[0].getUsername()).isEqualTo(TestUser.newDefaultUser().getUsername());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
     public void searchUserShouldReturn204() {
 
         String keyword = "foo";
@@ -62,9 +78,8 @@ public class UserResourceIT {
         RestAssured.given()
                 .param("keyword", keyword)
                 .when()
-                .post(getUsersApiUri())
+                .get(getUsersApiUri())
                 .then()
-                .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 

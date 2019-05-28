@@ -46,6 +46,7 @@
         <version.archunit>0.10.2</version.archunit>
 
         <version.hibernate-validator>6.0.16.Final</version.hibernate-validator>
+        <version.hibernate-core>5.4.2.Final</version.hibernate-core>
     </properties>
 
     <build>
@@ -235,7 +236,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.2.Final</version>
+            <version>${version.hibernate-core}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -243,6 +244,7 @@
         <dependency>
             <groupId>io.thorntail</groupId>
             <artifactId>swagger-webapp</artifactId>
+            <version>${version.thorntail}</version>
         </dependency>
 
         <!-- apache commons -->

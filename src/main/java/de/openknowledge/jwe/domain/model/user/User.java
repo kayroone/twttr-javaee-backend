@@ -3,7 +3,7 @@ package de.openknowledge.jwe.domain.model.user;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
-import de.openknowledge.jwe.infrastructure.util.PasswordEncoder;
+import de.openknowledge.jwe.infrastructure.security.PasswordEncoder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

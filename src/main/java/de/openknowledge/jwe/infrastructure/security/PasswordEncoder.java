@@ -1,4 +1,4 @@
-package de.openknowledge.jwe.infrastructure.util;
+package de.openknowledge.jwe.infrastructure.security;
 
 import org.mindrot.jbcrypt.BCrypt;
 
