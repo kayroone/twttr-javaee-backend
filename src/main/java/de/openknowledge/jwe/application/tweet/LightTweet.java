@@ -2,13 +2,13 @@ package de.openknowledge.jwe.application.tweet;
 
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 
-public class CreatedTweet extends AbstractTweet {
+public class LightTweet extends AbstractTweet {
 
     private Long id;
 
     private Long author;
 
-    public CreatedTweet(Tweet tweet) {
+    public LightTweet(Tweet tweet) {
 
         super();
 
@@ -27,7 +27,7 @@ public class CreatedTweet extends AbstractTweet {
 
     @Override
     public String toString() {
-        return "CreatedTweet{" +
+        return "LightTweet{" +
                 "id=" + id +
                 ", author=" + author +
                 ", message=" + getMessage() +

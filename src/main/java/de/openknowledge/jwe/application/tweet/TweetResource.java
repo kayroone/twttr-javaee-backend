@@ -7,6 +7,7 @@ import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.domain.repository.UserRepository;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
+import de.openknowledge.jwe.infrastructure.security.AccessTokenNeeded;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -50,6 +51,7 @@ public class TweetResource {
     private SecurityContext securityContext;
 
     @POST
+    @AccessTokenNeeded
     @Transactional
     @RolesAllowed(UserRole.USER)
     @Operation(description = "Create a new tweet")
@@ -76,7 +78,7 @@ public class TweetResource {
 
         tweetRepository.create(tweet);
 
-        CreatedTweet createdTweet = new CreatedTweet(tweet);
+        LightTweet createdTweet = new LightTweet(tweet);
 
         LOG.info("Tweet {} created by {}", createdTweet, author);
         return Response.status(Response.Status.CREATED).entity(createdTweet).build();
