@@ -4,11 +4,12 @@ import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 import de.openknowledge.jwe.infrastructure.util.PasswordEncoder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -22,7 +23,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class User extends AbstractEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TAB_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID", nullable = false)
     private Long id;
 
@@ -36,18 +37,18 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "USER_PASSWORD", length = 500)
     private String password;
 
-    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "TAB_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))
-    private Set<String> roles;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user")
+    private Set<UserRoleRelationship> roles;
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
-    private List<UserFollowerFollowingRelationship> followings;
+    private Set<UserFollowerFollowingRelationship> followings;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
-    private List<UserFollowerFollowingRelationship> followers;
+    private Set<UserFollowerFollowingRelationship> followers;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
-    private List<Tweet> tweets;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Tweet> tweets;
 
     @Size(max = 500)
     @Column(name = "USER_ICON_PATH", length = 500)
@@ -66,7 +67,7 @@ public class User extends AbstractEntity<Long> {
      * @param iconPath
      */
 
-    public void updateUser(String username, String password, Set<String> roles, String iconPath) {
+    public void updateUser(String username, String password, Set<UserRoleRelationship> roles, String iconPath) {
 
         this.username = notNull(username, "Username must nut be null");
         this.password = notNull(password, "Password must not be null");
@@ -95,19 +96,19 @@ public class User extends AbstractEntity<Long> {
         return password;
     }
 
-    public Set<String> getRoles() {
+    public Set<UserRoleRelationship> getRoles() {
         return roles;
     }
 
-    public List<UserFollowerFollowingRelationship> getFollowers() {
+    public Set<UserFollowerFollowingRelationship> getFollowers() {
         return followers;
     }
 
-    public List<UserFollowerFollowingRelationship> getFollowings() {
+    public Set<UserFollowerFollowingRelationship> getFollowings() {
         return followings;
     }
 
-    public List<Tweet> getTweets() {
+    public Set<Tweet> getTweets() {
         return tweets;
     }
 
@@ -144,22 +145,27 @@ public class User extends AbstractEntity<Long> {
             return this;
         }
 
-        public UserBuilder withRole(final Set<String> roles) {
-            this.instance.roles = roles;
+        public UserBuilder withRole(final String role) {
+
+            UserRoleRelationship userRoleRelationship = new UserRoleRelationship();
+
+            userRoleRelationship.setRole(role);
+            userRoleRelationship.setUser(instance);
+
             return this;
         }
 
-        public UserBuilder withFollowings(final List<UserFollowerFollowingRelationship> followings) {
+        public UserBuilder withFollowings(final Set<UserFollowerFollowingRelationship> followings) {
             this.instance.followings = notNull(followings, "dueDate must not be null");
             return this;
         }
 
-        public UserBuilder withFollowers(final List<UserFollowerFollowingRelationship> followers) {
+        public UserBuilder withFollowers(final Set<UserFollowerFollowingRelationship> followers) {
             this.instance.followers = notNull(followers, "dueDate must not be null");
             return this;
         }
 
-        public UserBuilder withTweetList(final List<Tweet> tweets) {
+        public UserBuilder withTweetList(final Set<Tweet> tweets) {
             this.instance.tweets = notNull(tweets, "title must not be null");
             return this;
         }

@@ -19,9 +19,10 @@
         <datasource-mapping>
           <factory-entry name="Entities" />
           <factory-entry name="default" value="268cfb20-3598-454a-a5ce-3d98975bde27" />
+          <factory-entry name="test-local" />
         </datasource-mapping>
         <naming-strategy-map />
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/test/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>
   </component>
