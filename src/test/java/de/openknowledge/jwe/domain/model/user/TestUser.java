@@ -2,8 +2,6 @@ package de.openknowledge.jwe.domain.model.user;
 
 import org.mockito.Mockito;
 
-import java.util.Collections;
-
 /**
  * Test {@link User} class.
  */
@@ -16,7 +14,7 @@ public class TestUser {
                 .withId(1L)
                 .withUsername("jw")
                 .withPassword("password")
-                .withRole(Collections.singleton(UserRole.USER))
+                .withRole(UserRole.USER)
                 .build());
 
         Mockito.doReturn(1L).when(user).getId();

@@ -1,2 +1,2 @@
-INSERT INTO TAB_USER(USER_ID, USER_NAME, USER_PASSWORD) VALUES ('1', 'jw', 'password');
-INSERT INTO TAB_USER_ROLE(USER_ID, ROLES) VALUES ('1', 'USER');
+INSERT INTO tab_user(user_id, user_name, user_password) VALUES ('1', 'jw', 'password');
+INSERT INTO tab_user_role_relationship(user_role_relationship_id, user_id, user_role) VALUES ('1', '1', 'USER');

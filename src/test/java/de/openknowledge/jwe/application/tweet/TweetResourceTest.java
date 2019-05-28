@@ -52,7 +52,6 @@ public class TweetResourceTest {
         NewTweet newTweet = new NewTweet();
 
         newTweet.setPostTime(defaultTweet.getPostTime());
-        newTweet.setAuthor(defaultTweet.getAuthor());
         newTweet.setMessage(defaultTweet.getMessage());
 
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());

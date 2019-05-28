@@ -64,6 +64,8 @@ public class TweetResource {
                     content = @Content(schema = @Schema(implementation = NewTweet.class)))
             @Valid final NewTweet newTweet) {
 
+        LOG.info("Going to create a new Tweet with message '{}'", newTweet.getMessage());
+
         User author = userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
 
         Tweet tweet = Tweet.newBuilder()
@@ -74,7 +76,9 @@ public class TweetResource {
 
         tweetRepository.create(tweet);
 
-        LOG.info("Tweet created {}", tweet);
-        return Response.status(Response.Status.CREATED).entity(tweet).build();
+        CreatedTweet createdTweet = new CreatedTweet(tweet);
+
+        LOG.info("Tweet {} created by {}", createdTweet, author);
+        return Response.status(Response.Status.CREATED).entity(createdTweet).build();
     }
 }

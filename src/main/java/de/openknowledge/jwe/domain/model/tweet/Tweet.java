@@ -7,7 +7,6 @@ import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -20,9 +19,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class Tweet extends AbstractEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TAB_GEN")
-    @TableGenerator(name = "TAB_GEN", table = "TAB_GEN", pkColumnName = "ID_GEN",
-            pkColumnValue = "VALUE_GEN", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TWEET_ID", nullable = false)
     private Long id;
 
@@ -35,17 +32,9 @@ public class Tweet extends AbstractEntity<Long> {
     private String message;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "TWEET_AUTHOR")
     private User author;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Column(name = "TWEET_LIKER")
-    private List<User> liker;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Column(name = "TWEET_RETWEETS")
-    private List<Tweet> retweets;
 
     @ManyToOne
     @JoinColumn(name = "TWEET_ROOT_TWEET")
@@ -76,9 +65,7 @@ public class Tweet extends AbstractEntity<Long> {
         this.postTime = postTime;
     }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
 
     public void setMessage(String message) {
         this.message = message;
@@ -90,22 +77,6 @@ public class Tweet extends AbstractEntity<Long> {
 
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public List<Tweet> getRetweets() {
-        return retweets;
-    }
-
-    public void setRetweets(List<Tweet> retweets) {
-        this.retweets = retweets;
-    }
-
-    public List<User> getLiker() {
-        return liker;
-    }
-
-    public void setLiker(List<User> liker) {
-        this.liker = liker;
     }
 
     public Tweet getRootTweet() {
@@ -143,11 +114,6 @@ public class Tweet extends AbstractEntity<Long> {
 
         public TweetBuilder withRootTweet(final Tweet tweet) {
             this.instance.rootTweet = notNull(tweet, "Tweet must not be null");
-            return this;
-        }
-
-        public TweetBuilder withLikerList(final List<User> liker) {
-            this.instance.liker = liker;
             return this;
         }
     }

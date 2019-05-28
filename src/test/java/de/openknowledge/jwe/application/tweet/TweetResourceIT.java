@@ -1,6 +1,5 @@
 package de.openknowledge.jwe.application.tweet;
 
-import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
@@ -19,11 +18,17 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -41,18 +46,59 @@ import static org.apache.http.entity.mime.MIME.UTF8_CHARSET;
 
 public class TweetResourceIT {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TweetResourceIT.class);
+
     private String baseURI = IntegrationTestUtil.getBaseURI();
 
     private static String accessToken;
 
-    @Rule
-    public EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
+    @BeforeClass
+    public static void initEntityManager() throws DatabaseUnitException {
 
-    @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(() -> entityManagerProvider.connection());
+        EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
+        IDatabaseConnection dbUnitConn = new DatabaseConnection(entityManagerProvider.connection(), "public");
+        DatabaseConfig databaseConfig = dbUnitConn.getConfig();
+
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
+    }
+
+    @BeforeClass
+    public static void getKeyCloakAccessToken() {
+
+        User testUser = TestUser.newDefaultUser();
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost(IntegrationTestUtil.getKeyCloakAccessTokenURL());
+
+        ArrayList<NameValuePair> postParameters = new ArrayList<>();
+        postParameters.add(new BasicNameValuePair("username", testUser.getUsername()));
+        postParameters.add(new BasicNameValuePair("password", "password"));
+        postParameters.add(new BasicNameValuePair("realm", "twttr"));
+        postParameters.add(new BasicNameValuePair("grant_type", "password"));
+        postParameters.add(new BasicNameValuePair("client_id", "twttr-service"));
+        postParameters.add(new BasicNameValuePair("client_secret", "1f4cebfb-c1bc-43bb-87f1-a6ebda78f4ae"));
+
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            String responseJSON = EntityUtils.toString(httpResponse.getEntity(), UTF8_CHARSET);
+
+            JSONObject keyCloakResponse = new JSONObject(responseJSON);
+            accessToken = keyCloakResponse.getString("access_token");
+
+            if (accessToken != null) {
+                LOG.info("Successfully retrieved Keycloak access token for TweetResourceIT");
+            }
+
+        } catch (IOException e) {
+            // Ignore
+        }
+    }
 
     @Test
-    @DataSet(strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, transactional = true)
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
     @ExpectedDataSet(value = "datasets/tweets-create-expected.yml")
     public void createTweetShouldReturn201() {
 
@@ -81,34 +127,5 @@ public class TweetResourceIT {
 
         return UriBuilder.fromUri(baseURI).path(Constants.ROOT_API_URI)
                 .path(Constants.TWEETS_API_URI).build();
-    }
-
-    @BeforeClass
-    public static void getKeyCloakAccessToken() {
-
-        User testUser = TestUser.newDefaultUser();
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost httpPost = new HttpPost(IntegrationTestUtil.getKeyCloakAccessTokenURL());
-
-        ArrayList<NameValuePair> postParameters = new ArrayList<>();
-        postParameters.add(new BasicNameValuePair("username", testUser.getUsername()));
-        postParameters.add(new BasicNameValuePair("password", "password"));
-        postParameters.add(new BasicNameValuePair("realm", "twttr"));
-        postParameters.add(new BasicNameValuePair("grant_type", "password"));
-        postParameters.add(new BasicNameValuePair("client_id", "twttr-service"));
-        postParameters.add(new BasicNameValuePair("client_secret", "1f4cebfb-c1bc-43bb-87f1-a6ebda78f4ae"));
-
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            String responseJSON = EntityUtils.toString(httpResponse.getEntity(), UTF8_CHARSET);
-
-            JSONObject keyCloakResponse = new JSONObject(responseJSON);
-            accessToken = keyCloakResponse.getString("access_token");
-        } catch (IOException e) {
-            // Ignore
-        }
     }
 }

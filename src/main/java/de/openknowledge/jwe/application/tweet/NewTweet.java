@@ -19,7 +19,6 @@ public class NewTweet extends AbstractTweet {
 
         return "NewTweet {" +
                 "message='" + getMessage() + '\'' +
-                ", author='" + getAuthor() + '\'' +
                 ", postTime='" + getPostTime() + '\'' +
                 '}';
     }
