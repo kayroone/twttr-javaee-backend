@@ -7,6 +7,7 @@ import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -35,6 +36,9 @@ public class Tweet extends AbstractEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "TWEET_AUTHOR")
     private User author;
+
+    @ManyToMany(mappedBy = "likes")
+    private Set<User> liker;
 
     @ManyToOne
     @JoinColumn(name = "TWEET_ROOT_TWEET")
@@ -78,6 +82,10 @@ public class Tweet extends AbstractEntity<Long> {
     public void setAuthor(User author) {
         this.author = author;
     }
+
+    public Set<User> getLiker() { return liker; }
+
+    public void setLiker(Set<User> liker) { this.liker = liker; }
 
     public Tweet getRootTweet() {
         return rootTweet;

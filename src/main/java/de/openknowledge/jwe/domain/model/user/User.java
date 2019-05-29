@@ -50,6 +50,13 @@ public class User extends AbstractEntity<Long> {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Tweet> tweets;
 
+    @ManyToMany
+    @JoinTable(
+            name = "TAB_USER_TWEET_LIKE",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "TWEET_ID"))
+    private Set<Tweet> likes;
+
     @Size(max = 500)
     @Column(name = "USER_ICON_PATH", length = 500)
     private String iconPath;
@@ -73,6 +80,28 @@ public class User extends AbstractEntity<Long> {
         this.password = notNull(password, "Password must not be null");
         this.roles = notNull(roles, "Role must not be null");
         this.iconPath = iconPath;
+    }
+
+    /**
+     * Add a {@link Tweet} to own likes list.
+     *
+     * @param tweet
+     */
+
+    public void addLike(final Tweet tweet) {
+
+        this.likes.add(tweet);
+    }
+
+    /**
+     * Remove a {@link Tweet} from own likes list.
+     *
+     * @param tweet
+     */
+
+    public void removeLike(final Tweet tweet) {
+
+        this.likes.remove(tweet);
     }
 
     public User() {
@@ -110,6 +139,10 @@ public class User extends AbstractEntity<Long> {
 
     public Set<Tweet> getTweets() {
         return tweets;
+    }
+
+    public Set<Tweet> getLikes() {
+        return likes;
     }
 
     public String getIconPath() {
