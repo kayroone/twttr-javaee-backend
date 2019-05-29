@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 
 
 /**
@@ -59,9 +60,11 @@ public class TweetResourceIT {
     public void createTweetShouldReturn201() {
 
         String message = "Today is a good day!";
+        LocalDateTime postTime = LocalDateTime.now();
 
         JSONObject tweetJSONObject = new JSONObject();
         tweetJSONObject.put("message", message);
+        tweetJSONObject.put("postTime", postTime);
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
@@ -75,7 +78,7 @@ public class TweetResourceIT {
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
                 .body("id", Matchers.notNullValue())
                 .body("message", Matchers.equalTo(message))
-                .body("postTime", Matchers.notNullValue())
+                .body("postTime", Matchers.equalTo(postTime.toString()))
                 .body("author", Matchers.notNullValue());
     }
 

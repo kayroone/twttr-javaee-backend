@@ -19,7 +19,18 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+/**
+ * Class providing functionality to fetch resources from the KeyCloak server.
+ */
+
 public class KeyCloakResourceLoader {
+
+    /**
+     * Get the access token (signed JWT) for the test default user of this application.
+     *
+     * @return The JWT as string.
+     * @throws IOException
+     */
 
     public String getKeyCloakAccessToken() throws IOException {
 
@@ -46,6 +57,13 @@ public class KeyCloakResourceLoader {
         JSONObject keyCloakResponse = new JSONObject(responseJSON);
         return keyCloakResponse.getString("access_token");
     }
+
+    /**
+     * Get the KeyCloak config file from the test/resources dir.
+     *
+     * @return JSONObject holding the KeyCloak server config.
+     * @throws IOException
+     */
 
     private JSONObject getKeyCloakConfigFile() throws IOException {
 

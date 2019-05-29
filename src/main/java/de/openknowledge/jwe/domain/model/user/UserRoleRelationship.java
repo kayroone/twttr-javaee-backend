@@ -5,6 +5,11 @@ import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+
+/**
+ * Entity representing the relationship between a {@link User} and it's permission roles.
+ */
+
 @Entity
 @Table(name = "TAB_USER_ROLE_RELATIONSHIP")
 public class UserRoleRelationship extends AbstractEntity<Long> {

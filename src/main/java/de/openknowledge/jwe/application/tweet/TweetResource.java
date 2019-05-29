@@ -76,7 +76,7 @@ public class TweetResource {
 
         tweetRepository.create(tweet);
 
-        LightTweet createdTweet = new LightTweet(tweet);
+        TweetListDTO createdTweet = new TweetListDTO(tweet);
 
         LOG.info("Tweet {} created by {}", createdTweet, author);
         return Response.status(Response.Status.CREATED).entity(createdTweet).build();

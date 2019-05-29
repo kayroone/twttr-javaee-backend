@@ -17,6 +17,7 @@ import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
@@ -53,16 +54,16 @@ public class UserResourceIT {
 
         String keyword = "j";
 
-        LightUser[] users = RestAssured.given()
+        UserListDTO[] users = RestAssured.given()
                 .param("keyword", keyword)
                 .when()
                 .get(getUsersApiUri())
                 .then()
-                //.contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/User-schema.json"))
                 .extract()
-                .as(LightUser[].class);
+                .as(UserListDTO[].class);
 
         assertThat(users).hasSize(1);
         assertThat(users[0].getUsername()).isEqualTo(TestUser.newDefaultUser().getUsername());

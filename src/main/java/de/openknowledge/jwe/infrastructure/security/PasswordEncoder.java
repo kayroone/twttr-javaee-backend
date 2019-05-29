@@ -5,9 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
- * bcrypt password encoder.
- *
- * @author cassiomolin
+ * bCrypt password encoder.
  */
 @ApplicationScoped
 public class PasswordEncoder {
@@ -19,7 +17,9 @@ public class PasswordEncoder {
      * @return
      */
     public String hashPassword(String plainTextPassword) {
+
         String salt = BCrypt.gensalt();
+
         return BCrypt.hashpw(plainTextPassword, salt);
     }
 

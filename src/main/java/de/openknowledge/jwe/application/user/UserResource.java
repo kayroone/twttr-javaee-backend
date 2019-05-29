@@ -44,16 +44,16 @@ public class UserResource {
     public Response searchUser(@Parameter(description = "Keyword matching the username")
                                @QueryParam("keyword") final String keyword) {
 
-        List<LightUser> usersFound = userRepository
+        List<UserListDTO> usersFound = userRepository
                 .search(keyword, -1, -1)
                 .stream()
-                .map(LightUser::new)
+                .map(UserListDTO::new)
                 .collect(Collectors.toList());
 
         if (!usersFound.isEmpty()) {
             LOG.info("User found {}", usersFound);
             return Response.status(Response.Status.OK)
-                    .entity(new GenericEntity<List<LightUser>>(usersFound) {
+                    .entity(new GenericEntity<List<UserListDTO>>(usersFound) {
                     }).build();
         } else {
             LOG.info("No User found with keyword {}", keyword);

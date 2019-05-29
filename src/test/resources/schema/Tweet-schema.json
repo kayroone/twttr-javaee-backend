@@ -1,7 +1,5 @@
 {
   "definitions": {},
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://example.com/root.json",
   "type": "object",
   "title": "The Root Schema",
   "required": [
@@ -12,42 +10,26 @@
   ],
   "properties": {
     "postTime": {
-      "$id": "#/properties/postTime",
       "type": "string",
       "title": "The Posttime Schema",
       "default": "",
-      "examples": [
-        "2019-05-27T14:38:45.725.000Z"
-      ],
       "pattern": "^(.*)$"
     },
     "message": {
-      "$id": "#/properties/message",
       "type": "string",
       "title": "The Message Schema",
       "default": "",
-      "examples": [
-        "Foobar"
-      ],
       "pattern": "^(.*)$"
     },
     "id": {
-      "$id": "#/properties/id",
       "type": "integer",
       "title": "The Id Schema",
-      "default": 0,
-      "examples": [
-        1
-      ]
+      "default": 0
     },
     "author": {
-      "$id": "#/properties/author",
       "type": "integer",
       "title": "The Author Schema",
-      "default": 0,
-      "examples": [
-        1
-      ]
+      "default": 0
     }
   }
 }
