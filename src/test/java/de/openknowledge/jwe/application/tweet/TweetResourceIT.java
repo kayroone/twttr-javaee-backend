@@ -210,6 +210,20 @@ public class TweetResourceIT {
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
+    @Test
+    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create-expected.yml")
+    public void deleteTweetShouldReturn404() {
+
+        RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
+                .when()
+                .delete(getTweetsApiUri() + "/" + 403)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
     private URI getTweetsApiUri() {
 
         return UriBuilder.fromUri(baseURI).path(Constants.ROOT_API_URI)
