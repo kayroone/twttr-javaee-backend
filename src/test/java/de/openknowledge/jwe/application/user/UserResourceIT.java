@@ -14,6 +14,7 @@ import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
+import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -82,6 +83,43 @@ public class UserResourceIT {
                 .get(getUsersApiUri())
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    public void searchUserShouldReturn400ForKeywordTooLong() {
+
+        String keyword = "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
+                "FoobarFoobarFoobarFoobarFoobarFoobar";
+
+        RestAssured.given()
+                .param("keyword", keyword)
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+                .body("size()", Matchers.is(1));
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    public void searchUserShouldReturn400ForKeywordTooShort() {
+
+        String keyword = "";
+
+        RestAssured.given()
+                .param("keyword", keyword)
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+                .body("size()", Matchers.is(1));
     }
 
     private URI getUsersApiUri() {

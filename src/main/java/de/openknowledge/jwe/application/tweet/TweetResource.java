@@ -6,10 +6,12 @@ import de.openknowledge.jwe.domain.model.user.UserRole;
 import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.domain.repository.UserRepository;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
+import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -20,10 +22,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -64,7 +65,7 @@ public class TweetResource {
                     content = @Content(schema = @Schema(implementation = NewTweet.class)))
             @Valid final NewTweet newTweet) {
 
-        LOG.info("Going to create a new Tweet with message '{}'", newTweet.getMessage());
+        LOG.info("Going to create tweet with message '{}'", newTweet.getMessage());
 
         User author = userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
 
@@ -80,5 +81,31 @@ public class TweetResource {
 
         LOG.info("Tweet {} created by {}", createdTweet, author);
         return Response.status(Response.Status.CREATED).entity(createdTweet).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    @Operation(description = "Delete a tweet")
+    @APIResponses({
+            @APIResponse(responseCode = "204", description = "Tweet deleted"),
+            @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
+    public Response deleteTweet(@Parameter(description = "tweet identifier")
+                                    @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        LOG.info("Going to delete tweet with id {}", tweetId);
+
+        try {
+            Tweet foundTweet = tweetRepository.find(tweetId);
+
+            tweetRepository.delete(foundTweet);
+
+            LOG.info("Tweet deleted");
+
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("Tweet with id {} not found", tweetId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

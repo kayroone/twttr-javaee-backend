@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Size;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -42,7 +43,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
     })
     public Response searchUser(@Parameter(description = "Keyword matching the username")
-                               @QueryParam("keyword") final String keyword) {
+                               @Size(min = 1, max = 100) @QueryParam("keyword") final String keyword) {
 
         List<UserListDTO> usersFound = userRepository
                 .search(keyword, -1, -1)
