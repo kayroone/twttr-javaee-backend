@@ -120,6 +120,11 @@ public class Tweet extends AbstractEntity<Long> {
             return this;
         }
 
+        public TweetBuilder withLiker(final Set<User> liker) {
+            this.instance.liker = notNull(liker, "Message must not be null");
+            return this;
+        }
+
         public TweetBuilder withRootTweet(final Tweet tweet) {
             this.instance.rootTweet = notNull(tweet, "Tweet must not be null");
             return this;

@@ -86,6 +86,7 @@ public class TweetResource {
     @DELETE
     @Path("/{id}")
     @Transactional
+    @RolesAllowed(UserRole.USER)
     @Operation(description = "Delete a tweet")
     @APIResponses({
             @APIResponse(responseCode = "204", description = "Tweet deleted"),
@@ -110,31 +111,54 @@ public class TweetResource {
     }
 
     @PUT
-    @Path("/{id}")
     @Transactional
-    @Operation(description = "Like or unlike a tweet")
+    @RolesAllowed(UserRole.USER)
+    @Operation(description = "Like an unliked tweet")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Tweet liked/unliked"),
             @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
-    public Response likeUnlikeTweet(@Parameter(description = "tweet identifier")
-                                    @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+    public Response likeTweet(@Parameter(description = "tweet identifier")
+                              @QueryParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        User user = userRepository
+                .getReferenceByUsername(securityContext.getUserPrincipal().getName());
 
         try {
-            User user = userRepository
-                    .getReferenceByUsername(securityContext.getUserPrincipal().getName());
-
             Tweet foundTweet = tweetRepository.find(tweetId);
 
-            if (!user.getLikes().contains(foundTweet)) {
-                LOG.info("Going to like tweet with id {} by user {}", tweetId, user);
-                user.addLike(foundTweet);
-            } else {
-                LOG.info("Going to unlike  tweet with id {} by user {}", tweetId, user);
-                user.removeLike(foundTweet);
-            }
+            LOG.info("Going to unlike tweet with id {} by user {}", tweetId, user);
+            user.addLike(foundTweet);
 
             userRepository.update(user);
-            LOG.info("Tweet successfully liked/unliked by {}", user);
+
+            LOG.info("Tweet {} successfully liked/unliked by {}", foundTweet, user);
+            return Response.status(Response.Status.OK).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("Tweet with id {} not found", tweetId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @DELETE
+    @Transactional
+    @RolesAllowed(UserRole.USER)
+    @Operation(description = "Unlike an liked tweet")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Tweet unliked"),
+            @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
+    public Response unlikeTweet(@Parameter(description = "tweet identifier")
+                                @QueryParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        User user = userRepository
+                .getReferenceByUsername(securityContext.getUserPrincipal().getName());
+
+        try {
+            Tweet foundTweet = tweetRepository.find(tweetId);
+
+            LOG.info("Going to like tweet with id {} by user {}", tweetId, user);
+            user.removeLike(foundTweet);
+
+            userRepository.update(user);
 
             return Response.status(Response.Status.OK).build();
         } catch (EntityNotFoundException e) {

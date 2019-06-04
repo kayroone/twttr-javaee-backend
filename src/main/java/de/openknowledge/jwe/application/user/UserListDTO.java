@@ -7,7 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
- * Lightweight User DTO representing a {@link User}.
+ * User list DTO representing a {@link User}.
  */
 
 @Schema
@@ -21,7 +21,7 @@ public class UserListDTO extends AbstractValueObject {
 
     public UserListDTO() { super(); }
 
-    UserListDTO(final User user) {
+    public UserListDTO(final User user) {
 
         this();
 

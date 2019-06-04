@@ -1,19 +1,17 @@
 package de.openknowledge.jwe.application.tweet;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
-import de.openknowledge.jwe.domain.model.tweet.TweetPostDateTimeDeserializer;
-import de.openknowledge.jwe.domain.model.tweet.TweetPostDateTimeSerializer;
+import de.openknowledge.jwe.domain.model.tweet.TweetPostDateTimeAdapter;
 import de.openknowledge.jwe.infrastructure.domain.value.AbstractValueObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
- * Lightweight Tweet DTO representing a {@link Tweet}.
+ * Tweet list DTO representing a {@link Tweet}.
  */
 
 @Schema
@@ -28,16 +26,15 @@ public class TweetListDTO extends AbstractValueObject {
     @Schema(example = "Today is a good day!", required = true, minLength = 1, maxLength = 280)
     private String message;
 
-    @Schema(example = "2018-01-01T12:34:56.000Z", required = true, format = "date-time")
-    @JsonSerialize(using = TweetPostDateTimeSerializer.class)
-    @JsonDeserialize(using = TweetPostDateTimeDeserializer.class)
+    @Schema(example = "2018-01-01T12:34:56.000Z")
+    @XmlJavaTypeAdapter(TweetPostDateTimeAdapter.class)
     private LocalDateTime postTime;
 
     public TweetListDTO() {
         super();
     }
 
-    TweetListDTO(final Tweet tweet) {
+    public TweetListDTO(final Tweet tweet) {
 
         this();
 

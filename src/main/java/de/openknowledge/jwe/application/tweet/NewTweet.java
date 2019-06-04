@@ -10,7 +10,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema
 public class NewTweet extends AbstractTweet {
 
-    NewTweet() {
+    public NewTweet() {
         super();
     }
 
