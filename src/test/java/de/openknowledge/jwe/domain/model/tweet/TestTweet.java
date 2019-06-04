@@ -13,10 +13,14 @@ public class TestTweet {
 
     public static Tweet newDefaultTweet() {
 
-        return Mockito.spy(Tweet.newBuilder()
+        Tweet tweet =  Mockito.spy(Tweet.newBuilder()
                 .withAuthor(TestUser.newDefaultUser())
                 .withMessage("Today is a good day!")
                 .withPostTime(LocalDateTime.now())
                 .build());
+
+        Mockito.doReturn(1L).when(tweet).getId();
+
+        return tweet;
     }
 }

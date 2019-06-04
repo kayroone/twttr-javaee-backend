@@ -1,6 +1,10 @@
 package de.openknowledge.jwe.domain.model.user;
 
+import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import org.mockito.Mockito;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Test {@link User} class.
@@ -13,16 +17,20 @@ public class TestUser {
 
     public static User newDefaultUser() {
 
-        User user = Mockito.spy(User.newBuilder()
+        Tweet likedTweet = Mockito.mock(Tweet.class);
+
+        Mockito.doReturn(1L).when(likedTweet).getId();
+
+        Set<Tweet> likes = new HashSet<>();
+        likes.add(likedTweet);
+
+        return Mockito.spy(User.newBuilder()
                 .withId(1L)
                 .withUsername(DEFAULT_USER_NAME)
                 .withPassword(DEFAULT_USER_PASSWORD)
                 .withRole(UserRole.USER)
+                .withLikes(likes)
                 .build());
-
-        Mockito.doReturn(1L).when(user).getId();
-
-        return user;
     }
 
     public static String getDefaultUserPassword() {

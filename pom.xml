@@ -36,8 +36,7 @@
         <version.assertj>3.12.2</version.assertj>
         <version.mockito>2.27.0</version.mockito>
 
-        <version.database-rider>1.5.3</version.database-rider>
-        <version.eclipselink>2.7.4</version.eclipselink>
+        <version.database-rider>1.6.0</version.database-rider>
 
         <version.rest-assured>4.0.0</version.rest-assured>
         <version.wiremock>2.23.2</version.wiremock>
@@ -56,6 +55,12 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -343,14 +348,8 @@
         <!-- persistence testing -->
         <dependency>
             <groupId>com.github.database-rider</groupId>
-            <artifactId>rider-core</artifactId>
+            <artifactId>rider-junit5</artifactId>
             <version>${version.database-rider}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>${version.eclipselink}</version>
             <scope>test</scope>
         </dependency>
 

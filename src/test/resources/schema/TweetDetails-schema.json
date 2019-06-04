@@ -1,0 +1,41 @@
+{
+  "definitions": {},
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "postTime",
+    "message",
+    "id",
+    "author",
+    "likes"
+  ],
+  "properties": {
+    "postTime": {
+      "type": "string",
+      "title": "The Posttime Schema",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "message": {
+      "type": "string",
+      "title": "The Message Schema",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "id": {
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0
+    },
+    "author": {
+      "type": "integer",
+      "title": "The Author Schema",
+      "default": 0
+    },
+    "likes": {
+      "type": "integer",
+      "title": "The Likes Schema",
+      "default": 0
+    }
+  }
+}
