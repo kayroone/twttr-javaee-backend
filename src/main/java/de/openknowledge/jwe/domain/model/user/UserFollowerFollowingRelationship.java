@@ -43,9 +43,7 @@ public class UserFollowerFollowingRelationship extends AbstractEntity<Long> {
         return follower;
     }
 
-    public void setFollower(User follower) {
-        this.follower = follower;
-    }
+    public void setFollower(User follower) { this.follower = follower; }
 
     public User getFollowing() {
         return following;

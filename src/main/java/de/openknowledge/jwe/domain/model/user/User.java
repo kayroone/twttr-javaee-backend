@@ -109,7 +109,7 @@ public class User extends AbstractEntity<Long> {
     /**
      * Follow this {@link User}.
      *
-     * @param user The user that wants to follow.
+     * @param user The {@link User} that wants to follow.
      */
 
     public void follow(final User user) {
@@ -119,17 +119,19 @@ public class User extends AbstractEntity<Long> {
         followerFollowingRelationship.setFollowing(this);
         followerFollowingRelationship.setFollower(user);
 
+        // Add the relationship to own follower list - JPA will persist the relation to the other user.
         this.followers.add(followerFollowingRelationship);
     }
 
     /**
      * Unfollow this {@link User}.
      *
-     * @param user The user that wants to unfollow.
+     * @param user The {@link User} that wants to unfollow.
      */
 
     public void unfollow(final User user) {
 
+        // Retrieve the relationship for removal:
         Optional<UserFollowerFollowingRelationship> result = this.followers
                 .stream()
                 .filter(relationship -> relationship.getFollowing().equals(this))
@@ -137,43 +139,83 @@ public class User extends AbstractEntity<Long> {
                 .findFirst();
 
         if (result.isPresent()) {
-
             UserFollowerFollowingRelationship relationship = result.get();
-
             this.followers.remove(relationship);
         }
     }
+
+    /**
+     * Add a following relationship to this {@link User}.
+     *
+     * @param relationship
+     */
 
     public void addFollowing(final UserFollowerFollowingRelationship relationship) {
 
         this.followings.add(relationship);
     }
 
+    /**
+     * Remove a following relationship from this {@link User}.
+     *
+     * @param relationship
+     */
+
     public void removeFollowing(final UserFollowerFollowingRelationship relationship) {
 
         this.followings.remove(relationship);
     }
+
+    /**
+     * Add a follower relationship to this {@link User}.
+     *
+     * @param relationship
+     */
 
     public void addFollower(final UserFollowerFollowingRelationship relationship) {
 
         this.followers.add(relationship);
     }
 
+    /**
+     * Remove a follower relationship from this {@link User}.
+     *
+     * @param relationship
+     */
+
     public void removeFollower(final UserFollowerFollowingRelationship relationship) {
 
         this.followers.remove(relationship);
     }
+
+    /**
+     * Check if a given {@link User} is a follower of this {@link User}.
+     *
+     * @param user
+     */
 
     public boolean hasFollower(User user) {
 
         return getFollower().contains(user);
     }
 
+    /**
+     * Check if this {@link User} is a follower of a given {@link User}.
+     *
+     * @param user
+     */
+
     public boolean isFollowing(User user) {
 
 
         return getFollowings().contains(user);
     }
+
+    /**
+     * Get all followers of this {@link User}.
+     *
+     * @return A set of {@link User} representing the followers of this {@link User}.
+     */
 
     public Set<User> getFollower() {
 
@@ -188,6 +230,12 @@ public class User extends AbstractEntity<Long> {
 
         return follower;
     }
+
+    /**
+     * Get all {@link User} followed by this {@link User}.
+     *
+     * @return A set of {@link User} representing the followings of this {@link User}.
+     */
 
     public Set<User> getFollowings() {
 
