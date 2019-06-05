@@ -236,7 +236,7 @@ public class TweetResourceIT {
     @Test
     @DataSet(value = "datasets/tweets-update.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-update-expected.yml")
+    @ExpectedDataSet(value = "datasets/tweets-update-expected-like.yml")
     public void likeTweetShouldReturn200() {
 
         RestAssured.given()
@@ -253,9 +253,9 @@ public class TweetResourceIT {
                 .path(Constants.TWEETS_API_URI).build();
     }
 
-    private URI getSingleItemUri(final Long todoId) {
+    private URI getSingleItemUri(final Long tweetId) {
 
-        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(todoId);
+        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
     }
 
     private Connection getDBConnection() {

@@ -120,7 +120,7 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(defaultUser).when(userRepository).findByUsername(anyString());
         Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.likeTweet(1L);
@@ -130,7 +130,7 @@ public class TweetResourceTest {
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
-        assertThat(defaultUser.getLikes().size()).isEqualTo(2);
+        assertThat(defaultUser.getLikes().size()).isEqualTo(1);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(defaultUser).when(userRepository).findByUsername(anyString());
         Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.unlikeTweet(1L);
@@ -154,6 +154,6 @@ public class TweetResourceTest {
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
-        assertThat(defaultUser.getLikes().size()).isEqualTo(1);
+        assertThat(defaultUser.getLikes().size()).isEqualTo(0);
     }
 }

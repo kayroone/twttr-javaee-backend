@@ -1,6 +1,7 @@
 package de.openknowledge.jwe.application.user;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import de.openknowledge.jwe.IntegrationTestUtil;
@@ -121,6 +122,90 @@ public class UserResourceIT {
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
                 .body("size()", Matchers.is(1));
     }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-update-expected-follow.yml")
+    public void followUserShouldReturn200() {
+
+        RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
+                .param("id", 2L)
+                .when()
+                .put(getUsersApiUri())
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void followUserShouldReturn400ForMissingIdParameter() {
+
+        RestAssured.given()
+                .param("id", "")
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+                .body("size()", Matchers.is(1));
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void followUserShouldReturn400ForIdTooBig() {
+
+        RestAssured.given()
+                .param("id", 999999)
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+                .body("size()", Matchers.is(1));
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void followUserShouldReturn400ForIdTooSmall() {
+
+        RestAssured.given()
+                .param("id", 0)
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+                .body("size()", Matchers.is(1));
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void followUserShouldReturn404ForUserNotFound() {
+
+        RestAssured.given()
+                .param("id", 87)
+                .when()
+                .get(getUsersApiUri())
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+                .body("size()", Matchers.is(1));
+    }
+
 
     private URI getUsersApiUri() {
 
