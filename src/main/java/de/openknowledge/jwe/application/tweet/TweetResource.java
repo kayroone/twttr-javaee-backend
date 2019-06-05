@@ -121,7 +121,7 @@ public class TweetResource {
                               @QueryParam("id") @Min(1) @Max(10000) final Long tweetId) {
 
         User user = userRepository
-                .getReferenceByUsername(securityContext.getUserPrincipal().getName());
+                .findByUsername(securityContext.getUserPrincipal().getName());
 
         try {
             Tweet foundTweet = tweetRepository.find(tweetId);
@@ -150,7 +150,7 @@ public class TweetResource {
                                 @QueryParam("id") @Min(1) @Max(10000) final Long tweetId) {
 
         User user = userRepository
-                .getReferenceByUsername(securityContext.getUserPrincipal().getName());
+                .findByUsername(securityContext.getUserPrincipal().getName());
 
         try {
             Tweet foundTweet = tweetRepository.find(tweetId);

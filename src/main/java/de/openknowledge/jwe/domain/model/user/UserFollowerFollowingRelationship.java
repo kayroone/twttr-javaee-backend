@@ -3,6 +3,7 @@ package de.openknowledge.jwe.domain.model.user;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * An entity that represents the relationship between a Users followers and followings.
@@ -13,16 +14,18 @@ import javax.persistence.*;
 public class UserFollowerFollowingRelationship extends AbstractEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID_FOLLOWER_FOLLOWING_RELATIONSHIP")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "USER_FOLLOWER_FOLLOWING_RELATIONSHIP_ID")
     private long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "USER_ID_FOLLOWER")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_FOLLOWER_ID", referencedColumnName = "USER_ID")
     private User follower;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "USER_ID_FOLLOWING")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_FOLLOWING_ID", referencedColumnName = "USER_ID")
     private User following;
 
     @Override
@@ -33,6 +36,8 @@ public class UserFollowerFollowingRelationship extends AbstractEntity<Long> {
     public void setId(long id) {
         this.id = id;
     }
+
+    public UserFollowerFollowingRelationship() { super(); }
 
     public User getFollower() {
         return follower;

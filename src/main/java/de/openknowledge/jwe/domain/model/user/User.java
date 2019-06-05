@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -42,13 +43,13 @@ public class User extends AbstractEntity<Long> {
     @OneToMany(mappedBy = "user")
     private Set<UserRoleRelationship> roles;
 
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserFollowerFollowingRelationship> followings;
 
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserFollowerFollowingRelationship> followers;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<Tweet> tweets;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
@@ -84,18 +85,6 @@ public class User extends AbstractEntity<Long> {
     }
 
     /**
-     * Checks if a given {@link Tweet} is already liked by this {@link User}.
-     *
-     * @param tweet
-     * @return true if the {@link Tweet} is already liked or false if not.
-     */
-
-    public boolean hasLike(final Tweet tweet) {
-
-        return this.likes.contains(tweet);
-    }
-
-    /**
      * Add a {@link Tweet} to own likes list.
      *
      * @param tweet
@@ -115,6 +104,103 @@ public class User extends AbstractEntity<Long> {
     public void removeLike(final Tweet tweet) {
 
         this.likes.remove(tweet);
+    }
+
+    /**
+     * Follow this {@link User}.
+     *
+     * @param user The user that wants to follow.
+     */
+
+    public void follow(final User user) {
+
+        UserFollowerFollowingRelationship followerFollowingRelationship = new UserFollowerFollowingRelationship();
+
+        followerFollowingRelationship.setFollowing(this);
+        followerFollowingRelationship.setFollower(user);
+
+        this.followers.add(followerFollowingRelationship);
+    }
+
+    /**
+     * Unfollow this {@link User}.
+     *
+     * @param user The user that wants to unfollow.
+     */
+
+    public void unfollow(final User user) {
+
+        Optional<UserFollowerFollowingRelationship> result = this.followers
+                .stream()
+                .filter(relationship -> relationship.getFollowing().equals(this))
+                .filter(relationship -> relationship.getFollower().equals(user))
+                .findFirst();
+
+        if (result.isPresent()) {
+
+            UserFollowerFollowingRelationship relationship = result.get();
+
+            this.followers.remove(relationship);
+        }
+    }
+
+    public void addFollowing(final UserFollowerFollowingRelationship relationship) {
+
+        this.followings.add(relationship);
+    }
+
+    public void removeFollowing(final UserFollowerFollowingRelationship relationship) {
+
+        this.followings.remove(relationship);
+    }
+
+    public void addFollower(final UserFollowerFollowingRelationship relationship) {
+
+        this.followers.add(relationship);
+    }
+
+    public void removeFollower(final UserFollowerFollowingRelationship relationship) {
+
+        this.followers.remove(relationship);
+    }
+
+    public boolean hasFollower(User user) {
+
+        return getFollower().contains(user);
+    }
+
+    public boolean isFollowing(User user) {
+
+
+        return getFollowings().contains(user);
+    }
+
+    public Set<User> getFollower() {
+
+        Set<User> follower = new HashSet<>();
+
+        if (this.followers.size() > 0) {
+            this.followers
+                    .stream()
+                    .filter(relationship -> !relationship.getFollower().equals(this))
+                    .forEach(relationship -> follower.add(relationship.getFollower()));
+        }
+
+        return follower;
+    }
+
+    public Set<User> getFollowings() {
+
+        Set<User> followings = new HashSet<>();
+
+        if (this.followings.size() > 0) {
+            this.followings
+                    .stream()
+                    .filter(relationship -> !relationship.getFollowing().equals(this))
+                    .forEach(relationship -> followings.add(relationship.getFollowing()));
+        }
+
+        return followings;
     }
 
     public User() {
@@ -142,14 +228,6 @@ public class User extends AbstractEntity<Long> {
         return roles;
     }
 
-    public Set<UserFollowerFollowingRelationship> getFollowers() {
-        return followers;
-    }
-
-    public Set<UserFollowerFollowingRelationship> getFollowings() {
-        return followings;
-    }
-
     public Set<Tweet> getTweets() {
         return tweets;
     }
@@ -169,7 +247,13 @@ public class User extends AbstractEntity<Long> {
     public static class UserBuilder extends DefaultBuilder<User> {
 
         public UserBuilder() {
+
             super();
+
+            this.instance.followings = new HashSet<>();
+            this.instance.followers = new HashSet<>();
+            this.instance.likes = new HashSet<>();
+            this.instance.tweets = new HashSet<>();
         }
 
         public UserBuilder withUsername(String username) {
@@ -204,16 +288,6 @@ public class User extends AbstractEntity<Long> {
             roles.add(userRoleRelationship);
             this.instance.roles = roles;
 
-            return this;
-        }
-
-        public UserBuilder withFollowings(final Set<UserFollowerFollowingRelationship> followings) {
-            this.instance.followings = notNull(followings, "followings must not be null");
-            return this;
-        }
-
-        public UserBuilder withFollowers(final Set<UserFollowerFollowingRelationship> followers) {
-            this.instance.followers = notNull(followers, "followers must not be null");
             return this;
         }
 

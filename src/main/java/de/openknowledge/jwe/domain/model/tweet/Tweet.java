@@ -7,6 +7,7 @@ import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -102,7 +103,10 @@ public class Tweet extends AbstractEntity<Long> {
     public static class TweetBuilder extends DefaultBuilder<Tweet> {
 
         public TweetBuilder() {
+
             super();
+
+            this.instance.liker = new HashSet<>();
         }
 
         public TweetBuilder withPostTime(final LocalDateTime postTime) {
