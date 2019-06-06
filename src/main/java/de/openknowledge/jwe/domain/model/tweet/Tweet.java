@@ -41,8 +41,10 @@ public class Tweet extends AbstractEntity<Long> {
     @ManyToMany(mappedBy = "likes")
     private Set<User> liker;
 
-    @ManyToOne
-    @JoinColumn(name = "TWEET_ROOT_TWEET")
+    @OneToMany(mappedBy = "rootTweet")
+    private Set<Tweet> retweets;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Tweet rootTweet;
 
     public static TweetBuilder newBuilder() {
@@ -66,34 +68,18 @@ public class Tweet extends AbstractEntity<Long> {
         return postTime;
     }
 
-    public void setPostTime(LocalDateTime postTime) {
-        this.postTime = postTime;
-    }
-
     public String getMessage() { return message; }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
     public Set<User> getLiker() { return liker; }
 
-    public void setLiker(Set<User> liker) { this.liker = liker; }
+    public Set<Tweet> getRetweets() { return retweets; }
 
     public Tweet getRootTweet() {
         return rootTweet;
-    }
-
-    public void setRootTweet(Tweet rootTweet) {
-        this.rootTweet = rootTweet;
     }
 
     /**
@@ -107,6 +93,7 @@ public class Tweet extends AbstractEntity<Long> {
             super();
 
             this.instance.liker = new HashSet<>();
+            this.instance.retweets = new HashSet<>();
         }
 
         public TweetBuilder withPostTime(final LocalDateTime postTime) {
@@ -126,6 +113,23 @@ public class Tweet extends AbstractEntity<Long> {
 
         public TweetBuilder withLiker(final Set<User> liker) {
             this.instance.liker = notNull(liker, "Message must not be null");
+            return this;
+        }
+
+        public TweetBuilder withLike(final User liker) {
+            notNull(liker, "Message must not be null");
+            this.instance.liker.add(liker);
+            return this;
+        }
+
+        public TweetBuilder withRetweets(final Set<Tweet> retweets) {
+            this.instance.retweets = notNull(retweets, "Message must not be null");
+            return this;
+        }
+
+        public TweetBuilder withRetweet(final Tweet retweet) {
+            notNull(retweet, "Message must not be null");
+            this.instance.retweets.add(retweet);
             return this;
         }
 

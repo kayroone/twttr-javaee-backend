@@ -19,8 +19,10 @@ import org.mockito.junit.MockitoRule;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -124,7 +126,7 @@ public class TweetResourceTest {
         Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.likeTweet(1L);
-        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         verify(tweetRepository).find(any(Long.class));
         verify(userRepository).update(any(User.class));
@@ -148,12 +150,68 @@ public class TweetResourceTest {
         Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.unlikeTweet(1L);
-        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         verify(tweetRepository).find(any(Long.class));
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
         assertThat(defaultUser.getLikes().size()).isEqualTo(0);
+    }
+
+    @Test
+    public void retweetTweetShouldReturn201() throws EntityNotFoundException {
+
+        Tweet rootTweet = TestTweet.newDefaultTweet();
+        User defaultUser = rootTweet.getAuthor();
+        NewTweet newTweet = new NewTweet();
+        LocalDateTime postTime = LocalDateTime.now();
+
+        newTweet.setPostTime(postTime);
+        newTweet.setMessage("Retweeted");
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
+        Mockito.doReturn(rootTweet).when(tweetRepository).find(any(Long.class));
+
+        Response response = resource.retweetTweet(newTweet, rootTweet.getId());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
+
+        ArgumentCaptor<Tweet> captor = ArgumentCaptor.forClass(Tweet.class);
+        verify(tweetRepository).create(captor.capture());
+
+        Tweet retweet = captor.getValue();
+        assertThat(retweet.getPostTime()).isEqualTo(postTime.toString());
+        assertThat(retweet.getMessage()).isEqualTo(newTweet.getMessage());
+        assertThat(retweet.getAuthor()).isEqualTo(rootTweet.getAuthor());
+        assertThat(retweet.getRootTweet()).isEqualTo(rootTweet);
+    }
+
+    @Test
+    public void retweetTweetShouldReturn404() throws EntityNotFoundException {
+
+        Tweet rootTweet = TestTweet.newDefaultTweet();
+        User defaultUser = rootTweet.getAuthor();
+        NewTweet newTweet = new NewTweet();
+        LocalDateTime postTime = LocalDateTime.now();
+
+        newTweet.setPostTime(postTime);
+        newTweet.setMessage("Retweeted");
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
+        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(any(Long.class));
+
+        Response response = resource.retweetTweet(newTweet, 404L);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
+
+        assertThatNullPointerException()
+                .isThrownBy(() -> new EntityNotFoundException(null))
+                .withMessage("identifier must not be null")
+                .withNoCause();
     }
 }

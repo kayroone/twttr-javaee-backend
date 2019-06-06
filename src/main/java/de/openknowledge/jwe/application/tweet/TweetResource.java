@@ -131,8 +131,8 @@ public class TweetResource {
 
             userRepository.update(user);
 
-            LOG.info("Tweet {} successfully liked/unliked by {}", foundTweet, user);
-            return Response.status(Response.Status.OK).build();
+            LOG.info("Tweet {} successfully liked by {}", foundTweet, user);
+            return Response.status(Response.Status.NO_CONTENT).build();
         } catch (EntityNotFoundException e) {
             LOG.warn("Tweet with id {} not found", tweetId);
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -160,10 +160,52 @@ public class TweetResource {
 
             userRepository.update(user);
 
-            return Response.status(Response.Status.OK).build();
+            LOG.info("Tweet {} successfully unliked by {}", foundTweet, user);
+            return Response.status(Response.Status.NO_CONTENT).build();
         } catch (EntityNotFoundException e) {
             LOG.warn("Tweet with id {} not found", tweetId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @POST
+    @Path("/{id}")
+    @Transactional
+    @RolesAllowed(UserRole.USER)
+    @Operation(description = "Retweet an tweet")
+    @APIResponses({
+            @APIResponse(responseCode = "201", description = "Tweet retweeted"),
+            @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
+    public Response retweetTweet(
+            @RequestBody(description = "New retweet", required = true,
+                    content = @Content(schema = @Schema(implementation = NewTweet.class)))
+            @Valid final NewTweet newTweet, @Parameter(description = "tweet identifier")
+            @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        User user = userRepository
+                .getReferenceByUsername(securityContext.getUserPrincipal().getName());
+
+        try {
+            Tweet rootTweet = tweetRepository.find(tweetId);
+
+            Tweet tweet = new Tweet.TweetBuilder()
+                    .withMessage(newTweet.getMessage())
+                    .withAuthor(user)
+                    .withPostTime(newTweet.getPostTime())
+                    .withRootTweet(rootTweet)
+                    .build();
+
+            LOG.info("Going to create retweet with id {} by user {}", tweet.getId(), user);
+            tweetRepository.create(tweet);
+
+            TweetListDTO retweet = new TweetListDTO(tweet);
+
+            LOG.info("Retweet {} successfully created by {}", retweet, user);
+            return Response.status(Response.Status.CREATED).entity(retweet).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("Tweet with id {} not found", tweetId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
     }
 }

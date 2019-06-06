@@ -78,7 +78,7 @@ public class TweetResourceIT {
                 .body("id", Matchers.notNullValue())
                 .body("message", Matchers.equalTo(message))
                 .body("postTime", Matchers.equalTo(postTime))
-                .body("author", Matchers.notNullValue());
+                .body("authorId", Matchers.notNullValue());
     }
 
     @Test
@@ -245,6 +245,59 @@ public class TweetResourceIT {
                 .put(getSingleItemUri(1L))
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/tweets-create-retweet.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create-retweet-expected.yml")
+    public void retweetTweetShouldReturn201() {
+
+        String message = "Foobar!";
+        String postTime = "2019-01-01T12:12:12.000Z";
+
+        JSONObject tweetJSONObject = new JSONObject();
+        tweetJSONObject.put("message", message);
+        tweetJSONObject.put("postTime", postTime);
+
+        RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(tweetJSONObject.toString())
+                .when()
+                .post(getSingleItemUri(1L))
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.CREATED.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+                .body("id", Matchers.equalTo(2))
+                .body("message", Matchers.equalTo(message))
+                .body("postTime", Matchers.equalTo(postTime))
+                .body("authorId", Matchers.notNullValue())
+                .body("rootTweetId", Matchers.equalTo(1));
+    }
+
+    @Test
+    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    public void retweetTweetShouldReturn404() {
+
+        String message = "Foobar!";
+        String postTime = "2019-01-01T12:12:12.000Z";
+
+        JSONObject tweetJSONObject = new JSONObject();
+        tweetJSONObject.put("message", message);
+        tweetJSONObject.put("postTime", postTime);
+
+        RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(tweetJSONObject.toString())
+                .when()
+                .post(getSingleItemUri(403L))
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     private URI getTweetsApiUri() {

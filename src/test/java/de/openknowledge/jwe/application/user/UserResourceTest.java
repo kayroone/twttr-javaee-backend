@@ -220,7 +220,6 @@ public class UserResourceTest {
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
         Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
-
         Mockito.doThrow(EntityNotFoundException.class).when(userRepository).find(anyLong());
 
         Response response = resource.unfollowUser(userToUnfollow.getId());

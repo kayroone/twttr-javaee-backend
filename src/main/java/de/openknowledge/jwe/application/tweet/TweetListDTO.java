@@ -21,7 +21,10 @@ public class TweetListDTO extends AbstractValueObject {
     private Long id;
 
     @Schema(example = "12")
-    private Long author;
+    private Long authorId;
+
+    @Schema(example = "11")
+    private Long rootTweetId;
 
     @Schema(example = "Today is a good day!", required = true, minLength = 1, maxLength = 280)
     private String message;
@@ -41,7 +44,8 @@ public class TweetListDTO extends AbstractValueObject {
         notNull(tweet, "Tweet must not be null");
 
         this.id = tweet.getId();
-        this.author = tweet.getAuthor().getId();
+        this.authorId = tweet.getAuthor().getId();
+        this.rootTweetId = tweet.getRootTweet() != null ? tweet.getRootTweet().getId() : null;
         this.message = tweet.getMessage();
         this.postTime = tweet.getPostTime();
     }
@@ -50,9 +54,11 @@ public class TweetListDTO extends AbstractValueObject {
         return id;
     }
 
-    public Long getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
+
+    public Long getRootTweetId() { return rootTweetId; }
 
     public String getMessage() {
         return message;
@@ -64,14 +70,15 @@ public class TweetListDTO extends AbstractValueObject {
 
     @Override
     protected Object[] values() {
-        return new Object[]{id, author, message, postTime};
+        return new Object[]{id, authorId, message, postTime, rootTweetId};
     }
 
     @Override
     public String toString() {
         return "TweetListDTO{" +
                 "id=" + id +
-                ", author=" + author +
+                ", authorId=" + authorId +
+                ", rootTweetId=" + rootTweetId +
                 ", message='" + message + '\'' +
                 ", postTime=" + postTime +
                 '}';
