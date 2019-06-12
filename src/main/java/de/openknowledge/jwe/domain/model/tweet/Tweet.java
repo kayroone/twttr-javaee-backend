@@ -45,6 +45,7 @@ public class Tweet extends AbstractEntity<Long> {
     private Set<Tweet> retweets;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "TWEET_ROOT_TWEET_ID")
     private Tweet rootTweet;
 
     public static TweetBuilder newBuilder() {

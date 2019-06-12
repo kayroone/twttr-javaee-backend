@@ -214,4 +214,44 @@ public class TweetResourceTest {
                 .withMessage("identifier must not be null")
                 .withNoCause();
     }
+
+    @Test
+    public void getTweetShouldReturn200() throws EntityNotFoundException {
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        User defaultUser = defaultTweet.getAuthor();
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
+        Mockito.doReturn(defaultTweet).when(tweetRepository).find(any(Long.class));
+
+        Response response = resource.getTweet(1L);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+
+        verify(tweetRepository).find(anyLong());
+        verifyNoMoreInteractions(tweetRepository);
+    }
+
+    @Test
+    public void getTweetShouldReturn404() throws EntityNotFoundException {
+
+        Tweet rootTweet = TestTweet.newDefaultTweet();
+        User defaultUser = rootTweet.getAuthor();
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
+        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(any(Long.class));
+
+        Response response = resource.getTweet(404L);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
+
+        assertThatNullPointerException()
+                .isThrownBy(() -> new EntityNotFoundException(null))
+                .withMessage("identifier must not be null")
+                .withNoCause();
+    }
 }

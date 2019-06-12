@@ -1,5 +1,6 @@
 package de.openknowledge.jwe.application.tweet;
 
+import de.openknowledge.jwe.application.user.UserListDTO;
 import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.model.user.UserRole;
@@ -18,6 +19,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -29,6 +31,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A resource that provides access to the {@link Tweet} entity.
@@ -198,14 +202,55 @@ public class TweetResource {
             LOG.info("Going to create retweet with id {} by user {}", tweet.getId(), user);
             tweetRepository.create(tweet);
 
-            TweetListDTO retweet = new TweetListDTO(tweet);
+            TweetListDTO tweetListDTO = new TweetListDTO(tweet);
 
-            LOG.info("Retweet {} successfully created by {}", retweet, user);
-            return Response.status(Response.Status.CREATED).entity(retweet).build();
+            LOG.info("Retweet {} successfully created by {}", tweetListDTO, user);
+            return Response.status(Response.Status.CREATED).entity(tweetListDTO).build();
         } catch (EntityNotFoundException e) {
             LOG.warn("Tweet with id {} not found", tweetId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
 
+    @GET
+    @Path("/{id}")
+    @PermitAll
+    @Operation(description = "Get a tweet")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successful fetched tweet"),
+            @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
+    public Response getTweet(@Parameter(description = "tweet identifier")
+                             @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        try {
+            Tweet foundTweet = tweetRepository.find(tweetId);
+
+            // Extract liker from tweet:
+            Set<UserListDTO> liker = new HashSet<>();
+
+            for (User user : foundTweet.getLiker()) {
+                UserListDTO userListDTO = new UserListDTO(user);
+                liker.add(userListDTO);
+            }
+
+            // Extract retweeter from tweet:
+            Set<UserListDTO> retweeter = new HashSet<>();
+
+            for (Tweet tweet : foundTweet.getRetweets()) {
+                UserListDTO userListDTO = new UserListDTO(tweet.getAuthor());
+                retweeter.add(userListDTO);
+            }
+
+            TweetFullDTO tweetFullDTO = new TweetFullDTO(foundTweet);
+
+            tweetFullDTO.setLiker(liker);
+            tweetFullDTO.setRetweeter(retweeter);
+
+            LOG.info("Tweet {} successfully fetched", tweetFullDTO);
+            return Response.status(Response.Status.OK).entity(tweetFullDTO).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("Tweet with id {} not found", tweetId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

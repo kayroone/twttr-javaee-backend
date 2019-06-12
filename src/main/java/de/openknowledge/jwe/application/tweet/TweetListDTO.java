@@ -54,18 +54,40 @@ public class TweetListDTO extends AbstractValueObject {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getAuthorId() {
         return authorId;
     }
 
-    public Long getRootTweetId() { return rootTweetId; }
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
+    public Long getRootTweetId() {
+        return rootTweetId;
+    }
+
+    public void setRootTweetId(Long rootTweetId) {
+        this.rootTweetId = rootTweetId;
+    }
 
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public LocalDateTime getPostTime() {
         return postTime;
+    }
+
+    public void setPostTime(LocalDateTime postTime) {
+        this.postTime = postTime;
     }
 
     @Override

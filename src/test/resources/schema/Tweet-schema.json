@@ -6,7 +6,7 @@
     "postTime",
     "message",
     "id",
-    "author"
+    "authorId"
   ],
   "properties": {
     "postTime": {
@@ -26,10 +26,23 @@
       "title": "The Id Schema",
       "default": 0
     },
-    "author": {
+    "authorId": {
       "type": "integer",
       "title": "The Author Schema",
       "default": 0
+    },
+    "rootTweetId": {
+      "type": "integer",
+      "title": "The Author Schema",
+      "default": 0
+    },
+    "liker": {
+      "type": "array",
+      "title": "The Liker Schema",
+    },
+    "retweeter": {
+      "type": "array",
+      "title": "The Retweeter Schema",
     }
   }
 }

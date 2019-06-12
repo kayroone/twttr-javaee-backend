@@ -40,7 +40,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
     public List<Tweet> findPartial(final int offset, final int limit) {
 
-        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
+        LOG.debug("Searching for tweets with offset " + offset + " and limit " + limit);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
@@ -54,14 +54,33 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
         List<Tweet> results = query.getResultList();
 
-        LOG.debug("Located {} Tweets", results.size());
+        LOG.debug("Located {} tweets", results.size());
+
+        return results;
+    }
+
+    public List<Tweet> findByRootTweet(final Long rootTweetId) {
+
+        LOG.debug("Searching for tweets with root tweet id {}", rootTweetId);
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
+
+        Root<Tweet> from = criteriaQuery.from(Tweet.class);
+        criteriaQuery.select(from);
+        criteriaQuery.where(criteriaBuilder.equal(from.get("rootTweet"), rootTweetId));
+
+        TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
+        List<Tweet> results = query.getResultList();
+
+        LOG.debug("Located {} tweets", results.size());
 
         return results;
     }
 
     public List<Tweet> findPartialOrderByDate(final int offset, final int limit) {
 
-        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
+        LOG.debug("Searching for tweets with offset " + offset + " and limit " + limit);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
@@ -76,14 +95,14 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
         List<Tweet> results = query.getResultList();
 
-        LOG.debug("Located {} Tweets", results.size());
+        LOG.debug("Located {} tweets", results.size());
 
         return results;
     }
 
     public List<Tweet> findPartialByIdsOrderByDate(final int offset, final int limit, final List<Long> ids) {
 
-        LOG.debug("Searching for Tweets with offset " + offset + " and limit " + limit);
+        LOG.debug("Searching for tweets with offset " + offset + " and limit " + limit);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tweet> criteriaQuery = criteriaBuilder.createQuery(Tweet.class);
@@ -99,7 +118,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
         List<Tweet> results = query.getResultList();
 
-        LOG.debug("Located {} Tweets", results.size());
+        LOG.debug("Located {} tweets", results.size());
 
         return results;
     }

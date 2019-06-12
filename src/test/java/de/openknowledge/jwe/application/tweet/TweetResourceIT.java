@@ -6,6 +6,11 @@ import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import de.openknowledge.jwe.IntegrationTestUtil;
+import de.openknowledge.jwe.application.user.UserListDTO;
+import de.openknowledge.jwe.domain.model.tweet.TestTweet;
+import de.openknowledge.jwe.domain.model.tweet.Tweet;
+import de.openknowledge.jwe.domain.model.user.TestUser;
+import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;
@@ -29,6 +34,8 @@ import java.net.URI;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -228,7 +235,7 @@ public class TweetResourceIT {
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .when()
-                .delete(getSingleItemUri(403L))
+                .delete(getSingleItemUri(404L))
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -295,7 +302,59 @@ public class TweetResourceIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(tweetJSONObject.toString())
                 .when()
-                .post(getSingleItemUri(403L))
+                .post(getSingleItemUri(404L))
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
+    public void getTweetShouldReturn200() {
+
+        User defaultUser = TestUser.newDefaultUser();
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        TweetFullDTO tweetFullDTO = new TweetFullDTO(defaultTweet);
+
+        Set<UserListDTO> liker = new HashSet<>();
+        liker.add(new UserListDTO(defaultUser));
+
+        Set<UserListDTO> retweeter = new HashSet<>();
+        retweeter.add(new UserListDTO(defaultUser));
+
+        tweetFullDTO.setLiker(liker);
+        tweetFullDTO.setRetweeter(retweeter);
+
+        RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(getSingleItemUri(2L))
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+                .body("id", Matchers.equalTo(2))
+                .body("message", Matchers.equalTo(tweetFullDTO.getMessage()))
+                .body("postTime", Matchers.equalTo(tweetFullDTO.getPostTime()))
+                .body("authorId", Matchers.equalTo(tweetFullDTO.getAuthorId()))
+                .body("rootTweetId", Matchers.equalTo(1))
+                .body("liker", Matchers.equalTo(tweetFullDTO.getLiker()))
+                .body("retweeter", Matchers.equalTo(tweetFullDTO.getRetweeter()));
+    }
+
+    @Test
+    @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
+    public void getTweetShouldReturn404() {
+
+        RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(getSingleItemUri(404L))
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
