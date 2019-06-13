@@ -87,7 +87,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
         Root<Tweet> from = criteriaQuery.from(Tweet.class);
         criteriaQuery.select(from);
-        criteriaQuery.orderBy(criteriaBuilder.desc(from.get("date")));
+        criteriaQuery.orderBy(criteriaBuilder.desc(from.get("postTime")));
 
         TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);
         query.setFirstResult(offset);
@@ -109,7 +109,7 @@ public class TweetRepository extends AbstractRepository<Tweet> implements Serial
 
         Root<Tweet> from = criteriaQuery.from(Tweet.class);
         criteriaQuery.select(from);
-        criteriaQuery.orderBy(criteriaBuilder.desc(from.get("date")));
+        criteriaQuery.orderBy(criteriaBuilder.desc(from.get("postTime")));
         criteriaQuery.where(from.get("id").in(ids));
 
         TypedQuery<Tweet> query = entityManager.createQuery(criteriaQuery);

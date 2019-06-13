@@ -32,7 +32,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A resource that provides access to the {@link Tweet} entity.
@@ -309,6 +311,27 @@ public class TweetResource {
         } catch (EntityNotFoundException e) {
             LOG.warn("Tweet with id {} not found", tweetId);
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/")
+    @PermitAll
+    @Operation(description = "Get the main timeline consisting of the latest tweets")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successful fetched latest tweets list"),
+            @APIResponse(responseCode = "204", description = "No tweets available yet")})
+    public Response getMainTimeLine() {
+
+        List<Tweet> tweets = tweetRepository.findPartialOrderByDate(0, 100);
+        List<TweetListDTO> timelineDTOs = tweets.stream().map(TweetListDTO::new).collect(Collectors.toList());
+
+        LOG.info("Main timeline tweets list {} successfully fetched", timelineDTOs);
+
+        if (tweets.size() > 0) {
+            return Response.status(Response.Status.OK).entity(timelineDTOs).build();
+        } else {
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
     }
 }

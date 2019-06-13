@@ -20,6 +20,8 @@ import org.mockito.junit.MockitoRule;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
@@ -61,7 +63,7 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doReturn(defaultTweet).when(tweetRepository).create(any(Tweet.class));
 
         Response response = resource.createTweet(newTweet);
@@ -128,7 +130,7 @@ public class TweetResourceTest {
         Response response = resource.likeTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
-        verify(tweetRepository).find(any(Long.class));
+        verify(tweetRepository).find(anyLong());
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
@@ -152,7 +154,7 @@ public class TweetResourceTest {
         Response response = resource.unlikeTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
-        verify(tweetRepository).find(any(Long.class));
+        verify(tweetRepository).find(anyLong());
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
@@ -173,8 +175,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doReturn(rootTweet).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(rootTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.retweetTweet(newTweet, rootTweet.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
@@ -203,8 +205,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.retweetTweet(newTweet, 404L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
@@ -224,8 +226,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -243,8 +245,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweet(404L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
@@ -268,8 +270,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetLiker(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -291,8 +293,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(tweetAuthor.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(tweetAuthor).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(tweetAuthor).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetLiker(404L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
@@ -316,8 +318,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetRetweeter(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -339,8 +341,8 @@ public class TweetResourceTest {
         TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(any(Long.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetRetweeter(404L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
@@ -349,5 +351,49 @@ public class TweetResourceTest {
                 .isThrownBy(() -> new EntityNotFoundException(null))
                 .withMessage("identifier must not be null")
                 .withNoCause();
+    }
+
+    @Test
+    public void getMainTimelineShouldReturn200() {
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        List<Tweet> timelineTweets = new ArrayList<>();
+
+        timelineTweets.add(defaultTweet);
+
+        User defaultUser = defaultTweet.getAuthor();
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialOrderByDate(anyInt(), anyInt());
+
+        Response response = resource.getMainTimeLine();
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+
+        verify(tweetRepository).findPartialOrderByDate(anyInt(), anyInt());
+        verifyNoMoreInteractions(tweetRepository);
+    }
+
+    @Test
+    public void getMainTimelineShouldReturn204() {
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        List<Tweet> timelineTweets = new ArrayList<>();
+
+        User defaultUser = defaultTweet.getAuthor();
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialOrderByDate(anyInt(), anyInt());
+
+        Response response = resource.getMainTimeLine();
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
+
+        verify(tweetRepository).findPartialOrderByDate(anyInt(), anyInt());
+        verifyNoMoreInteractions(tweetRepository);
     }
 }

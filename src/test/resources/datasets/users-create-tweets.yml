@@ -20,7 +20,3 @@ TAB_USER:
   - USER_ID: 2
     USER_PASSWORD: foobar
     USER_NAME: barfoo
-
-TAB_USER_TWEET_LIKE:
-  - USER_ID: 1
-    TWEET_ID: 2

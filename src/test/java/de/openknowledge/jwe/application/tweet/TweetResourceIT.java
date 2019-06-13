@@ -328,7 +328,6 @@ public class TweetResourceIT {
         tweetFullDTO.setRetweeter(retweeter);
 
         RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
                 .get(getSingleItemUri(2L))
@@ -352,12 +351,43 @@ public class TweetResourceIT {
     public void getTweetShouldReturn404() {
 
         RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
                 .get(getSingleItemUri(404L))
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
+    public void getMainTimelineShouldReturn200() {
+
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(getSingleItemUri(2L))
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("size()", Matchers.equalTo(3));
+    }
+
+    @Test
+    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    public void getMainTimelineShouldReturn204() {
+
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(getSingleItemUri(2L))
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode())
+                .body("size()", Matchers.equalTo(0));
     }
 
     private URI getTweetsApiUri() {

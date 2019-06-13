@@ -1,7 +1,10 @@
 package de.openknowledge.jwe.application.user;
 
+import de.openknowledge.jwe.application.tweet.TweetListDTO;
+import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.model.user.UserRole;
+import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.domain.repository.UserRepository;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
@@ -24,7 +27,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path(Constants.USERS_API_URI)
@@ -35,6 +40,9 @@ public class UserResource {
 
     @Inject
     private UserRepository userRepository;
+
+    @Inject
+    private TweetRepository tweetRepository;
 
     @Context
     private SecurityContext securityContext;
@@ -136,6 +144,52 @@ public class UserResource {
 
             LOG.info("User with id {} successfully unfollowed by user {}", userId, user);
             return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("User with id {} not found", userId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}")
+    @PermitAll
+    @Operation(description = "Get a users timeline consisting of the latest user tweets")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "User timeline found",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "204", description = "User timeline empty",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "404", description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
+    })
+    public Response getTimeLineForUser(@Parameter(description = "The Id of the user the timeline will be fetched for")
+                                       @Min(1) @Max(10000) @PathParam("id") final Long userId,
+                                       @Min(0) @Max(10000) @DefaultValue("0") @QueryParam("offset") int offset,
+                                       @Min(0) @Max(10000) @DefaultValue("100") @QueryParam("limit") int limit) {
+
+        try {
+            User user = userRepository.find(userId);
+            Set<User> followings = user.getFollowings();
+
+            // Also add own user to add own timeline tweets:
+            followings.add(user);
+
+            List<Long> tweetIds = new ArrayList<>();
+            for (User follower : followings) {
+                follower.getTweets().forEach(tweet -> tweetIds.add(tweet.getId()));
+            }
+
+            List<Tweet> timeline = tweetRepository.findPartialByIdsOrderByDate(offset, limit, tweetIds);
+            List<TweetListDTO> timelineDTOs = timeline.stream().map(TweetListDTO::new).collect(Collectors.toList());
+
+            LOG.info("Successfully fetched users {} timeline {}", user, timelineDTOs);
+
+            if (timeline.size() > 0) {
+                return Response.status(Response.Status.OK).entity(timelineDTOs).build();
+            } else {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
+
         } catch (EntityNotFoundException e) {
             LOG.warn("User with id {} not found", userId);
             return Response.status(Response.Status.NOT_FOUND).build();

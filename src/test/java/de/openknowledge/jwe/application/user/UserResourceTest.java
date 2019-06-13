@@ -1,8 +1,11 @@
 package de.openknowledge.jwe.application.user;
 
+import de.openknowledge.jwe.domain.model.tweet.TestTweet;
+import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.TestUser;
 import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.domain.model.user.UserFollowerFollowingRelationship;
+import de.openknowledge.jwe.domain.repository.TweetRepository;
 import de.openknowledge.jwe.domain.repository.UserRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
 import de.openknowledge.jwe.infrastructure.security.TestPrincipal;
@@ -35,6 +38,9 @@ public class UserResourceTest {
     private UserRepository userRepository = new UserRepository();
 
     @Mock
+    private TweetRepository tweetRepository = new TweetRepository();
+
+    @Mock
     private SecurityContext securityContext;
 
     @InjectMocks
@@ -49,14 +55,14 @@ public class UserResourceTest {
 
         users.add(defaultUser);
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(any(String.class));
-        Mockito.doReturn(users).when(userRepository).search(any(String.class), any(Integer.class), any(Integer.class));
+        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(users).when(userRepository).search(anyString(), anyInt(), anyInt());
 
         Response response = resource.searchUser(keyword);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository).search(captor.capture(), any(Integer.class), any(Integer.class));
+        verify(userRepository).search(captor.capture(), anyInt(), anyInt());
         verifyNoMoreInteractions(userRepository);
 
         assertThat(keyword).isEqualTo(captor.getValue());
@@ -71,7 +77,7 @@ public class UserResourceTest {
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository).search(captor.capture(), any(Integer.class), any(Integer.class));
+        verify(userRepository).search(captor.capture(), anyInt(), anyInt());
         verifyNoMoreInteractions(userRepository);
 
         assertThat(keyword).isEqualTo(captor.getValue());
@@ -229,5 +235,67 @@ public class UserResourceTest {
                 .withMessage("identifier must not be null")
                 .withNoCause();
         assertThat(userToUnfollow.getFollower().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void getTimelineForUserShouldReturn200() throws EntityNotFoundException {
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        User defaultUser = defaultTweet.getAuthor();
+
+        List<Tweet> timelineTweets = new ArrayList<>();
+        timelineTweets.add(defaultTweet);
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+        Mockito.doReturn(defaultUser).when(userRepository).find(anyLong());
+        Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
+
+        Response response = resource.getTimeLineForUser(defaultUser.getId(), 0, 100);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+
+        verify(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
+        verifyNoMoreInteractions(tweetRepository);
+    }
+
+    @Test
+    public void getTimelineForUserShouldReturn204() throws EntityNotFoundException {
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        User defaultUser = defaultTweet.getAuthor();
+
+        List<Tweet> timelineTweets = new ArrayList<>();
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+        Mockito.doReturn(defaultUser).when(userRepository).find(anyLong());
+        Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
+
+        Response response = resource.getTimeLineForUser(defaultUser.getId(), 0, 100);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
+
+        verify(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
+        verifyNoMoreInteractions(tweetRepository);
+    }
+
+    @Test
+    public void getTimelineForUserShouldReturn404() throws EntityNotFoundException {
+
+        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        User defaultUser = defaultTweet.getAuthor();
+
+        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+
+        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
+        Mockito.doThrow(EntityNotFoundException.class).when(userRepository).find(anyLong());
+
+        Response response = resource.getTimeLineForUser(defaultUser.getId(), 0, 100);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
+        assertThatNullPointerException()
+                .isThrownBy(() -> new EntityNotFoundException(null))
+                .withMessage("identifier must not be null")
+                .withNoCause();
     }
 }

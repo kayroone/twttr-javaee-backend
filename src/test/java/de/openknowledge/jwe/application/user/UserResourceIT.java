@@ -206,6 +206,55 @@ public class UserResourceIT {
                 .body("size()", Matchers.is(1));
     }
 
+    @Test
+    @DataSet(value = "datasets/users-create-tweets.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create-tweets.yml")
+    public void getTimelineForUserShouldReturn200() {
+
+        RestAssured.given()
+                .param("offset", 0)
+                .param("limit", 100)
+                .when()
+                .get(getSingleItemUri(1L))
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void getTimelineForUserShouldReturn204ForNoTweetsFound() {
+
+        RestAssured.given()
+                .param("offset", 0)
+                .param("limit", 100)
+                .when()
+                .get(getSingleItemUri(1L))
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create-empty.yml")
+    public void getTimelineForUserShouldReturn404ForUserNotFound() {
+
+        RestAssured.given()
+                .param("offset", 0)
+                .param("limit", 100)
+                .when()
+                .get(getSingleItemUri(1L))
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    private URI getSingleItemUri(final Long userId) {
+
+        return UriBuilder.fromUri(getUsersApiUri()).path("{id}").build(userId);
+    }
 
     private URI getUsersApiUri() {
 
