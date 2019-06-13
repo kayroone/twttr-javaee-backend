@@ -53,18 +53,18 @@ public class TweetResourceTest {
     @Test
     public void createTweetShouldReturn201() {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
         NewTweet newTweet = new NewTweet();
 
-        newTweet.setPostTime(defaultTweet.getPostTime());
-        newTweet.setMessage(defaultTweet.getMessage());
+        newTweet.setPostTime(tweet1.getPostTime());
+        newTweet.setMessage(tweet1.getMessage());
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(defaultTweet).when(tweetRepository).create(any(Tweet.class));
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(tweet1).when(tweetRepository).create(any(Tweet.class));
 
         Response response = resource.createTweet(newTweet);
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
@@ -74,22 +74,22 @@ public class TweetResourceTest {
         verifyNoMoreInteractions(tweetRepository);
 
         Tweet createdTweet = captor.getValue();
-        assertThat(createdTweet.getPostTime()).isEqualTo(defaultTweet.getPostTime());
-        assertThat(createdTweet.getMessage()).isEqualTo(defaultTweet.getMessage());
-        assertThat(createdTweet.getAuthor()).isEqualTo(defaultTweet.getAuthor());
+        assertThat(createdTweet.getPostTime()).isEqualTo(tweet1.getPostTime());
+        assertThat(createdTweet.getMessage()).isEqualTo(tweet1.getMessage());
+        assertThat(createdTweet.getAuthor()).isEqualTo(tweet1.getAuthor());
     }
 
     @Test
     public void deleteTweetShouldReturn204() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
 
         Mockito.doNothing().when(tweetRepository).delete(any(Tweet.class));
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
         Response response = resource.deleteTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
@@ -102,9 +102,9 @@ public class TweetResourceTest {
     @Test
     public void deleteTweetShouldReturn404ForEntityNotFoundException() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
         Mockito.doThrow(new EntityNotFoundException(-1L)).when(tweetRepository).find(anyLong());
@@ -119,13 +119,13 @@ public class TweetResourceTest {
     @Test
     public void likeTweetShouldReturn200() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = TestUser.newDefaultUser();
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = TestUser.newDefaultUser();
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).findByUsername(anyString());
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).findByUsername(anyString());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
         Response response = resource.likeTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
@@ -134,22 +134,22 @@ public class TweetResourceTest {
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
-        assertThat(defaultUser.getLikes().size()).isEqualTo(1);
+        assertThat(user1.getLikes().size()).isEqualTo(1);
     }
 
     @Test
     public void unlikeTweetShouldReturn200() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
 
-        User defaultUser = TestUser.newDefaultUser();
-        defaultUser.addLike(defaultTweet);
+        User user1 = TestUser.newDefaultUser();
+        user1.addLike(tweet1);
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).findByUsername(anyString());
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).findByUsername(anyString());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
         Response response = resource.unlikeTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
@@ -158,27 +158,28 @@ public class TweetResourceTest {
         verify(userRepository).update(any(User.class));
         verifyNoMoreInteractions(tweetRepository);
 
-        assertThat(defaultUser.getLikes().size()).isEqualTo(0);
+        assertThat(user1.getLikes().size()).isEqualTo(0);
     }
 
     @Test
     public void retweetTweetShouldReturn201() throws EntityNotFoundException {
 
-        Tweet rootTweet = TestTweet.newDefaultTweet();
-        User defaultUser = rootTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
+
         NewTweet newTweet = new NewTweet();
         LocalDateTime postTime = LocalDateTime.now();
 
         newTweet.setPostTime(postTime);
         newTweet.setMessage("Retweeted");
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(rootTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
-        Response response = resource.retweetTweet(newTweet, rootTweet.getId());
+        Response response = resource.retweetTweet(newTweet, tweet1.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
         ArgumentCaptor<Tweet> captor = ArgumentCaptor.forClass(Tweet.class);
@@ -187,25 +188,26 @@ public class TweetResourceTest {
         Tweet retweet = captor.getValue();
         assertThat(retweet.getPostTime()).isEqualTo(postTime.toString());
         assertThat(retweet.getMessage()).isEqualTo(newTweet.getMessage());
-        assertThat(retweet.getAuthor()).isEqualTo(rootTweet.getAuthor());
-        assertThat(retweet.getRootTweet()).isEqualTo(rootTweet);
+        assertThat(retweet.getAuthor()).isEqualTo(tweet1.getAuthor());
+        assertThat(retweet.getRootTweet()).isEqualTo(tweet1);
     }
 
     @Test
     public void retweetTweetShouldReturn404() throws EntityNotFoundException {
 
-        Tweet rootTweet = TestTweet.newDefaultTweet();
-        User defaultUser = rootTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
+
         NewTweet newTweet = new NewTweet();
         LocalDateTime postTime = LocalDateTime.now();
 
         newTweet.setPostTime(postTime);
         newTweet.setMessage("Retweeted");
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.retweetTweet(newTweet, 404L);
@@ -220,14 +222,9 @@ public class TweetResourceTest {
     @Test
     public void getTweetShouldReturn200() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweet(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -239,13 +236,6 @@ public class TweetResourceTest {
     @Test
     public void getTweetShouldReturn404() throws EntityNotFoundException {
 
-        Tweet rootTweet = TestTweet.newDefaultTweet();
-        User defaultUser = rootTweet.getAuthor();
-
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweet(404L);
@@ -260,18 +250,13 @@ public class TweetResourceTest {
     @Test
     public void getTweetLikerShouldReturn200() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
 
         // Liker:
-        User tweetLiker = TestUser.newDefaultUserWithId("liker", 2L);
-        defaultTweet.addLiker(tweetLiker);
+        User user1 = TestUser.newDefaultUserWithId("liker", 2L);
+        tweet1.addLiker(user1);
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetLiker(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -283,17 +268,12 @@ public class TweetResourceTest {
     @Test
     public void getTweetLikerShouldReturn404() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User tweetAuthor = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
 
         // Liker:
-        User tweetLiker = TestUser.newDefaultUserWithId("liker", 2L);
-        defaultTweet.addLiker(tweetLiker);
+        User user1 = TestUser.newDefaultUserWithId("liker", 2L);
+        tweet1.addLiker(user1);
 
-        TestPrincipal testPrincipal = new TestPrincipal(tweetAuthor.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(tweetAuthor).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetLiker(404L);
@@ -308,18 +288,13 @@ public class TweetResourceTest {
     @Test
     public void getTweetRetweeterShouldReturn200() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
 
         // Retweet:
-        Tweet retweet = TestTweet.newDefaultTweetWithId(2L);
-        defaultTweet.addRetweet(retweet);
+        Tweet tweet2 = TestTweet.newDefaultTweetWithId(2L);
+        tweet1.addRetweet(tweet2);
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(defaultTweet).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetRetweeter(1L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -331,17 +306,12 @@ public class TweetResourceTest {
     @Test
     public void getTweetRetweeterShouldReturn404() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
 
         // Retweet:
-        Tweet retweet = TestTweet.newDefaultTweetWithId(2L);
-        defaultTweet.addRetweet(retweet);
+        Tweet tweet2 = TestTweet.newDefaultTweetWithId(2L);
+        tweet1.addRetweet(tweet2);
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
         Response response = resource.getTweetRetweeter(404L);
@@ -356,17 +326,11 @@ public class TweetResourceTest {
     @Test
     public void getMainTimelineShouldReturn200() {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
         List<Tweet> timelineTweets = new ArrayList<>();
 
-        timelineTweets.add(defaultTweet);
+        timelineTweets.add(tweet1);
 
-        User defaultUser = defaultTweet.getAuthor();
-
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialOrderByDate(anyInt(), anyInt());
 
         Response response = resource.getMainTimeLine();
@@ -379,15 +343,8 @@ public class TweetResourceTest {
     @Test
     public void getMainTimelineShouldReturn204() {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
         List<Tweet> timelineTweets = new ArrayList<>();
 
-        User defaultUser = defaultTweet.getAuthor();
-
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialOrderByDate(anyInt(), anyInt());
 
         Response response = resource.getMainTimeLine();

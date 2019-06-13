@@ -60,7 +60,7 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
     @ExpectedDataSet(value = "datasets/tweets-create-expected.yml")
     public void createTweetShouldReturn201() {
@@ -89,9 +89,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForEmptyRequestBody() {
 
         JSONObject tweetJSONObject = new JSONObject();
@@ -110,9 +110,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForMissingMessage() {
 
         LocalDateTime postTime = LocalDateTime.now();
@@ -134,9 +134,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForMissingPostTime() {
 
         String message = "Today is a good day!";
@@ -158,9 +158,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForTooShortMessage() {
 
         String message = "";
@@ -184,9 +184,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForTooLongMessage() {
 
         String message = "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
@@ -285,9 +285,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void retweetTweetShouldReturn404() {
 
         String message = "Foobar!";
@@ -375,9 +375,9 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
+    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create.yml")
+    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void getMainTimelineShouldReturn204() {
 
         RestAssured.given()

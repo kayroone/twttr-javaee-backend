@@ -251,9 +251,92 @@ public class UserResourceIT {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    @Test
+    @DataSet(value = "datasets/users-update-expected-follow.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-update-expected-follow.yml")
+    public void getFollowerForUserShouldReturn200() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUriWithPath("follower", 2L))
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void getFollowerForUserShouldReturn204ForNoFollowerFound() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUriWithPath("follower", 1L))
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create-empty.yml")
+    public void getFollowerForUserShouldReturn404ForUserNotFound() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUriWithPath("follower", 1L))
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-update-expected-follow.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-update-expected-follow.yml")
+    public void getFollowingForUserShouldReturn200() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUriWithPath("following", 1L))
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void getFollowingForUserShouldReturn204ForNoFollowerFound() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUriWithPath("following", 1L))
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create-empty.yml")
+    public void getFollowingForUserShouldReturn404ForUserNotFound() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUriWithPath("following", 1L))
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
     private URI getSingleItemUri(final Long userId) {
 
         return UriBuilder.fromUri(getUsersApiUri()).path("{id}").build(userId);
+    }
+
+    private URI getSingleItemUriWithPath(final String path, final Long userId) {
+
+        return UriBuilder.fromUri(getUsersApiUri()).path(path).path("{id}").build(userId);
     }
 
     private URI getUsersApiUri() {

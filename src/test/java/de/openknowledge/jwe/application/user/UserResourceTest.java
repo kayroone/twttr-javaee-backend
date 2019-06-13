@@ -50,12 +50,11 @@ public class UserResourceTest {
     public void searchUserShouldReturn200() {
 
         String keyword = "tes";
-        User defaultUser = TestUser.newDefaultUser();
+        User user1 = TestUser.newDefaultUser();
         List<User> users = new ArrayList<>();
 
-        users.add(defaultUser);
+        users.add(user1);
 
-        Mockito.doReturn(defaultUser).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doReturn(users).when(userRepository).search(anyString(), anyInt(), anyInt());
 
         Response response = resource.searchUser(keyword);
@@ -86,173 +85,170 @@ public class UserResourceTest {
     @Test
     public void followUserShouldReturn204() throws EntityNotFoundException {
 
-        User user = TestUser.newDefaultUser();
-        User userToFollow = TestUser.newDefaultUserWithId("foo", 2L);
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId("foo", 2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
-        relationship.setFollower(user);
-        relationship.setFollowing(userToFollow);
+        relationship.setFollower(user1);
+        relationship.setFollowing(user2);
 
-        user.addFollowing(relationship);
+        user1.addFollowing(relationship);
 
-        TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(userToFollow).when(userRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user2).when(userRepository).find(anyLong());
 
-        Response response = resource.followUser(userToFollow.getId());
+        Response response = resource.followUser(user2.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).update(captor.capture());
 
-        assertThat(userToFollow.getFollower().size()).isEqualTo(1);
-        assertThat(userToFollow.getFollower().contains(user)).isTrue();
-        assertThat(user.getFollowings().size()).isEqualTo(1);
-        assertThat(user.getFollowings().contains(userToFollow)).isTrue();
+        assertThat(user2.getFollower().size()).isEqualTo(1);
+        assertThat(user2.getFollower().contains(user1)).isTrue();
+        assertThat(user1.getFollowings().size()).isEqualTo(1);
+        assertThat(user1.getFollowings().contains(user2)).isTrue();
     }
 
     @Test
     public void followUserShouldReturn202() throws EntityNotFoundException {
 
-        User user = TestUser.newDefaultUser();
-        User userToFollow = TestUser.newDefaultUserWithId("foo", 2L);
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId("foo", 2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
-        relationship.setFollower(user);
-        relationship.setFollowing(userToFollow);
+        relationship.setFollower(user1);
+        relationship.setFollowing(user2);
 
-        user.addFollowing(relationship);
-        userToFollow.addFollower(relationship);
+        user1.addFollowing(relationship);
+        user2.addFollower(relationship);
 
-        TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(userToFollow).when(userRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user2).when(userRepository).find(anyLong());
 
-        Response response = resource.followUser(userToFollow.getId());
+        Response response = resource.followUser(user2.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
 
-        assertThat(userToFollow.getFollower().size()).isEqualTo(1);
-        assertThat(userToFollow.getFollower().contains(user)).isTrue();
-        assertThat(user.getFollowings().size()).isEqualTo(1);
-        assertThat(user.getFollowings().contains(userToFollow)).isTrue();
+        assertThat(user2.getFollower().size()).isEqualTo(1);
+        assertThat(user2.getFollower().contains(user1)).isTrue();
+        assertThat(user1.getFollowings().size()).isEqualTo(1);
+        assertThat(user1.getFollowings().contains(user2)).isTrue();
     }
 
     @Test
     public void followUserShouldReturn404() throws EntityNotFoundException {
 
-        User user = TestUser.newDefaultUser();
-        User userToFollow = TestUser.newDefaultUserWithId(2L);
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId(2L);
 
-        TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
 
         Mockito.doThrow(EntityNotFoundException.class).when(userRepository).find(anyLong());
 
-        Response response = resource.followUser(userToFollow.getId());
+        Response response = resource.followUser(user2.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
         assertThatNullPointerException()
                 .isThrownBy(() -> new EntityNotFoundException(null))
                 .withMessage("identifier must not be null")
                 .withNoCause();
-        assertThat(userToFollow.getFollower().size()).isEqualTo(0);
+        assertThat(user2.getFollower().size()).isEqualTo(0);
     }
 
     @Test
     public void unfollowUserShouldReturn204() throws EntityNotFoundException {
 
-        User user = TestUser.newDefaultUser();
-        User userToUnfollow = TestUser.newDefaultUserWithId(2L);
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId(2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
-        relationship.setFollower(user);
-        relationship.setFollowing(userToUnfollow);
+        relationship.setFollower(user1);
+        relationship.setFollowing(user2);
 
-        user.addFollowing(relationship);
-        userToUnfollow.addFollower(relationship);
+        user1.addFollowing(relationship);
+        user2.addFollower(relationship);
 
-        TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(userToUnfollow).when(userRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user2).when(userRepository).find(anyLong());
 
-        Response response = resource.unfollowUser(userToUnfollow.getId());
+        Response response = resource.unfollowUser(user2.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).update(captor.capture());
 
-        assertThat(userToUnfollow.getFollower().size()).isEqualTo(0);
+        assertThat(user2.getFollower().size()).isEqualTo(0);
     }
 
     @Test
     public void unfollowUserShouldReturn202() throws EntityNotFoundException {
 
-        User user = TestUser.newDefaultUser();
-        User userToUnfollow = TestUser.newDefaultUserWithId(2L);
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId(2L);
 
-        TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
-        Mockito.doReturn(userToUnfollow).when(userRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user2).when(userRepository).find(anyLong());
 
-        Response response = resource.unfollowUser(userToUnfollow.getId());
+        Response response = resource.unfollowUser(user2.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
 
-        assertThat(userToUnfollow.getFollower().size()).isEqualTo(0);
+        assertThat(user2.getFollower().size()).isEqualTo(0);
     }
 
     @Test
     public void unfollowUserShouldReturn404() throws EntityNotFoundException {
 
-        User user = TestUser.newDefaultUser();
-        User userToUnfollow = TestUser.newDefaultUserWithId(2L);
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId(2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
-        relationship.setFollower(user);
-        relationship.setFollowing(userToUnfollow);
+        relationship.setFollower(user1);
+        relationship.setFollowing(user2);
 
-        user.addFollowing(relationship);
-        userToUnfollow.addFollower(relationship);
+        user1.addFollowing(relationship);
+        user2.addFollower(relationship);
 
-        TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
+        TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(user).when(userRepository).getReferenceByUsername(anyString());
+        Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doThrow(EntityNotFoundException.class).when(userRepository).find(anyLong());
 
-        Response response = resource.unfollowUser(userToUnfollow.getId());
+        Response response = resource.unfollowUser(user2.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
         assertThatNullPointerException()
                 .isThrownBy(() -> new EntityNotFoundException(null))
                 .withMessage("identifier must not be null")
                 .withNoCause();
-        assertThat(userToUnfollow.getFollower().size()).isEqualTo(1);
+        assertThat(user2.getFollower().size()).isEqualTo(1);
     }
 
     @Test
     public void getTimelineForUserShouldReturn200() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
 
         List<Tweet> timelineTweets = new ArrayList<>();
-        timelineTweets.add(defaultTweet);
+        timelineTweets.add(tweet1);
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).find(anyLong());
         Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
 
-        Response response = resource.getTimeLineForUser(defaultUser.getId(), 0, 100);
+        Response response = resource.getTimeLineForUser(user1.getId(), 0, 100);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         verify(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
@@ -262,18 +258,15 @@ public class UserResourceTest {
     @Test
     public void getTimelineForUserShouldReturn204() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
 
         List<Tweet> timelineTweets = new ArrayList<>();
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
-        Mockito.doReturn(defaultUser).when(userRepository).find(anyLong());
+        Mockito.doReturn(user1).when(userRepository).find(anyLong());
         Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
 
-        Response response = resource.getTimeLineForUser(defaultUser.getId(), 0, 100);
+        Response response = resource.getTimeLineForUser(user1.getId(), 0, 100);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
         verify(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), any(List.class));
@@ -283,19 +276,88 @@ public class UserResourceTest {
     @Test
     public void getTimelineForUserShouldReturn404() throws EntityNotFoundException {
 
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-        User defaultUser = defaultTweet.getAuthor();
+        Tweet tweet1 = TestTweet.newDefaultTweet();
+        User user1 = tweet1.getAuthor();
 
-        TestPrincipal testPrincipal = new TestPrincipal(defaultUser.getUsername());
-
-        Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
         Mockito.doThrow(EntityNotFoundException.class).when(userRepository).find(anyLong());
 
-        Response response = resource.getTimeLineForUser(defaultUser.getId(), 0, 100);
+        Response response = resource.getTimeLineForUser(user1.getId(), 0, 100);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
         assertThatNullPointerException()
                 .isThrownBy(() -> new EntityNotFoundException(null))
                 .withMessage("identifier must not be null")
                 .withNoCause();
+    }
+
+    @Test
+    public void getFollowerForUserShouldReturn200() throws EntityNotFoundException {
+
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId("foo", 2L);
+
+        UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
+        relationship.setFollower(user2);
+        relationship.setFollowing(user1);
+
+        user1.addFollower(relationship);
+
+        Mockito.doReturn(user1).when(userRepository).find(anyLong());
+
+        Response response = resource.getFollower(user2.getId());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+
+        verify(userRepository).find(anyLong());
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void getFollowerForUserShouldReturn204() throws EntityNotFoundException {
+
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId("foo", 2L);
+
+        Mockito.doReturn(user1).when(userRepository).find(anyLong());
+
+        Response response = resource.getFollower(user2.getId());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
+
+        verify(userRepository).find(anyLong());
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void getFollowingsForUserShouldReturn200() throws EntityNotFoundException {
+
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId("foo", 2L);
+
+        UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
+        relationship.setFollower(user2);
+        relationship.setFollowing(user1);
+
+        user2.addFollowing(relationship);
+
+        Mockito.doReturn(user2).when(userRepository).find(anyLong());
+
+        Response response = resource.getFollowing(user2.getId());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+
+        verify(userRepository).find(anyLong());
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    public void getFollowingsForUserShouldReturn204() throws EntityNotFoundException {
+
+        User user1 = TestUser.newDefaultUser();
+        User user2 = TestUser.newDefaultUserWithId("foo", 2L);
+
+        Mockito.doReturn(user1).when(userRepository).find(anyLong());
+
+        Response response = resource.getFollowing(user2.getId());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
+
+        verify(userRepository).find(anyLong());
+        verifyNoMoreInteractions(userRepository);
     }
 }

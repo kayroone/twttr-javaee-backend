@@ -195,4 +195,74 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+    @GET
+    @Path("/follower/{id}")
+    @PermitAll
+    @Operation(description = "Get the follower list of a user")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "User follower list found",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "204", description = "User follower list empty",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "404", description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
+    })
+    public Response getFollower(@Parameter(description = "The Id of the user the follower list will be fetched for")
+                                @Min(1) @Max(10000) @PathParam("id") final Long userId) {
+
+        try {
+            User user = userRepository.find(userId);
+
+            Set<User> follower = user.getFollower();
+            List<UserListDTO> userListDTOs = follower.stream().map(UserListDTO::new).collect(Collectors.toList());
+
+            LOG.info("Successfully fetched users {} follower list {}", user, userListDTOs);
+
+            if (userListDTOs.size() > 0) {
+                return Response.status(Response.Status.OK).entity(userListDTOs).build();
+            } else {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
+
+        } catch (EntityNotFoundException e) {
+            LOG.warn("User with id {} not found", userId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/following/{id}")
+    @PermitAll
+    @Operation(description = "Get the following list of a user")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "User following list found",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "204", description = "User following list empty",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "404", description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
+    })
+    public Response getFollowing(@Parameter(description = "The Id of the user the following list will be fetched for")
+                                 @Min(1) @Max(10000) @PathParam("id") final Long userId) {
+
+        try {
+            User user = userRepository.find(userId);
+
+            Set<User> follower = user.getFollowings();
+            List<UserListDTO> userListDTOs = follower.stream().map(UserListDTO::new).collect(Collectors.toList());
+
+            LOG.info("Successfully fetched users {} following list {}", user, userListDTOs);
+
+            if (userListDTOs.size() > 0) {
+                return Response.status(Response.Status.OK).entity(userListDTOs).build();
+            } else {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
+
+        } catch (EntityNotFoundException e) {
+            LOG.warn("User with id {} not found", userId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 }
