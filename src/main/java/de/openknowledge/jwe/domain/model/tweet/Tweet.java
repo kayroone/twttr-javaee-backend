@@ -48,6 +48,36 @@ public class Tweet extends AbstractEntity<Long> {
     @JoinColumn(name = "TWEET_ROOT_TWEET_ID")
     private Tweet rootTweet;
 
+    /**
+     * Add a {@link User} as liker to this {@link Tweet}.
+     *
+     * @param user
+     */
+
+    public void addLiker(User user) {
+
+        if (liker == null) {
+            liker = new HashSet<>();
+        }
+
+        liker.add(user);
+    }
+
+    /**
+     * Add a {@link Tweet} as retweet to this {@link Tweet}.
+     *
+     * @param tweet
+     */
+
+    public void addRetweet(Tweet tweet) {
+
+        if (retweets == null) {
+            retweets = new HashSet<>();
+        }
+
+        retweets.add(tweet);
+    }
+
     public static TweetBuilder newBuilder() {
         return new TweetBuilder();
     }
@@ -69,15 +99,21 @@ public class Tweet extends AbstractEntity<Long> {
         return postTime;
     }
 
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     public User getAuthor() {
         return author;
     }
 
-    public Set<User> getLiker() { return liker; }
+    public Set<User> getLiker() {
+        return liker;
+    }
 
-    public Set<Tweet> getRetweets() { return retweets; }
+    public Set<Tweet> getRetweets() {
+        return retweets;
+    }
 
     public Tweet getRootTweet() {
         return rootTweet;
@@ -95,6 +131,11 @@ public class Tweet extends AbstractEntity<Long> {
 
             this.instance.liker = new HashSet<>();
             this.instance.retweets = new HashSet<>();
+        }
+
+        public Tweet.TweetBuilder withId(Long id) {
+            this.instance.id = notNull(id, "Id must not be null");
+            return this;
         }
 
         public TweetBuilder withPostTime(final LocalDateTime postTime) {

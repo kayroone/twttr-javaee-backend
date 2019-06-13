@@ -253,4 +253,62 @@ public class TweetResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+    @GET
+    @Path("/details/{id}")
+    @PermitAll
+    @Operation(description = "Get a list of all tweets liker")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successful fetched tweets liker list"),
+            @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
+    public Response getTweetLiker(@Parameter(description = "tweet identifier")
+                                  @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        try {
+            Tweet foundTweet = tweetRepository.find(tweetId);
+
+            // Extract liker from tweet:
+            Set<UserListDTO> liker = new HashSet<>();
+
+            for (User user : foundTweet.getLiker()) {
+                UserListDTO userListDTO = new UserListDTO(user);
+                liker.add(userListDTO);
+            }
+
+            LOG.info("Tweet liker list {} successfully fetched", liker);
+            return Response.status(Response.Status.OK).entity(liker).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("Tweet with id {} not found", tweetId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/details/{id}")
+    @PermitAll
+    @Operation(description = "Get a list of all tweet retweeter")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successful fetched tweets retweeter list"),
+            @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
+    public Response getTweetRetweeter(@Parameter(description = "tweet identifier")
+                                      @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+
+        try {
+            Tweet foundTweet = tweetRepository.find(tweetId);
+
+            // Extract retweeter from tweet:
+            Set<UserListDTO> retweeter = new HashSet<>();
+
+            for (Tweet tweet : foundTweet.getRetweets()) {
+                UserListDTO userListDTO = new UserListDTO(tweet.getAuthor());
+                retweeter.add(userListDTO);
+            }
+
+            LOG.info("Tweet retweeter list {} successfully fetched", retweeter);
+            return Response.status(Response.Status.OK).entity(retweeter).build();
+        } catch (EntityNotFoundException e) {
+            LOG.warn("Tweet with id {} not found", tweetId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 }

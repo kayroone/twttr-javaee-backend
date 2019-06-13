@@ -81,7 +81,7 @@ public class UserResourceTest {
     public void followUserShouldReturn204() throws EntityNotFoundException {
 
         User user = TestUser.newDefaultUser();
-        User userToFollow = TestUser.newUserWithId("foo", 2L);
+        User userToFollow = TestUser.newDefaultUserWithId("foo", 2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
         relationship.setFollower(user);
@@ -111,7 +111,7 @@ public class UserResourceTest {
     public void followUserShouldReturn202() throws EntityNotFoundException {
 
         User user = TestUser.newDefaultUser();
-        User userToFollow = TestUser.newUserWithId("foo", 2L);
+        User userToFollow = TestUser.newDefaultUserWithId("foo", 2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
         relationship.setFollower(user);
@@ -139,7 +139,7 @@ public class UserResourceTest {
     public void followUserShouldReturn404() throws EntityNotFoundException {
 
         User user = TestUser.newDefaultUser();
-        User userToFollow = TestUser.newUserWithId(2L);
+        User userToFollow = TestUser.newDefaultUserWithId(2L);
 
         TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
 
@@ -161,7 +161,7 @@ public class UserResourceTest {
     public void unfollowUserShouldReturn204() throws EntityNotFoundException {
 
         User user = TestUser.newDefaultUser();
-        User userToUnfollow = TestUser.newUserWithId(2L);
+        User userToUnfollow = TestUser.newDefaultUserWithId(2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
         relationship.setFollower(user);
@@ -189,7 +189,7 @@ public class UserResourceTest {
     public void unfollowUserShouldReturn202() throws EntityNotFoundException {
 
         User user = TestUser.newDefaultUser();
-        User userToUnfollow = TestUser.newUserWithId(2L);
+        User userToUnfollow = TestUser.newDefaultUserWithId(2L);
 
         TestPrincipal testPrincipal = new TestPrincipal(user.getUsername());
 
@@ -207,7 +207,7 @@ public class UserResourceTest {
     public void unfollowUserShouldReturn404() throws EntityNotFoundException {
 
         User user = TestUser.newDefaultUser();
-        User userToUnfollow = TestUser.newUserWithId(2L);
+        User userToUnfollow = TestUser.newDefaultUserWithId(2L);
 
         UserFollowerFollowingRelationship relationship = new UserFollowerFollowingRelationship();
         relationship.setFollower(user);

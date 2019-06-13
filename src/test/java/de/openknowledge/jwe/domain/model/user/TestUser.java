@@ -21,12 +21,12 @@ public class TestUser {
                 .build());
     }
 
-    public static User newUserWithId(final Long userId) {
+    public static User newDefaultUserWithId(final Long userId) {
 
-        return newUserWithId(DEFAULT_USER_NAME, userId);
+        return newDefaultUserWithId(DEFAULT_USER_NAME, userId);
     }
 
-    public static User newUserWithId(String username, final Long userId) {
+    public static User newDefaultUserWithId(String username, final Long userId) {
 
         return Mockito.spy(User.newBuilder()
                 .withId(userId)

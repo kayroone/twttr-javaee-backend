@@ -304,13 +304,13 @@ public class User extends AbstractEntity<Long> {
             this.instance.tweets = new HashSet<>();
         }
 
-        public UserBuilder withUsername(String username) {
-            this.instance.username = notNull(username, "Username must not be null");
+        public UserBuilder withId(Long id) {
+            this.instance.id = notNull(id, "Id must not be null");
             return this;
         }
 
-        public UserBuilder withId(Long id) {
-            this.instance.id = notNull(id, "Id must not be null");
+        public UserBuilder withUsername(String username) {
+            this.instance.username = notNull(username, "Username must not be null");
             return this;
         }
 

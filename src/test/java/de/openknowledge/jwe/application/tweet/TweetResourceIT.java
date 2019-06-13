@@ -307,6 +307,7 @@ public class TweetResourceIT {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    @Test
     @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
     @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
