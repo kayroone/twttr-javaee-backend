@@ -1,0 +1,76 @@
+thorntail:
+  http:
+    port: 8081
+  context:
+    path: twttr-service
+
+  deployment:
+    backend.war:
+      web:
+        login-config:
+          auth-method: KEYCLOAK
+        security-constraints:
+          - url-pattern: /api/tweets/*
+            methods: [GET, POST, PUT, DELETE, OPTIONS]
+            roles: [USER, MODERATOR]
+          - url-pattern: /api/users/*
+            methods: [POST, PUT, DELETE, OPTIONS]
+            roles: [USER, MODERATOR]
+  keycloak:
+    json:
+      path: keycloak.json
+
+  datasources:
+      jdbc-drivers:
+        org.postgresql:
+          driver-class-name: org.postgresql.Driver
+          xa-datasource-class-name: org.postgresql.xa.PGXADataSource
+          driver-module-name: org.postgresql
+      data-sources:
+        TwttrDS:
+          driver-name: org.postgresql
+          connection-url: jdbc:postgresql://localhost:5432/twttr
+          user-name: keycloak
+          password: password
+
+  logging:
+    pattern-formatters:
+      PATTERN:
+        pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) - %s%e%n"
+    console-handlers:
+      CONSOLE:
+        named-formatter: PATTERN
+    root-logger:
+      level: FINE
+      handlers:
+      - CONSOLE
+
+  undertow:
+    filter-configuration:
+      response-headers:
+        access-control-allow-origin:
+          # for testing purposes allow every origin
+          header-name: Access-Control-Allow-Origin
+          header-value: "*"
+        access-control-allow-methods:
+          header-name: Access-Control-Allow-Methods
+          header-value: GET, POST, PUT, DELETE, OPTIONS
+        access-control-max-age:
+          header-name: Access-Control-Max-Age
+          header-value: -1
+        access-control-allow-headers:
+          header-name: Access-Control-Allow-Headers
+          header-value: Origin, X-Requested-With, Content-Type, Accept
+    servers:
+      default-server:
+        hosts:
+          default-host:
+            filter-refs:
+              access-control-allow-origin:
+                priority: 1
+              access-control-allow-methods:
+                priority: 1
+              access-control-max-age:
+                priority: 1
+              access-control-allow-headers:
+                priority: 1

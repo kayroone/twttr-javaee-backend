@@ -17,3 +17,7 @@ keycloak.trace.db
 log/
 target/
 libraries/
+
+# Node
+node/
+package-lock.json
