@@ -1,6 +1,6 @@
 package de.openknowledge.jwe.application.user;
 
-import de.openknowledge.jwe.domain.model.user.User;
+import de.openknowledge.jwe.domain.user.User;
 import de.openknowledge.jwe.infrastructure.domain.value.AbstractValueObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 

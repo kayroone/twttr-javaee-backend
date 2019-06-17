@@ -1,4 +1,4 @@
-package de.openknowledge.jwe.domain.model.user;
+package de.openknowledge.jwe.domain.user;
 
 import de.openknowledge.jwe.infrastructure.validation.ValidationErrorPayload;
 

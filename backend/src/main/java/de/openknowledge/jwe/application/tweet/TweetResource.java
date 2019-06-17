@@ -1,11 +1,11 @@
 package de.openknowledge.jwe.application.tweet;
 
 import de.openknowledge.jwe.application.user.UserListDTO;
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
-import de.openknowledge.jwe.domain.model.user.User;
-import de.openknowledge.jwe.domain.model.user.UserRole;
-import de.openknowledge.jwe.domain.repository.TweetRepository;
-import de.openknowledge.jwe.domain.repository.UserRepository;
+import de.openknowledge.jwe.domain.tweet.Tweet;
+import de.openknowledge.jwe.domain.tweet.TweetRepository;
+import de.openknowledge.jwe.domain.user.User;
+import de.openknowledge.jwe.domain.user.UserRepository;
+import de.openknowledge.jwe.domain.user.UserRole;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
@@ -31,7 +31,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -117,6 +116,7 @@ public class TweetResource {
     }
 
     @PUT
+    @Path("/{id}/like")
     @Transactional
     @RolesAllowed(UserRole.USER)
     @Operation(description = "Like an unliked tweet")
@@ -124,7 +124,7 @@ public class TweetResource {
             @APIResponse(responseCode = "200", description = "Tweet liked/unliked"),
             @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
     public Response likeTweet(@Parameter(description = "tweet identifier")
-                              @QueryParam("id") @Min(1) @Max(10000) final Long tweetId) {
+                              @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
 
         User user = userRepository
                 .findByUsername(securityContext.getUserPrincipal().getName());
@@ -146,6 +146,7 @@ public class TweetResource {
     }
 
     @DELETE
+    @Path("/{id}/like")
     @Transactional
     @RolesAllowed(UserRole.USER)
     @Operation(description = "Unlike an liked tweet")
@@ -153,7 +154,7 @@ public class TweetResource {
             @APIResponse(responseCode = "200", description = "Tweet unliked"),
             @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
     public Response unlikeTweet(@Parameter(description = "tweet identifier")
-                                @QueryParam("id") @Min(1) @Max(10000) final Long tweetId) {
+                                @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
 
         User user = userRepository
                 .findByUsername(securityContext.getUserPrincipal().getName());
@@ -227,26 +228,15 @@ public class TweetResource {
         try {
             Tweet foundTweet = tweetRepository.find(tweetId);
 
-            // Extract liker from tweet:
-            Set<UserListDTO> liker = new HashSet<>();
+            Set<UserListDTO> liker = foundTweet.getLiker().stream()
+                    .map(UserListDTO::new)
+                    .collect(Collectors.toSet());
 
-            for (User user : foundTweet.getLiker()) {
-                UserListDTO userListDTO = new UserListDTO(user);
-                liker.add(userListDTO);
-            }
+            Set<UserListDTO> retweeter = foundTweet.getRetweets().stream()
+                    .map(t -> new UserListDTO(t.getAuthor()))
+                    .collect(Collectors.toSet());
 
-            // Extract retweeter from tweet:
-            Set<UserListDTO> retweeter = new HashSet<>();
-
-            for (Tweet tweet : foundTweet.getRetweets()) {
-                UserListDTO userListDTO = new UserListDTO(tweet.getAuthor());
-                retweeter.add(userListDTO);
-            }
-
-            TweetFullDTO tweetFullDTO = new TweetFullDTO(foundTweet);
-
-            tweetFullDTO.setLiker(liker);
-            tweetFullDTO.setRetweeter(retweeter);
+            TweetFullDTO tweetFullDTO = new TweetFullDTO(foundTweet, liker, retweeter);
 
             LOG.info("Tweet {} successfully fetched", tweetFullDTO);
             return Response.status(Response.Status.OK).entity(tweetFullDTO).build();
@@ -257,7 +247,7 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/details/{id}")
+    @Path("/{id}/likes")
     @PermitAll
     @Operation(description = "Get a list of all tweets liker")
     @APIResponses({
@@ -269,13 +259,9 @@ public class TweetResource {
         try {
             Tweet foundTweet = tweetRepository.find(tweetId);
 
-            // Extract liker from tweet:
-            Set<UserListDTO> liker = new HashSet<>();
-
-            for (User user : foundTweet.getLiker()) {
-                UserListDTO userListDTO = new UserListDTO(user);
-                liker.add(userListDTO);
-            }
+            Set<UserListDTO> liker = foundTweet.getLiker().stream()
+                    .map(UserListDTO::new)
+                    .collect(Collectors.toSet());
 
             LOG.info("Tweet liker list {} successfully fetched", liker);
             return Response.status(Response.Status.OK).entity(liker).build();
@@ -286,7 +272,7 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/details/{id}")
+    @Path("/{id}/retweets")
     @PermitAll
     @Operation(description = "Get a list of all tweet retweeter")
     @APIResponses({
@@ -298,13 +284,9 @@ public class TweetResource {
         try {
             Tweet foundTweet = tweetRepository.find(tweetId);
 
-            // Extract retweeter from tweet:
-            Set<UserListDTO> retweeter = new HashSet<>();
-
-            for (Tweet tweet : foundTweet.getRetweets()) {
-                UserListDTO userListDTO = new UserListDTO(tweet.getAuthor());
-                retweeter.add(userListDTO);
-            }
+            Set<UserListDTO> retweeter = foundTweet.getRetweets().stream()
+                    .map(t -> new UserListDTO(t.getAuthor()))
+                    .collect(Collectors.toSet());
 
             LOG.info("Tweet retweeter list {} successfully fetched", retweeter);
             return Response.status(Response.Status.OK).entity(retweeter).build();
@@ -315,7 +297,6 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/")
     @PermitAll
     @Operation(description = "Get the main timeline consisting of the latest tweets")
     @APIResponses({
@@ -324,7 +305,9 @@ public class TweetResource {
     public Response getMainTimeLine() {
 
         List<Tweet> tweets = tweetRepository.findPartialOrderByDate(0, 100);
-        List<TweetListDTO> timelineDTOs = tweets.stream().map(TweetListDTO::new).collect(Collectors.toList());
+
+        List<TweetListDTO> timelineDTOs = tweets.stream()
+                .map(TweetListDTO::new).collect(Collectors.toList());
 
         LOG.info("Main timeline tweets list {} successfully fetched", timelineDTOs);
 

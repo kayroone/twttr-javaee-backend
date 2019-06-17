@@ -1,6 +1,7 @@
 package de.openknowledge.jwe.domain.model.tweet;
 
 import de.openknowledge.jwe.domain.model.user.TestUser;
+import de.openknowledge.jwe.domain.tweet.Tweet;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;

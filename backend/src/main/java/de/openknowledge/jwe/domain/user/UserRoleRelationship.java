@@ -1,9 +1,11 @@
-package de.openknowledge.jwe.domain.model.user;
+package de.openknowledge.jwe.domain.user;
 
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
+import static org.apache.commons.lang3.Validate.notNull;
 
 
 /**
@@ -36,7 +38,8 @@ public class UserRoleRelationship extends AbstractEntity<Long> {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
+        notNull(user, "user must not be null");
         this.user = user;
     }
 
@@ -44,7 +47,8 @@ public class UserRoleRelationship extends AbstractEntity<Long> {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(final String role) {
+        notNull(role, "role must not be null");
         this.role = role;
     }
 }

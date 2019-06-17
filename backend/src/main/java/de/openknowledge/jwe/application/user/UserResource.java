@@ -1,11 +1,11 @@
 package de.openknowledge.jwe.application.user;
 
 import de.openknowledge.jwe.application.tweet.TweetListDTO;
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
-import de.openknowledge.jwe.domain.model.user.User;
-import de.openknowledge.jwe.domain.model.user.UserRole;
-import de.openknowledge.jwe.domain.repository.TweetRepository;
-import de.openknowledge.jwe.domain.repository.UserRepository;
+import de.openknowledge.jwe.domain.tweet.Tweet;
+import de.openknowledge.jwe.domain.tweet.TweetRepository;
+import de.openknowledge.jwe.domain.user.User;
+import de.openknowledge.jwe.domain.user.UserRepository;
+import de.openknowledge.jwe.domain.user.UserRole;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
 import de.openknowledge.jwe.infrastructure.domain.error.ApplicationErrorDTO;
@@ -27,7 +27,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -77,6 +76,7 @@ public class UserResource {
     }
 
     @PUT
+    @Path("/{id}/follow")
     @Transactional
     @RolesAllowed(UserRole.USER)
     @Operation(description = "Follow a given user")
@@ -89,7 +89,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
     })
     public Response followUser(@Parameter(description = "The Id of the user that will be followed")
-                               @Min(1) @Max(10000) @QueryParam("id") final Long userId) {
+                               @Min(1) @Max(10000) @PathParam("id") final Long userId) {
 
         User user = userRepository
                 .getReferenceByUsername(securityContext.getUserPrincipal().getName());
@@ -114,6 +114,7 @@ public class UserResource {
     }
 
     @DELETE
+    @Path("/{id}/follow")
     @Transactional
     @RolesAllowed(UserRole.USER)
     @Operation(description = "Unfollow a given user")
@@ -126,7 +127,7 @@ public class UserResource {
                     content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
     })
     public Response unfollowUser(@Parameter(description = "The Id of the user that will be unfollowed")
-                                 @Min(1) @Max(10000) @QueryParam("id") final Long userId) {
+                                 @Min(1) @Max(10000) @PathParam("id") final Long userId) {
 
         User user = userRepository
                 .getReferenceByUsername(securityContext.getUserPrincipal().getName());
@@ -151,7 +152,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/timeline")
     @PermitAll
     @Operation(description = "Get a users timeline consisting of the latest user tweets")
     @APIResponses({
@@ -171,16 +172,15 @@ public class UserResource {
             User user = userRepository.find(userId);
             Set<User> followings = user.getFollowings();
 
-            // Also add own user to add own timeline tweets:
             followings.add(user);
 
-            List<Long> tweetIds = new ArrayList<>();
-            for (User follower : followings) {
-                follower.getTweets().forEach(tweet -> tweetIds.add(tweet.getId()));
-            }
+            List<Long> tweetIds = followings.stream()
+                    .map(User::getId).collect(Collectors.toList());
 
             List<Tweet> timeline = tweetRepository.findPartialByIdsOrderByDate(offset, limit, tweetIds);
-            List<TweetListDTO> timelineDTOs = timeline.stream().map(TweetListDTO::new).collect(Collectors.toList());
+
+            List<TweetListDTO> timelineDTOs = timeline.stream()
+                    .map(TweetListDTO::new).collect(Collectors.toList());
 
             LOG.info("Successfully fetched users {} timeline {}", user, timelineDTOs);
 
@@ -197,7 +197,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/follower/{id}")
+    @Path("/{id}/follower")
     @PermitAll
     @Operation(description = "Get the follower list of a user")
     @APIResponses({
@@ -215,7 +215,9 @@ public class UserResource {
             User user = userRepository.find(userId);
 
             Set<User> follower = user.getFollower();
-            List<UserListDTO> userListDTOs = follower.stream().map(UserListDTO::new).collect(Collectors.toList());
+
+            List<UserListDTO> userListDTOs = follower.stream()
+                    .map(UserListDTO::new).collect(Collectors.toList());
 
             LOG.info("Successfully fetched users {} follower list {}", user, userListDTOs);
 
@@ -232,7 +234,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/following/{id}")
+    @Path("/{id}/following")
     @PermitAll
     @Operation(description = "Get the following list of a user")
     @APIResponses({
@@ -250,7 +252,9 @@ public class UserResource {
             User user = userRepository.find(userId);
 
             Set<User> follower = user.getFollowings();
-            List<UserListDTO> userListDTOs = follower.stream().map(UserListDTO::new).collect(Collectors.toList());
+
+            List<UserListDTO> userListDTOs = follower.stream()
+                    .map(UserListDTO::new).collect(Collectors.toList());
 
             LOG.info("Successfully fetched users {} following list {}", user, userListDTOs);
 

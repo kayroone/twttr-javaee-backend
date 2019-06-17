@@ -1,4 +1,4 @@
-package de.openknowledge.jwe.domain.model.tweet;
+package de.openknowledge.jwe.domain.tweet;
 
 import de.openknowledge.jwe.infrastructure.validation.ValidationErrorPayload;
 

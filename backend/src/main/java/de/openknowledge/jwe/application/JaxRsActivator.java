@@ -15,7 +15,7 @@
  */
 package de.openknowledge.jwe.application;
 
-import de.openknowledge.jwe.domain.model.user.UserRole;
+import de.openknowledge.jwe.domain.user.UserRole;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;

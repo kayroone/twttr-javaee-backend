@@ -1,6 +1,5 @@
-package de.openknowledge.jwe.domain.repository;
+package de.openknowledge.jwe.domain.tweet;
 
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
 import de.openknowledge.jwe.infrastructure.domain.repository.Repository;
 import org.slf4j.Logger;

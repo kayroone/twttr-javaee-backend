@@ -1,5 +1,7 @@
 package de.openknowledge.jwe.domain.model.user;
 
+import de.openknowledge.jwe.domain.user.User;
+import de.openknowledge.jwe.domain.user.UserRole;
 import org.mockito.Mockito;
 
 /**

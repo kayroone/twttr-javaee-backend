@@ -1,12 +1,12 @@
 package de.openknowledge.jwe.application.user;
 
 import de.openknowledge.jwe.domain.model.tweet.TestTweet;
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
 import de.openknowledge.jwe.domain.model.user.TestUser;
-import de.openknowledge.jwe.domain.model.user.User;
-import de.openknowledge.jwe.domain.model.user.UserFollowerFollowingRelationship;
-import de.openknowledge.jwe.domain.repository.TweetRepository;
-import de.openknowledge.jwe.domain.repository.UserRepository;
+import de.openknowledge.jwe.domain.tweet.Tweet;
+import de.openknowledge.jwe.domain.tweet.TweetRepository;
+import de.openknowledge.jwe.domain.user.User;
+import de.openknowledge.jwe.domain.user.UserFollowerFollowingRelationship;
+import de.openknowledge.jwe.domain.user.UserRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
 import de.openknowledge.jwe.infrastructure.security.TestPrincipal;
 import org.junit.Rule;

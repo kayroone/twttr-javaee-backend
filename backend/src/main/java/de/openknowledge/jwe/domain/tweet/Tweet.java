@@ -1,6 +1,6 @@
-package de.openknowledge.jwe.domain.model.tweet;
+package de.openknowledge.jwe.domain.tweet;
 
-import de.openknowledge.jwe.domain.model.user.User;
+import de.openknowledge.jwe.domain.user.User;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 
@@ -54,7 +54,9 @@ public class Tweet extends AbstractEntity<Long> {
      * @param user The {@link User} that likes.
      */
 
-    public void addLiker(User user) {
+    public void addLiker(final User user) {
+
+        notNull(user, "user must not be null");
 
         if (liker == null) {
             liker = new HashSet<>();
@@ -69,7 +71,9 @@ public class Tweet extends AbstractEntity<Long> {
      * @param tweet The {@link Tweet} to be added as retweet.
      */
 
-    public void addRetweet(Tweet tweet) {
+    public void addRetweet(final Tweet tweet) {
+
+        notNull(tweet, "tweet must not be null");
 
         if (retweets == null) {
             retweets = new HashSet<>();
@@ -91,7 +95,8 @@ public class Tweet extends AbstractEntity<Long> {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
+        notNull(id, "id must not be null");
         this.id = id;
     }
 
@@ -133,44 +138,44 @@ public class Tweet extends AbstractEntity<Long> {
             this.instance.retweets = new HashSet<>();
         }
 
-        public Tweet.TweetBuilder withId(Long id) {
-            this.instance.id = notNull(id, "Id must not be null");
+        public Tweet.TweetBuilder withId(final Long id) {
+            this.instance.id = notNull(id, "id must not be null");
             return this;
         }
 
         public TweetBuilder withPostTime(final LocalDateTime postTime) {
-            this.instance.postTime = notNull(postTime, "Post time must not be null");
+            this.instance.postTime = notNull(postTime, "postTime must not be null");
             return this;
         }
 
         public TweetBuilder withAuthor(final User author) {
-            this.instance.author = notNull(author, "Author must not be null");
+            this.instance.author = notNull(author, "author must not be null");
             return this;
         }
 
         public TweetBuilder withMessage(final String message) {
-            this.instance.message = notNull(message, "Message must not be null");
+            this.instance.message = notNull(message, "message must not be null");
             return this;
         }
 
         public TweetBuilder withLiker(final Set<User> liker) {
-            this.instance.liker = notNull(liker, "Message must not be null");
+            this.instance.liker = notNull(liker, "liker must not be null");
             return this;
         }
 
-        public TweetBuilder withLike(final User liker) {
-            notNull(liker, "Message must not be null");
+        public TweetBuilder addLike(final User liker) {
+            notNull(liker, "liker must not be null");
             this.instance.liker.add(liker);
             return this;
         }
 
         public TweetBuilder withRetweets(final Set<Tweet> retweets) {
-            this.instance.retweets = notNull(retweets, "Message must not be null");
+            this.instance.retweets = notNull(retweets, "retweets must not be null");
             return this;
         }
 
-        public TweetBuilder withRetweet(final Tweet retweet) {
-            notNull(retweet, "Message must not be null");
+        public TweetBuilder addRetweet(final Tweet retweet) {
+            notNull(retweet, "retweet must not be null");
             this.instance.retweets.add(retweet);
             return this;
         }

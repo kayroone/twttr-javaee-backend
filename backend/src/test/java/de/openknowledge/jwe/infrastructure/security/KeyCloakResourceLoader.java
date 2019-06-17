@@ -2,7 +2,7 @@ package de.openknowledge.jwe.infrastructure.security;
 
 import de.openknowledge.jwe.IntegrationTestUtil;
 import de.openknowledge.jwe.domain.model.user.TestUser;
-import de.openknowledge.jwe.domain.model.user.User;
+import de.openknowledge.jwe.domain.user.User;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;

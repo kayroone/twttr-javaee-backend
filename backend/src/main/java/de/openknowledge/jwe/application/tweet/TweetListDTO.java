@@ -1,7 +1,7 @@
 package de.openknowledge.jwe.application.tweet;
 
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
-import de.openknowledge.jwe.domain.model.tweet.TweetPostDateTimeAdapter;
+import de.openknowledge.jwe.domain.tweet.Tweet;
+import de.openknowledge.jwe.domain.tweet.TweetPostDateTimeAdapter;
 import de.openknowledge.jwe.infrastructure.domain.value.AbstractValueObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -23,15 +23,15 @@ public class TweetListDTO extends AbstractValueObject {
     @Schema(example = "12")
     private Long authorId;
 
-    @Schema(example = "11")
-    private Long rootTweetId;
-
     @Schema(example = "Today is a good day!", required = true, minLength = 1, maxLength = 280)
     private String message;
 
     @Schema(example = "2018-01-01T12:34:56.000Z")
     @XmlJavaTypeAdapter(TweetPostDateTimeAdapter.class)
     private LocalDateTime postTime;
+
+    @Schema(example = "11")
+    private Long rootTweetId;
 
     TweetListDTO() {
         super();
@@ -43,11 +43,12 @@ public class TweetListDTO extends AbstractValueObject {
 
         notNull(tweet, "Tweet must not be null");
 
-        this.id = tweet.getId();
-        this.authorId = tweet.getAuthor().getId();
+        setId(tweet.getId());
+        setAuthorId(tweet.getAuthor().getId());
+        setMessage(tweet.getMessage());
+        setPostTime(tweet.getPostTime());
+
         this.rootTweetId = tweet.getRootTweet() != null ? tweet.getRootTweet().getId() : null;
-        this.message = tweet.getMessage();
-        this.postTime = tweet.getPostTime();
     }
 
     Long getId() {
@@ -55,6 +56,7 @@ public class TweetListDTO extends AbstractValueObject {
     }
 
     void setId(Long id) {
+        notNull(id, "id must not be null");
         this.id = id;
     }
 
@@ -63,15 +65,8 @@ public class TweetListDTO extends AbstractValueObject {
     }
 
     void setAuthorId(Long authorId) {
+        notNull(authorId, "authorId must not be null");
         this.authorId = authorId;
-    }
-
-    Long getRootTweetId() {
-        return rootTweetId;
-    }
-
-    void setRootTweetId(Long rootTweetId) {
-        this.rootTweetId = rootTweetId;
     }
 
     public String getMessage() {
@@ -79,6 +74,7 @@ public class TweetListDTO extends AbstractValueObject {
     }
 
     void setMessage(String message) {
+        notNull(message, "message must not be null");
         this.message = message;
     }
 
@@ -87,7 +83,16 @@ public class TweetListDTO extends AbstractValueObject {
     }
 
     void setPostTime(LocalDateTime postTime) {
+        notNull(postTime, "postTime must not be null");
         this.postTime = postTime;
+    }
+
+    Long getRootTweetId() {
+        return rootTweetId;
+    }
+
+    void setRootTweetId(Long rootTweetId) {
+        this.rootTweetId = rootTweetId;
     }
 
     @Override

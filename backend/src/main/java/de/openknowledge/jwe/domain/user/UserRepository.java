@@ -1,6 +1,5 @@
-package de.openknowledge.jwe.domain.repository;
+package de.openknowledge.jwe.domain.user;
 
-import de.openknowledge.jwe.domain.model.user.User;
 import de.openknowledge.jwe.infrastructure.domain.repository.AbstractRepository;
 import de.openknowledge.jwe.infrastructure.domain.repository.Repository;
 import org.slf4j.Logger;

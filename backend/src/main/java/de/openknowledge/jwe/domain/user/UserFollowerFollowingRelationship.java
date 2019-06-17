@@ -1,9 +1,11 @@
-package de.openknowledge.jwe.domain.model.user;
+package de.openknowledge.jwe.domain.user;
 
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import static org.apache.commons.lang3.Validate.notNull;
 
 /**
  * An entity that represents the relationship between a Users followers and followings.
@@ -37,19 +39,25 @@ public class UserFollowerFollowingRelationship extends AbstractEntity<Long> {
         this.id = id;
     }
 
-    public UserFollowerFollowingRelationship() { super(); }
+    public UserFollowerFollowingRelationship() {
+        super();
+    }
 
     public User getFollower() {
         return follower;
     }
 
-    public void setFollower(User follower) { this.follower = follower; }
+    public void setFollower(final User follower) {
+        notNull(follower, "follower must not be null");
+        this.follower = follower;
+    }
 
     public User getFollowing() {
         return following;
     }
 
-    public void setFollowing(User following) {
+    public void setFollowing(final User following) {
+        notNull(following, "following must not be null");
         this.following = following;
     }
 }

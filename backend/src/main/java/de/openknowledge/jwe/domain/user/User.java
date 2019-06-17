@@ -1,6 +1,6 @@
-package de.openknowledge.jwe.domain.model.user;
+package de.openknowledge.jwe.domain.user;
 
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
+import de.openknowledge.jwe.domain.tweet.Tweet;
 import de.openknowledge.jwe.infrastructure.domain.builder.DefaultBuilder;
 import de.openknowledge.jwe.infrastructure.domain.entity.AbstractEntity;
 import de.openknowledge.jwe.infrastructure.security.PasswordEncoder;
@@ -74,7 +74,7 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void addLike(final Tweet tweet) {
-
+        notNull(tweet, "tweet must not be null");
         this.likes.add(tweet);
     }
 
@@ -85,7 +85,7 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void removeLike(final Tweet tweet) {
-
+        notNull(tweet, "tweet must not be null");
         this.likes.remove(tweet);
     }
 
@@ -96,6 +96,8 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void follow(final User user) {
+
+        notNull(user, "user must not be null");
 
         UserFollowerFollowingRelationship followerFollowingRelationship = new UserFollowerFollowingRelationship();
 
@@ -114,7 +116,8 @@ public class User extends AbstractEntity<Long> {
 
     public void unfollow(final User user) {
 
-        // Retrieve the relationship for removal:
+        notNull(user, "user must not be null");
+
         Optional<UserFollowerFollowingRelationship> result = this.followers
                 .stream()
                 .filter(relationship -> relationship.getFollowing().equals(this))
@@ -134,7 +137,7 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void addFollowing(final UserFollowerFollowingRelationship relationship) {
-
+        notNull(relationship, "relationship must not be null");
         this.followings.add(relationship);
     }
 
@@ -145,7 +148,7 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void removeFollowing(final UserFollowerFollowingRelationship relationship) {
-
+        notNull(relationship, "relationship must not be null");
         this.followings.remove(relationship);
     }
 
@@ -156,7 +159,7 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void addFollower(final UserFollowerFollowingRelationship relationship) {
-
+        notNull(relationship, "relationship must not be null");
         this.followers.add(relationship);
     }
 
@@ -167,7 +170,7 @@ public class User extends AbstractEntity<Long> {
      */
 
     public void removeFollower(final UserFollowerFollowingRelationship relationship) {
-
+        notNull(relationship, "relationship must not be null");
         this.followers.remove(relationship);
     }
 
@@ -177,8 +180,8 @@ public class User extends AbstractEntity<Long> {
      * @param user The {@link User} that will be checked.
      */
 
-    public boolean hasFollower(User user) {
-
+    public boolean hasFollower(final User user) {
+        notNull(user, "user must not be null");
         return getFollower().contains(user);
     }
 
@@ -188,9 +191,8 @@ public class User extends AbstractEntity<Long> {
      * @param user The {@link User} that will be checked.
      */
 
-    public boolean isFollowing(User user) {
-
-
+    public boolean isFollowing(final User user) {
+        notNull(user, "user must not be null");
         return getFollowings().contains(user);
     }
 
@@ -243,7 +245,8 @@ public class User extends AbstractEntity<Long> {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
+        notNull(id, "id must not be null");
         this.id = id;
     }
 
@@ -287,22 +290,23 @@ public class User extends AbstractEntity<Long> {
             this.instance.tweets = new HashSet<>();
         }
 
-        public UserBuilder withId(Long id) {
-            this.instance.id = notNull(id, "Id must not be null");
+        public UserBuilder withId(final Long id) {
+            this.instance.id = notNull(id, "id must not be null");
             return this;
         }
 
-        public UserBuilder withUsername(String username) {
-            this.instance.username = notNull(username, "Username must not be null");
+        public UserBuilder withUsername(final String username) {
+            this.instance.username = notNull(username, "username must not be null");
             return this;
         }
 
         public UserBuilder withPassword(final String password) {
 
-            // Never store user passwords in clear text:
+            notNull(password, "password must not be null");
+
             PasswordEncoder passwordEncoder = new PasswordEncoder();
-            this.instance.password = passwordEncoder
-                    .hashPassword(notNull(password, "Password must not be null"));
+            this.instance.password = passwordEncoder.hashPassword(password);
+
             return this;
         }
 
@@ -322,13 +326,25 @@ public class User extends AbstractEntity<Long> {
             return this;
         }
 
-        public UserBuilder withTweetList(final Set<Tweet> tweets) {
+        public UserBuilder withTweets(final Set<Tweet> tweets) {
             this.instance.tweets = notNull(tweets, "tweets must not be null");
             return this;
         }
 
+        public UserBuilder addTweet(final Tweet tweet) {
+            notNull(tweet, "tweet must not be null");
+            this.instance.tweets.add(tweet);
+            return this;
+        }
+
         public UserBuilder withLikes(final Set<Tweet> tweets) {
-            this.instance.likes = notNull(tweets, "likes must not be null");
+            this.instance.likes = notNull(tweets, "tweets must not be null");
+            return this;
+        }
+
+        public UserBuilder addLike(final Tweet like) {
+            notNull(like, "like must not be null");
+            this.instance.likes.add(like);
             return this;
         }
 

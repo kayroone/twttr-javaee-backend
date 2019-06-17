@@ -1,6 +1,6 @@
 package de.openknowledge.jwe.application.tweet;
 
-import de.openknowledge.jwe.domain.model.tweet.Tweet;
+import de.openknowledge.jwe.domain.tweet.Tweet;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**

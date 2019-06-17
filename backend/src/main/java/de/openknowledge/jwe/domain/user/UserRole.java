@@ -1,4 +1,4 @@
-package de.openknowledge.jwe.domain.model.user;
+package de.openknowledge.jwe.domain.user;
 
 /**
  * The {@link User} permission roles.

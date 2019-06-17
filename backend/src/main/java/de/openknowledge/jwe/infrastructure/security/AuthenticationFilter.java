@@ -19,7 +19,7 @@ import java.security.Principal;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
-    public void filter(ContainerRequestContext requestContext) {
+    public void filter(final ContainerRequestContext requestContext) {
 
         SecurityContext securityContext = requestContext.getSecurityContext();
 
@@ -40,7 +40,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 }
 
                 @Override
-                public boolean isUserInRole(String role) {
+                public boolean isUserInRole(final String role) {
                     return securityContext.isUserInRole(role);
                 }
 
