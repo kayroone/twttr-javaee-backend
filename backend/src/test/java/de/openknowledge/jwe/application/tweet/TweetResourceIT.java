@@ -7,9 +7,9 @@ import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import de.openknowledge.jwe.IntegrationTestUtil;
 import de.openknowledge.jwe.application.user.UserListDTO;
-import de.openknowledge.jwe.domain.model.tweet.TestTweet;
-import de.openknowledge.jwe.domain.model.user.TestUser;
+import de.openknowledge.jwe.domain.tweet.TestTweet;
 import de.openknowledge.jwe.domain.tweet.Tweet;
+import de.openknowledge.jwe.domain.user.TestUser;
 import de.openknowledge.jwe.domain.user.User;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
@@ -316,7 +316,6 @@ public class TweetResourceIT {
         User defaultUser = TestUser.newDefaultUser();
 
         Tweet defaultTweet = TestTweet.newDefaultTweet();
-        TweetFullDTO tweetFullDTO = new TweetFullDTO(defaultTweet);
 
         Set<UserListDTO> liker = new HashSet<>();
         liker.add(new UserListDTO(defaultUser));
@@ -324,8 +323,7 @@ public class TweetResourceIT {
         Set<UserListDTO> retweeter = new HashSet<>();
         retweeter.add(new UserListDTO(defaultUser));
 
-        tweetFullDTO.setLiker(liker);
-        tweetFullDTO.setRetweeter(retweeter);
+        TweetFullDTO tweetFullDTO = new TweetFullDTO(defaultTweet, liker, retweeter);
 
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -5,7 +5,7 @@ import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import de.openknowledge.jwe.IntegrationTestUtil;
-import de.openknowledge.jwe.domain.model.user.TestUser;
+import de.openknowledge.jwe.domain.user.TestUser;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;

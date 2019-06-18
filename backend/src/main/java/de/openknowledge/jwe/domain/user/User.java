@@ -63,7 +63,7 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "USER_ICON_PATH", length = 500)
     private String iconPath;
 
-    static UserBuilder newBuilder() {
+    public static UserBuilder newBuilder() {
         return new UserBuilder();
     }
 

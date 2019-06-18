@@ -80,12 +80,12 @@ public class TweetResource {
                 .withAuthor(author)
                 .build();
 
-        tweetRepository.create(tweet);
+        Tweet createdTweet = tweetRepository.create(tweet);
 
-        TweetListDTO createdTweet = new TweetListDTO(tweet);
+        TweetListDTO tweetListDTO = new TweetListDTO(createdTweet);
 
-        LOG.info("Tweet {} created by {}", createdTweet, author);
-        return Response.status(Response.Status.CREATED).entity(createdTweet).build();
+        LOG.info("Tweet {} created by {}", tweetListDTO, author);
+        return Response.status(Response.Status.CREATED).entity(tweetListDTO).build();
     }
 
     @DELETE
@@ -203,9 +203,9 @@ public class TweetResource {
                     .build();
 
             LOG.info("Going to create retweet with id {} by user {}", tweet.getId(), user);
-            tweetRepository.create(tweet);
+            Tweet createdRetweet = tweetRepository.create(tweet);
 
-            TweetListDTO tweetListDTO = new TweetListDTO(tweet);
+            TweetListDTO tweetListDTO = new TweetListDTO(createdRetweet);
 
             LOG.info("Retweet {} successfully created by {}", tweetListDTO, user);
             return Response.status(Response.Status.CREATED).entity(tweetListDTO).build();
@@ -247,7 +247,7 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/{id}/likes")
+    @Path("/{id}/liker")
     @PermitAll
     @Operation(description = "Get a list of all tweets liker")
     @APIResponses({
@@ -272,7 +272,7 @@ public class TweetResource {
     }
 
     @GET
-    @Path("/{id}/retweets")
+    @Path("/{id}/retweeter")
     @PermitAll
     @Operation(description = "Get a list of all tweet retweeter")
     @APIResponses({

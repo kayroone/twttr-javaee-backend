@@ -1,9 +1,9 @@
 package de.openknowledge.jwe.application.tweet;
 
-import de.openknowledge.jwe.domain.model.tweet.TestTweet;
-import de.openknowledge.jwe.domain.model.user.TestUser;
+import de.openknowledge.jwe.domain.tweet.TestTweet;
 import de.openknowledge.jwe.domain.tweet.Tweet;
 import de.openknowledge.jwe.domain.tweet.TweetRepository;
+import de.openknowledge.jwe.domain.user.TestUser;
 import de.openknowledge.jwe.domain.user.User;
 import de.openknowledge.jwe.domain.user.UserRepository;
 import de.openknowledge.jwe.infrastructure.domain.entity.EntityNotFoundException;
@@ -179,6 +179,7 @@ public class TweetResourceTest {
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
         Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
+        Mockito.doReturn(tweet1).when(tweetRepository).create(any(Tweet.class));
 
         Response response = resource.retweetTweet(newTweet, tweet1.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());

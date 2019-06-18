@@ -1,9 +1,9 @@
 package de.openknowledge.jwe.application.user;
 
-import de.openknowledge.jwe.domain.model.tweet.TestTweet;
-import de.openknowledge.jwe.domain.model.user.TestUser;
+import de.openknowledge.jwe.domain.tweet.TestTweet;
 import de.openknowledge.jwe.domain.tweet.Tweet;
 import de.openknowledge.jwe.domain.tweet.TweetRepository;
+import de.openknowledge.jwe.domain.user.TestUser;
 import de.openknowledge.jwe.domain.user.User;
 import de.openknowledge.jwe.domain.user.UserFollowerFollowingRelationship;
 import de.openknowledge.jwe.domain.user.UserRepository;
