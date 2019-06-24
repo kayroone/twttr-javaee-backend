@@ -21,7 +21,7 @@ public class PasswordEncoder {
     public String hashPassword(final String plainTextPassword) {
 
         notNull(plainTextPassword, "plainTextPassword must not be null");
-
+        
         String salt = BCrypt.gensalt();
 
         return BCrypt.hashpw(plainTextPassword, salt);

@@ -1,5 +1,6 @@
 package de.openknowledge.jwe.application.tweet;
 
+import de.openknowledge.jwe.domain.tweet.Tweet;
 import de.openknowledge.jwe.domain.tweet.TweetPostDateTimeAdapter;
 import de.openknowledge.jwe.domain.tweet.TweetValidationErrorCodes;
 import de.openknowledge.jwe.infrastructure.domain.value.AbstractValueObject;
@@ -9,8 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
-
-import static org.apache.commons.lang3.Validate.notNull;
 
 /**
  * Abstract Tweet class used for DTOs.
@@ -28,8 +27,14 @@ public class AbstractTweet extends AbstractValueObject {
     @Size(min = 1, max = 280, payload = TweetValidationErrorCodes.InvalidMessageSize.class)
     private String message;
 
-    AbstractTweet() {
+    AbstractTweet() { super(); }
+
+    AbstractTweet(Tweet tweet) {
+
         super();
+
+        this.message = tweet.getMessage();
+        this.postTime = tweet.getPostTime();
     }
 
     public LocalDateTime getPostTime() {
@@ -37,7 +42,6 @@ public class AbstractTweet extends AbstractValueObject {
     }
 
     public void setPostTime(LocalDateTime postTime) {
-        notNull(postTime, "postTime must not be null");
         this.postTime = postTime;
     }
 
@@ -46,7 +50,6 @@ public class AbstractTweet extends AbstractValueObject {
     }
 
     public void setMessage(String message) {
-        notNull(message, "message must not be null");
         this.message = message;
     }
 

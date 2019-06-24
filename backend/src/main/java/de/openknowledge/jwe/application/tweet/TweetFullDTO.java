@@ -27,20 +27,11 @@ public class TweetFullDTO extends TweetListDTO {
 
     public TweetFullDTO(final Tweet tweet, final Set<UserListDTO> liker, final Set<UserListDTO> retweeter) {
 
-        this();
+        super(tweet);
 
         notNull(tweet, "tweet must not be null");
         notNull(liker, "liker must not be null");
         notNull(retweeter, "retweeter must not be null");
-
-        Long rootTweetId = tweet.getRootTweet() != null ? tweet.getRootTweet().getId() : null;
-
-        setId(tweet.getId());
-        setAuthorId(tweet.getAuthor().getId());
-
-        setMessage(tweet.getMessage());
-        setPostTime(tweet.getPostTime());
-        setRootTweetId(rootTweetId);
 
         this.liker = liker;
         this.retweeter = retweeter;
