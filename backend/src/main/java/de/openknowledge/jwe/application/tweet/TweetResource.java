@@ -67,16 +67,16 @@ public class TweetResource {
     })
     public Response createTweet(
             @RequestBody(description = "New tweet", required = true,
-                    content = @Content(schema = @Schema(implementation = NewTweet.class)))
-            @Valid final NewTweet newTweet) {
+                    content = @Content(schema = @Schema(implementation = TweetNewDTO.class)))
+            @Valid final TweetNewDTO tweetNewDTO) {
 
-        LOG.info("Going to create tweet with message '{}'", newTweet.getMessage());
+        LOG.info("Going to create tweet with message '{}'", tweetNewDTO.getMessage());
 
         User author = userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
 
         Tweet tweet = Tweet.newBuilder()
-                .withPostTime(newTweet.getPostTime())
-                .withMessage(newTweet.getMessage())
+                .withPostTime(tweetNewDTO.getPostTime())
+                .withMessage(tweetNewDTO.getMessage())
                 .withAuthor(author)
                 .build();
 
@@ -185,8 +185,8 @@ public class TweetResource {
             @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")})
     public Response retweetTweet(
             @RequestBody(description = "New retweet", required = true,
-                    content = @Content(schema = @Schema(implementation = NewTweet.class)))
-            @Valid final NewTweet newTweet, @Parameter(description = "tweet identifier")
+                    content = @Content(schema = @Schema(implementation = TweetNewDTO.class)))
+            @Valid final TweetNewDTO tweetNewDTO, @Parameter(description = "tweet identifier")
             @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
 
         User user = userRepository
@@ -196,9 +196,9 @@ public class TweetResource {
             Tweet rootTweet = tweetRepository.find(tweetId);
 
             Tweet tweet = new Tweet.TweetBuilder()
-                    .withMessage(newTweet.getMessage())
+                    .withMessage(tweetNewDTO.getMessage())
                     .withAuthor(user)
-                    .withPostTime(newTweet.getPostTime())
+                    .withPostTime(tweetNewDTO.getPostTime())
                     .withRootTweet(rootTweet)
                     .build();
 
@@ -228,13 +228,13 @@ public class TweetResource {
         try {
             Tweet foundTweet = tweetRepository.find(tweetId);
 
-            Set<UserListDTO> liker = foundTweet.getLiker().stream()
+            List<UserListDTO> liker = foundTweet.getLiker().stream()
                     .map(UserListDTO::new)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
 
-            Set<UserListDTO> retweeter = foundTweet.getRetweets().stream()
+            List<UserListDTO> retweeter = foundTweet.getRetweets().stream()
                     .map(t -> new UserListDTO(t.getAuthor()))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
 
             TweetFullDTO tweetFullDTO = new TweetFullDTO(foundTweet, liker, retweeter);
 

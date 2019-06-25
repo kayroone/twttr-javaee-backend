@@ -56,10 +56,10 @@ public class TweetResourceTest {
 
         Tweet tweet1 = TestTweet.newDefaultTweet();
         User user1 = tweet1.getAuthor();
-        NewTweet newTweet = new NewTweet();
+        TweetNewDTO tweetNewDTO = new TweetNewDTO();
 
-        newTweet.setPostTime(tweet1.getPostTime());
-        newTweet.setMessage(tweet1.getMessage());
+        tweetNewDTO.setPostTime(tweet1.getPostTime());
+        tweetNewDTO.setMessage(tweet1.getMessage());
 
         TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
         Mockito.doReturn(testPrincipal).when(securityContext).getUserPrincipal();
@@ -67,7 +67,7 @@ public class TweetResourceTest {
         Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doReturn(tweet1).when(tweetRepository).create(any(Tweet.class));
 
-        Response response = resource.createTweet(newTweet);
+        Response response = resource.createTweet(tweetNewDTO);
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
         ArgumentCaptor<Tweet> captor = ArgumentCaptor.forClass(Tweet.class);
@@ -168,11 +168,11 @@ public class TweetResourceTest {
         Tweet tweet1 = TestTweet.newDefaultTweet();
         User user1 = tweet1.getAuthor();
 
-        NewTweet newTweet = new NewTweet();
+        TweetNewDTO tweetNewDTO = new TweetNewDTO();
         LocalDateTime postTime = LocalDateTime.now();
 
-        newTweet.setPostTime(postTime);
-        newTweet.setMessage("Retweeted");
+        tweetNewDTO.setPostTime(postTime);
+        tweetNewDTO.setMessage("Retweeted");
 
         TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
@@ -181,7 +181,7 @@ public class TweetResourceTest {
         Mockito.doReturn(tweet1).when(tweetRepository).find(anyLong());
         Mockito.doReturn(tweet1).when(tweetRepository).create(any(Tweet.class));
 
-        Response response = resource.retweetTweet(newTweet, tweet1.getId());
+        Response response = resource.retweetTweet(tweetNewDTO, tweet1.getId());
         assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
         ArgumentCaptor<Tweet> captor = ArgumentCaptor.forClass(Tweet.class);
@@ -189,7 +189,7 @@ public class TweetResourceTest {
 
         Tweet retweet = captor.getValue();
         assertThat(retweet.getPostTime()).isEqualTo(postTime.toString());
-        assertThat(retweet.getMessage()).isEqualTo(newTweet.getMessage());
+        assertThat(retweet.getMessage()).isEqualTo(tweetNewDTO.getMessage());
         assertThat(retweet.getAuthor()).isEqualTo(tweet1.getAuthor());
         assertThat(retweet.getRootTweet()).isEqualTo(tweet1);
     }
@@ -200,11 +200,11 @@ public class TweetResourceTest {
         Tweet tweet1 = TestTweet.newDefaultTweet();
         User user1 = tweet1.getAuthor();
 
-        NewTweet newTweet = new NewTweet();
+        TweetNewDTO tweetNewDTO = new TweetNewDTO();
         LocalDateTime postTime = LocalDateTime.now();
 
-        newTweet.setPostTime(postTime);
-        newTweet.setMessage("Retweeted");
+        tweetNewDTO.setPostTime(postTime);
+        tweetNewDTO.setMessage("Retweeted");
 
         TestPrincipal testPrincipal = new TestPrincipal(user1.getUsername());
 
@@ -212,7 +212,7 @@ public class TweetResourceTest {
         Mockito.doReturn(user1).when(userRepository).getReferenceByUsername(anyString());
         Mockito.doThrow(EntityNotFoundException.class).when(tweetRepository).find(anyLong());
 
-        Response response = resource.retweetTweet(newTweet, 404L);
+        Response response = resource.retweetTweet(tweetNewDTO, 404L);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 
         assertThatNullPointerException()

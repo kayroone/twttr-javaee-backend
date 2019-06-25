@@ -269,4 +269,35 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+    @GET
+    @Path("/{id}")
+    @PermitAll
+    @Operation(description = "Get the users profile")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "User profile found",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "404", description = "User profile not found",
+                    content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
+    })
+    public Response getUserProfile(@Parameter(description = "The Id of the user the the profile will be fetched for")
+                                   @Min(1) @Max(10000) @PathParam("id") final Long userId) {
+
+        try {
+            User user = userRepository.find(userId);
+
+            int tweetCount = user.getTweets().size();
+            int followingCount = user.getFollowings().size();
+            int followerCount = user.getFollower().size();
+
+            UserProfileDTO userProfileDTO = new UserProfileDTO(user, tweetCount, followingCount, followerCount);
+
+            LOG.info("Successfully fetched user profile {} for user {}", userProfileDTO, user);
+            return Response.status(Response.Status.OK).entity(userProfileDTO).build();
+
+        } catch (EntityNotFoundException e) {
+            LOG.warn("User with id {} not found", userId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 }

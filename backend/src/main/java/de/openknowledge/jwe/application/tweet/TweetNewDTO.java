@@ -8,16 +8,16 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 
 @Schema
-class NewTweet extends AbstractTweet {
+class TweetNewDTO extends AbstractTweet {
 
-    public NewTweet() {
+    public TweetNewDTO() {
         super();
     }
 
     @Override
     public String toString() {
 
-        return "NewTweet {" +
+        return "TweetNewDTO {" +
                 "message='" + getMessage() + '\'' +
                 ", postTime='" + getPostTime() + '\'' +
                 '}';

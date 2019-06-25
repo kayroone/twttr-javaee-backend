@@ -4,7 +4,7 @@ import de.openknowledge.jwe.application.user.UserListDTO;
 import de.openknowledge.jwe.domain.tweet.Tweet;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -16,20 +16,19 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class TweetFullDTO extends TweetListDTO {
 
     @Schema
-    private Set<UserListDTO> liker;
+    private List<UserListDTO> liker;
 
     @Schema
-    private Set<UserListDTO> retweeter;
+    private List<UserListDTO> retweeter;
 
     private TweetFullDTO() {
         super();
     }
 
-    public TweetFullDTO(final Tweet tweet, final Set<UserListDTO> liker, final Set<UserListDTO> retweeter) {
+    public TweetFullDTO(final Tweet tweet, final List<UserListDTO> liker, final List<UserListDTO> retweeter) {
 
         super(tweet);
 
-        notNull(tweet, "tweet must not be null");
         notNull(liker, "liker must not be null");
         notNull(retweeter, "retweeter must not be null");
 
@@ -37,11 +36,11 @@ public class TweetFullDTO extends TweetListDTO {
         this.retweeter = retweeter;
     }
 
-    public Set<UserListDTO> getLiker() {
+    public List<UserListDTO> getLiker() {
         return liker;
     }
 
-    public Set<UserListDTO> getRetweeter() {
+    public List<UserListDTO> getRetweeter() {
         return retweeter;
     }
 

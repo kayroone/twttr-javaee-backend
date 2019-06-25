@@ -218,7 +218,8 @@ public class UserResourceIT {
                 .when()
                 .get(getSingleItemUri(1L))
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("size()", Matchers.is(3));
     }
 
     @Test
@@ -261,7 +262,8 @@ public class UserResourceIT {
                 .when()
                 .get(getSingleItemUriWithPath("follower", 2L))
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("size()", Matchers.is(1));
     }
 
     @Test
@@ -300,7 +302,8 @@ public class UserResourceIT {
                 .when()
                 .get(getSingleItemUriWithPath("following", 1L))
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("size()", Matchers.is(1));
     }
 
     @Test
@@ -325,6 +328,35 @@ public class UserResourceIT {
         RestAssured.given()
                 .when()
                 .get(getSingleItemUriWithPath("following", 1L))
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create-tweets.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create-tweets.yml")
+    public void getProfileForUserShouldReturn200() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUri(1L))
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("tweetCount", Matchers.is(2))
+                .body("followingCount", Matchers.is(0))
+                .body("followerCount", Matchers.is(0));
+    }
+
+    @Test
+    @DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true,
+            transactional = true, disableConstraints = true)
+    @ExpectedDataSet(value = "datasets/users-create.yml")
+    public void getProfileForUserShouldReturn404() {
+
+        RestAssured.given()
+                .when()
+                .get(getSingleItemUri(1L))
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
