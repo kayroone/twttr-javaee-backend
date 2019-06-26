@@ -21,11 +21,12 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.hamcrest.Matchers;
-import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -34,8 +35,8 @@ import java.net.URI;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,14 +69,15 @@ public class TweetResourceIT {
         String message = "Today is a good day!";
         String postTime = "2019-01-01T12:12:12.000Z";
 
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("message", message);
-        tweetJSONObject.put("postTime", postTime);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("message", message)
+                .add("postTime", postTime)
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getTweetsApiUri())
                 .then()
@@ -94,12 +96,12 @@ public class TweetResourceIT {
     @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForEmptyRequestBody() {
 
-        JSONObject tweetJSONObject = new JSONObject();
+        JsonObject tweetJsonObject = Json.createObjectBuilder().build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getTweetsApiUri())
                 .then()
@@ -117,13 +119,14 @@ public class TweetResourceIT {
 
         LocalDateTime postTime = LocalDateTime.now();
 
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("postTime", postTime);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("postTime", postTime.toString())
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getTweetsApiUri())
                 .then()
@@ -139,15 +142,14 @@ public class TweetResourceIT {
     @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForMissingPostTime() {
 
-        String message = "Today is a good day!";
-
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("message", message);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("message", "Today is a good day!")
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getTweetsApiUri())
                 .then()
@@ -163,17 +165,15 @@ public class TweetResourceIT {
     @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void createTweetShouldReturn400ForTooShortMessage() {
 
-        String message = "";
-        LocalDateTime postTime = LocalDateTime.now();
-
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("message", message);
-        tweetJSONObject.put("postTime", postTime);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("message", "")
+                .add("postTime", LocalDateTime.now().toString())
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getTweetsApiUri())
                 .then()
@@ -193,16 +193,16 @@ public class TweetResourceIT {
                 "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
                 "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
                 "FoobarFoobarFoobarFoobar";
-        LocalDateTime postTime = LocalDateTime.now();
 
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("message", message);
-        tweetJSONObject.put("postTime", postTime);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("message", message)
+                .add("postTime", LocalDateTime.now().toString())
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getTweetsApiUri())
                 .then()
@@ -263,14 +263,15 @@ public class TweetResourceIT {
         String message = "Foobar!";
         String postTime = "2019-01-01T12:12:12.000Z";
 
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("message", message);
-        tweetJSONObject.put("postTime", postTime);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("message", message)
+                .add("postTime", postTime)
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getSingleItemUri(1L))
                 .then()
@@ -290,17 +291,15 @@ public class TweetResourceIT {
     @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
     public void retweetTweetShouldReturn404() {
 
-        String message = "Foobar!";
-        String postTime = "2019-01-01T12:12:12.000Z";
-
-        JSONObject tweetJSONObject = new JSONObject();
-        tweetJSONObject.put("message", message);
-        tweetJSONObject.put("postTime", postTime);
+        JsonObject tweetJsonObject = Json.createObjectBuilder()
+                .add("message", "Foobar!")
+                .add("postTime", "2019-01-01T12:12:12.000Z")
+                .build();
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJSONObject.toString())
+                .body(tweetJsonObject.toString())
                 .when()
                 .post(getSingleItemUri(404L))
                 .then()
@@ -317,10 +316,10 @@ public class TweetResourceIT {
 
         Tweet defaultTweet = TestTweet.newDefaultTweet();
 
-        Set<UserListDTO> liker = new HashSet<>();
+        List<UserListDTO> liker = new ArrayList<>();
         liker.add(new UserListDTO(defaultUser));
 
-        Set<UserListDTO> retweeter = new HashSet<>();
+        List<UserListDTO> retweeter = new ArrayList<>();
         retweeter.add(new UserListDTO(defaultUser));
 
         TweetFullDTO tweetFullDTO = new TweetFullDTO(defaultTweet, liker, retweeter);
