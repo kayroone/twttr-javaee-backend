@@ -4,7 +4,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app.routing.module';
-import {HeaderComponent} from './components/header/header.component';
+import {HeaderComponent} from './component/header/header.component';
 
 @NgModule({
   declarations: [

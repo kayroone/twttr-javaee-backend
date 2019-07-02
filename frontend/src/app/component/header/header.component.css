@@ -31,7 +31,7 @@
 .icon {
   height: 3em;
   width: 3em;
-  background-image: url("~src/assets/icon/icon-turkey.png");
+  background-image: url("../../../assets/icon/icon-turkey.png");
   background-repeat: no-repeat;
   background-size: cover;
 }
