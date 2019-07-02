@@ -1,0 +1,41 @@
+.topbar {
+  backface-visibility: hidden;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.global-nav {
+  height: 75px;
+  position: relative;
+  width: 100%;
+  background: rgb(255, 255, 255);
+}
+
+.icon-topbar-etched {
+  color: rgb(29, 161, 242);
+  position: absolute;
+  left: 50%;
+  cursor: pointer;
+  font-size: 21px;
+  margin-left: -24px;
+  display: inline-block;
+  font-weight: bold;
+  transition: all 0.25s ease-in-out 0s;
+
+}
+
+.icon {
+  height: 3em;
+  width: 3em;
+  background-image: url("~src/assets/icon/icon-turkey.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+div {
+  display: block;
+}
