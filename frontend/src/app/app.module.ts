@@ -3,16 +3,20 @@ import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-import {AuthKeycloakInitializer} from './service/auth/auth.keycloak.initializer';
-
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app.routing.module';
 import {HeaderComponent} from './component/header/header.component';
+import {LoginComponent} from './component/login/login.component';
+
+import {AuthKeycloakInitializer} from './service/auth/auth.keycloak.initializer';
+
+import {AppAuthGuard} from './guards/AuthGuard';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -26,9 +30,11 @@ import {HeaderComponent} from './component/header/header.component';
       useFactory: AuthKeycloakInitializer,
       multi: true,
       deps: [KeycloakService]
-    }
+    },
+    AppAuthGuard
   ],
   bootstrap: [AppComponent]
 })
 
-export class AppModule {}
+export class AppModule {
+}
