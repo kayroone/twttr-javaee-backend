@@ -2,19 +2,31 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 
-@Injectable()
-export class AppAuthGuard extends KeycloakAuthGuard {
+/**
+ * Guard to protect secured URIs.
+ */
 
-  constructor(protected router: Router, protected keycloakAngular: KeycloakService) {
-    super(router, keycloakAngular);
+@Injectable()
+export class KeyCloakAuthGuard extends KeycloakAuthGuard {
+
+  constructor(protected router: Router, protected keycloakService: KeycloakService) {
+    super(router, keycloakService);
   }
 
-  public isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+  /**
+   * Checks if the JWT contains the path roles. If no JWT is present, the user will be
+   * redirected to the login page.
+   *
+   * @param route The route that will be checked.
+   * @param state Snapshot of the actual router state.
+   */
+
+  isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
     return new Promise((resolve, reject) => {
 
       if (!this.authenticated) {
-        this.keycloakAngular.login();
+        this.keycloakService.login();
         return;
       }
 

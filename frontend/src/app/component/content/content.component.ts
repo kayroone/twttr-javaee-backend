@@ -5,6 +5,11 @@ import {Component, OnInit} from '@angular/core';
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.css']
 })
+
+/**
+ * Component representing the content area of the user profile.
+ */
+
 export class ContentComponent implements OnInit {
 
   constructor() { }

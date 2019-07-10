@@ -75,6 +75,32 @@ public class UserResource {
         }
     }
 
+    @GET
+    @Path("/{id}")
+    @PermitAll
+    @Operation(description = "Get a user by it's id")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "User found",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @APIResponse(responseCode = "404", description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
+    })
+    public Response getUser(@Parameter(description = "The Id of the user")
+                            @Min(1) @Max(10000) @PathParam("id") final Long userId) {
+
+        try {
+            User user = userRepository.find(userId);
+            UserListDTO userListDTO = new UserListDTO(user);
+
+            LOG.info("Successfully fetched user {}", user);
+            return Response.status(Response.Status.OK).entity(userListDTO).build();
+
+        } catch (EntityNotFoundException e) {
+            LOG.warn("User with id {} not found", userId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
     @PUT
     @Path("/{id}/follow")
     @Transactional

@@ -1,15 +1,18 @@
-import {KeycloakConfig} from 'keycloak-angular';
-
-const keycloakConfig: KeycloakConfig = {
+const keycloakConfig = {
   url: 'http://localhost:8080/auth',
   realm: 'twttr',
-  clientId: 'twttr-service',
-  credentials: {
-    secret: '1f4cebfb-c1bc-43bb-87f1-a6ebda78f4ae'
-  }
+  clientId: 'twttr-spa'
+};
+
+const api = {
+  users: 'http://localhost:8081/twttr-service/api/users',
+  tweets: 'http://localhost:8081/twttr-service/api/tweets',
 };
 
 export const environment = {
   production: false,
-  keycloak: keycloakConfig,
+  config: {
+    keycloak: keycloakConfig,
+    frontend: api
+  }
 };
