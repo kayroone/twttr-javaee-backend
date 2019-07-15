@@ -14,7 +14,7 @@ export class KeyCloakAuthGuard extends KeycloakAuthGuard {
   }
 
   /**
-   * Checks if the JWT contains the path roles. If no JWT is present, the user will be
+   * Checks if the JWT contains the path's roles. If no JWT is present, the user will be
    * redirected to the login page.
    *
    * @param route The route that will be checked.

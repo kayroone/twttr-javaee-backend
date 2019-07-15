@@ -1,7 +1,23 @@
-<div class="w-screen flex justify-center border-b border-gray-500 shadow">
-  <div class="gubbel-icon mx-auto w-12 h-12 mt-2 mb-2 bg-cover bg-no-repeat"></div>
-  <button (click)="logout()"
-          class="h-10 w-0/12 mr-4 mt-3 shadow text-black py-2 px-4">
+<div class="flex items-start justify-center w-screen border-b border-gray-500 shadow">
+
+  <!-- Home -->
+  <button class="h-10 w-20 mx-3 mt-3 bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
+    Home
+  </button>
+
+  <!-- Tweet -->
+  <button class="h-10 w-20 mx-3 mt-3 bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
+    Tweet
+  </button>
+
+  <!-- Icon -->
+  <div class="gubbel-icon h-12 w-12 mt-3 mx-8 bg-cover bg-no-repeat"></div>
+
+  <!-- Search -->
+  <input class="h-10 mx-3 mt-3 bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
+
+  <!-- Logout -->
+  <button (click)="logout()" class="h-10 w-20 mx-3 mt-3 nav-button-logout hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
     Logout
   </button>
 </div>
