@@ -1,24 +1,41 @@
-<div class="flex items-start justify-center w-screen border-b border-gray-500 shadow">
+<div class="flex w-screen h-16 px-64 border-b border-gray-500 shadow">
 
   <!-- Home -->
-  <button class="h-10 w-20 mx-3 mt-3 bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
-    Home
-  </button>
+  <div class="flex-col justify-start mx-3 mt-3">
+    <button
+      class="bg-transparent hover:shadow font-thin text-black py-2 px-8 border border-gray-900 rounded">
+      Home
+    </button>
+  </div>
 
   <!-- Tweet -->
-  <button class="h-10 w-20 mx-3 mt-3 bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
-    Tweet
-  </button>
+  <div class="flex-col justify-start mx-3 mt-3">
+    <button
+      class="bg-transparent hover:shadow font-thin text-black py-2 px-8 border border-gray-900 rounded">
+      Tweet
+    </button>
+  </div>
 
   <!-- Icon -->
-  <div class="gubbel-icon h-12 w-12 mt-3 mx-8 bg-cover bg-no-repeat"></div>
+  <div class="flex-col justify-center mx-auto mt-3">
+    <a routerLink="/" routerLinkActive="active">
+      <div class="gubbel-icon h-12 w-12 bg-cover bg-no-repeat"></div>
+    </a>
+  </div>
 
   <!-- Search -->
-  <input class="h-10 mx-3 mt-3 bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded"
-  placeholder="Search user">
+  <div class="flex-col justify-end mx-3 mt-3">
+    <input
+      class="bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded"
+      placeholder="Search user">
+  </div>
 
   <!-- Logout -->
-  <button (click)="logout()" class="h-10 w-20 mx-3 mt-3 nav-button-logout hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
-    Logout
-  </button>
+  <div class="flex-col justify-end mx-3 mt-3">
+    <button (click)="logout()"
+            class="nav-button-logout hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
+      Logout
+    </button>
+  </div>
+
 </div>
