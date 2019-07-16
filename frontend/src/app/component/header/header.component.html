@@ -1,41 +1,38 @@
-<div class="flex w-screen h-16 px-64 border-b border-gray-500 shadow">
+<header class="container border-b mx-auto pb-0 md:pb-4 md:flex md:items-center md:justify-between">
 
-  <!-- Home -->
-  <div class="flex-col justify-start mx-3 mt-3">
+  <!-- SM Search -->
+  <input
+    class="bg-transparent hover:shadow font-thin text-black mt-4 -mb-2 py-2 px-4 border border-gray-900 rounded w-full block md:hidden"
+    placeholder="Search user">
+
+  <!-- Home & Tweet -->
+  <div class="flex flex-col md:flex-row justify-start mt-4 md:-mx-3">
     <button
-      class="bg-transparent hover:shadow font-thin text-black py-2 px-8 border border-gray-900 rounded">
+      class="bg-transparent font-thin text-black mb-2 md:mb-0 py-2 px-8 border border-gray-900 rounded w-full md:mx-3 hover:shadow md:w-auto">
       Home
     </button>
-  </div>
-
-  <!-- Tweet -->
-  <div class="flex-col justify-start mx-3 mt-3">
     <button
-      class="bg-transparent hover:shadow font-thin text-black py-2 px-8 border border-gray-900 rounded">
+      class="bg-transparent font-thin text-black py-2 px-8 mb-2 md:mb-0 border border-gray-900 rounded w-full md:mx-3 hover:shadow md:w-auto">
       Tweet
     </button>
   </div>
 
-  <!-- Icon -->
-  <div class="flex-col justify-center mx-auto mt-3">
+  <!-- Gubbel -->
+  <div class="flex justify-center mx-auto mt-3 hidden md:block">
     <a routerLink="/" routerLinkActive="active">
       <div class="gubbel-icon h-12 w-12 bg-cover bg-no-repeat"></div>
     </a>
   </div>
 
-  <!-- Search -->
-  <div class="flex-col justify-end mx-3 mt-3">
+  <!-- MD Search & Logout -->
+  <div class="flex flex-col justify-end md:mt-4 md:flex-row md:-mx-3">
     <input
-      class="bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded"
+      class="bg-transparent hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded w-full hidden md:block md:mx-3 md:w-auto"
       placeholder="Search user">
-  </div>
-
-  <!-- Logout -->
-  <div class="flex-col justify-end mx-3 mt-3">
     <button (click)="logout()"
-            class="nav-button-logout hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded">
+            class="nav-button-logout mb-4 md:mb-0 hover:shadow font-thin text-black py-2 px-4 border border-gray-900 rounded w-full md:mx-3 md:w-auto">
       Logout
     </button>
   </div>
 
-</div>
+</header>

@@ -5423,6 +5423,11 @@ video {
   padding-right: 16rem;
 }
 
+.px-72 {
+  padding-left: 18rem;
+  padding-right: 18rem;
+}
+
 .py-px {
   padding-top: 1px;
   padding-bottom: 1px;
