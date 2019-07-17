@@ -79,7 +79,7 @@
             </testResource>
         </testResources>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${version.maven-rescource-plugin}</version>
                 <executions>
@@ -103,7 +103,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -321,13 +321,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${version.slf4j}</version>
-        </dependency>
-
-        <!-- Build -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>${version.apache-maven-plugin}</version>
         </dependency>
 
         <!-- unit testing -->

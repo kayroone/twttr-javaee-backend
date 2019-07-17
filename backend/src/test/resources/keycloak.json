@@ -3,10 +3,10 @@
   "auth-server-url": "http://localhost:8080/auth",
   "bearer-only": true,
   "ssl-required": "none",
-  "resource": "twttr-service",
+  "resource": "twttr-test",
   "verify-token-audience": true,
   "credentials": {
-    "secret": "1f4cebfb-c1bc-43bb-87f1-a6ebda78f4ae"
+    "secret": "c0f228c0-1d22-42d6-aceb-f1f5585a6154"
   },
   "confidential-port": 0,
   "principal-attribute": "preferred_username",

@@ -1,5 +1,6 @@
 package de.openknowledge.jwe.application.user;
 
+import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
@@ -10,13 +11,9 @@ import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -33,15 +30,11 @@ public class UserResourceIT {
 
     private static String accessToken;
 
-    @BeforeClass
-    public static void initEntityManager() throws DatabaseUnitException {
+    @Rule
+    public EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
 
-        EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
-        IDatabaseConnection dbUnitConn = new DatabaseConnection(entityManagerProvider.connection(), "public");
-        DatabaseConfig databaseConfig = dbUnitConn.getConfig();
-
-        databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
-    }
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(entityManagerProvider.connection());
 
     @BeforeClass
     public static void getKeyCloakAccessToken() throws IOException {
@@ -368,7 +361,7 @@ public class UserResourceIT {
 
     private URI getSingleItemUriWithPath(final String path, final Long userId) {
 
-        return UriBuilder.fromUri(getUsersApiUri()).path(path).path("{id}").build(userId);
+        return UriBuilder.fromUri(getUsersApiUri()).path("{id}").path(path).build(userId);
     }
 
     private URI getUsersApiUri() {

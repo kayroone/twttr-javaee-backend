@@ -43,15 +43,15 @@ public class TweetListDTO extends AbstractTweet {
         this.rootTweetId = tweet.getRootTweet() != null ? tweet.getRootTweet().getId() : null;
     }
 
-    Long getId() {
+    public Long getId() {
         return id;
     }
 
-    Long getAuthorId() {
+    public Long getAuthorId() {
         return authorId;
     }
 
-    Long getRootTweetId() {
+    public Long getRootTweetId() {
         return rootTweetId;
     }
 

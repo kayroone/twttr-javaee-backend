@@ -4,9 +4,7 @@
   "title": "The Root Schema",
   "required": [
     "postTime",
-    "message",
-    "id",
-    "authorId"
+    "message"
   ],
   "properties": {
     "postTime": {
@@ -32,17 +30,16 @@
       "default": 0
     },
     "rootTweetId": {
-      "type": "integer",
       "title": "The Author Schema",
-      "default": 0
+      "default": null
     },
     "liker": {
       "type": "array",
-      "title": "The Liker Schema",
+      "title": "The Liker Schema"
     },
     "retweeter": {
       "type": "array",
-      "title": "The Retweeter Schema",
+      "title": "The Retweeter Schema"
     }
   }
 }

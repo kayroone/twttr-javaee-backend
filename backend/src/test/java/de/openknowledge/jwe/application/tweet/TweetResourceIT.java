@@ -6,20 +6,10 @@ import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import de.openknowledge.jwe.IntegrationTestUtil;
-import de.openknowledge.jwe.application.user.UserListDTO;
-import de.openknowledge.jwe.domain.tweet.TestTweet;
-import de.openknowledge.jwe.domain.tweet.Tweet;
-import de.openknowledge.jwe.domain.user.TestUser;
-import de.openknowledge.jwe.domain.user.User;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -32,19 +22,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * Integration test class for the resource {@link TweetResource}.
  */
-
-@DataSet(value = "datasets/users-create.yml", strategy = SeedStrategy.CLEAN_INSERT,
-        cleanBefore = true, transactional = true, disableConstraints = true)
 public class TweetResourceIT {
 
     private final String baseURI = IntegrationTestUtil.getBaseURI();
@@ -52,7 +35,10 @@ public class TweetResourceIT {
     private static String accessToken;
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(getDBConnection());
+    public EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(entityManagerProvider.connection());
 
     @BeforeClass
     public static void getKeyCloakAccessToken() throws IOException {
@@ -213,8 +199,8 @@ public class TweetResourceIT {
     }
 
     @Test
-    @DataSet(value = "datasets/tweets-delete-expected.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
+    @DataSet(value = "datasets/tweets-delete.yml", strategy = SeedStrategy.CLEAN_INSERT,
+            cleanBefore = true, transactional = true)
     @ExpectedDataSet(value = "datasets/tweets-delete-expected.yml")
     public void deleteTweetShouldReturn204() {
 
@@ -244,14 +230,14 @@ public class TweetResourceIT {
     @DataSet(value = "datasets/tweets-update.yml", strategy = SeedStrategy.CLEAN_INSERT,
             cleanBefore = true, transactional = true, disableConstraints = true)
     @ExpectedDataSet(value = "datasets/tweets-update-expected-like.yml")
-    public void likeTweetShouldReturn200() {
+    public void likeTweetShouldReturn204() {
 
         RestAssured.given()
                 .headers("Authorization", "Bearer " + accessToken)
                 .when()
-                .put(getSingleItemUri(1L))
+                .put(getSingleItemUriWithPath("like", 1L))
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test
@@ -260,7 +246,7 @@ public class TweetResourceIT {
     @ExpectedDataSet(value = "datasets/tweets-create-retweet-expected.yml")
     public void retweetTweetShouldReturn201() {
 
-        String message = "Foobar!";
+        String message = "Today is a good day!";
         String postTime = "2019-01-01T12:12:12.000Z";
 
         JsonObject tweetJsonObject = Json.createObjectBuilder()
@@ -292,7 +278,7 @@ public class TweetResourceIT {
     public void retweetTweetShouldReturn404() {
 
         JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", "Foobar!")
+                .add("message", "Today is a good day!")
                 .add("postTime", "2019-01-01T12:12:12.000Z")
                 .build();
 
@@ -312,33 +298,15 @@ public class TweetResourceIT {
     @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
     public void getTweetShouldReturn200() {
 
-        User defaultUser = TestUser.newDefaultUser();
-
-        Tweet defaultTweet = TestTweet.newDefaultTweet();
-
-        List<UserListDTO> liker = new ArrayList<>();
-        liker.add(new UserListDTO(defaultUser));
-
-        List<UserListDTO> retweeter = new ArrayList<>();
-        retweeter.add(new UserListDTO(defaultUser));
-
-        TweetFullDTO tweetFullDTO = new TweetFullDTO(defaultTweet, liker, retweeter);
-
         RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
                 .get(getSingleItemUri(2L))
                 .then()
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
-                .body("id", Matchers.equalTo(2))
-                .body("message", Matchers.equalTo(tweetFullDTO.getMessage()))
-                .body("postTime", Matchers.equalTo(tweetFullDTO.getPostTime()))
-                .body("authorId", Matchers.equalTo(tweetFullDTO.getAuthorId()))
-                .body("rootTweetId", Matchers.equalTo(1))
-                .body("liker", Matchers.equalTo(tweetFullDTO.getLiker()))
-                .body("retweeter", Matchers.equalTo(tweetFullDTO.getRetweeter()));
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"));
     }
 
     @Test
@@ -348,6 +316,7 @@ public class TweetResourceIT {
     public void getTweetShouldReturn404() {
 
         RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
                 .get(getSingleItemUri(404L))
@@ -362,9 +331,10 @@ public class TweetResourceIT {
     public void getMainTimelineShouldReturn200() {
 
         RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
-                .get(getSingleItemUri(2L))
+                .get(getTweetsApiUri())
                 .then()
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
@@ -378,9 +348,10 @@ public class TweetResourceIT {
     public void getMainTimelineShouldReturn204() {
 
         RestAssured.given()
+                .headers("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
-                .get(getSingleItemUri(2L))
+                .get(getTweetsApiUri())
                 .then()
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode())
@@ -398,24 +369,8 @@ public class TweetResourceIT {
         return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
     }
 
-    private Connection getDBConnection() {
+    private URI getSingleItemUriWithPath(final String path, final Long userId) {
 
-        try {
-            EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
-            IDatabaseConnection dbUnitConn =
-                    new DatabaseConnection(entityManagerProvider.connection(), "public");
-
-            DatabaseConfig databaseConfig = dbUnitConn.getConfig();
-            databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, true);
-            databaseConfig.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
-            databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
-
-            return dbUnitConn.getConnection();
-
-        } catch (SQLException | DatabaseUnitException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").path(path).build(userId);
     }
 }
