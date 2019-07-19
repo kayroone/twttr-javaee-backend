@@ -2,7 +2,6 @@ package de.openknowledge.jwe.infrastructure.security;
 
 import de.openknowledge.jwe.IntegrationTestUtil;
 import de.openknowledge.jwe.domain.user.TestUser;
-import de.openknowledge.jwe.domain.user.User;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -49,11 +48,10 @@ public class KeyCloakResourceLoader {
      * @throws IOException
      */
 
-    public String getKeyCloakAccessToken() throws IOException {
+    public String getKeyCloakAccessTokenForDefaultUser() throws IOException {
 
         JsonObject keyCloakConfig = getConfigFile();
-        User testUser = TestUser.newDefaultUser();
-        ArrayList<NameValuePair> postParameters = createAccessTokenRequestParameters(testUser, keyCloakConfig);
+        ArrayList<NameValuePair> postParameters = createAccessTokenRequestParameters(keyCloakConfig);
 
         HttpResponse httpResponse = sendAccessTokenRequest(postParameters);
 
@@ -85,20 +83,18 @@ public class KeyCloakResourceLoader {
     /**
      * Create a list holding key value pairs with parameters needed for the Keycloak access token HTTP request.
      *
-     * @param testUser       The username of the user the token will be fetched for.
      * @param keyCloakConfig The Keycloak server config file.
      * @return A list holding key value pairs with parameters.
      */
 
-    private ArrayList<NameValuePair> createAccessTokenRequestParameters(final User testUser,
-                                                                        final JsonObject keyCloakConfig) {
+    private ArrayList<NameValuePair> createAccessTokenRequestParameters(final JsonObject keyCloakConfig) {
 
         ArrayList<NameValuePair> postParameters = new ArrayList<>();
 
         postParameters.add(new BasicNameValuePair(KEYCLOAK_GRANT_TYPE_REQUEST_PARAMETER,
                 KEYCLOAK_PASSWORD_REQUEST_PARAMETER));
         postParameters.add(new BasicNameValuePair(KEYCLOAK_USERNAME_REQUEST_PARAMETER,
-                testUser.getUsername()));
+                TestUser.getDefaultUsername()));
         postParameters.add(new BasicNameValuePair(KEYCLOAK_PASSWORD_REQUEST_PARAMETER,
                 TestUser.getDefaultUserPassword()));
         postParameters.add(new BasicNameValuePair(KEYCLOAK_REALM_REQUEST_PARAMETER,

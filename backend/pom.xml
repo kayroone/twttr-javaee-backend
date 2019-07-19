@@ -79,31 +79,6 @@
             </testResource>
         </testResources>
         <plugins>
-            <!--<plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${version.maven-rescource-plugin}</version>
-                <executions>
-                    <execution>
-                        <id>copy-keycloak.json</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <overwrite>true</overwrite>
-                            <outputDirectory>${basedir}/src/test/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <includes>
-                                        <include>keycloak.json</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -111,13 +86,6 @@
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
-                        <version>${version.maven-surefire-plugin}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -141,13 +109,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
-                        <version>${version.maven-surefire-plugin}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>io.thorntail</groupId>
@@ -293,7 +254,7 @@
             <version>${version.thorntail}</version>
         </dependency>
 
-        <!-- apache commons -->
+        <!-- Apache Commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -323,7 +284,7 @@
             <version>${version.slf4j}</version>
         </dependency>
 
-        <!-- unit testing -->
+        <!-- Unit Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -355,15 +316,15 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- persistence testing -->
+        <!-- Persistence Testing -->
         <dependency>
             <groupId>com.github.database-rider</groupId>
-            <artifactId>rider-junit5</artifactId>
-            <version>${version.database-rider}</version>
+            <artifactId>rider-core</artifactId>
+            <version>1.7.1</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- integration testing -->
+        <!-- Integration Testing -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
@@ -377,7 +338,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- architecture testing -->
+        <!-- Architecture Testing -->
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit4</artifactId>
@@ -385,7 +346,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- other testing dependencies -->
+        <!-- Other Testing Dependencies -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

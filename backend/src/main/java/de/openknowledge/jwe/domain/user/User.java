@@ -21,22 +21,22 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Entity
-@Table(name = "TAB_USER")
+@Table(name = "tab_user")
 public class User extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long id;
 
     @NotNull
     @Size(min = 1, max = 80)
-    @Column(name = "USER_NAME", nullable = false, length = 80)
+    @Column(name = "user_name", nullable = false, length = 80)
     private String username;
 
     @NotNull
     @Size(max = 500)
-    @Column(name = "USER_PASSWORD", length = 500)
+    @Column(name = "user_password", length = 500)
     private String password;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -54,13 +54,13 @@ public class User extends AbstractEntity<Long> {
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "TAB_USER_TWEET_LIKE",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "TWEET_ID"))
+            name = "tab_user_tweet_like",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_id"))
     private Set<Tweet> likes;
 
     @Size(max = 500)
-    @Column(name = "USER_ICON_PATH", length = 500)
+    @Column(name = "user_icon_path", length = 500)
     private String iconPath;
 
     public static UserBuilder newBuilder() {

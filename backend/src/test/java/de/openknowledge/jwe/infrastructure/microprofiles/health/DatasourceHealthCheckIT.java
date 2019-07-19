@@ -39,11 +39,10 @@ public class DatasourceHealthCheckIT {
         .then()
         .contentType(MediaType.APPLICATION_JSON)
         .statusCode(Response.Status.OK.getStatusCode())
-        //.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("json/schema/HealthCheck-schema.json"))
         .body("outcome", Matchers.equalTo("UP"))
         .body("checks[0].name", Matchers.equalTo("datasource"))
         .body("checks[0].state", Matchers.equalTo("UP"))
-        .body("checks[0].data.driverName", Matchers.equalTo("H2 JDBC Driver"))
-        .body("checks[0].data.databaseProductName", Matchers.equalTo("H2"));
+        .body("checks[0].data.driverName", Matchers.equalTo("PostgreSQL JDBC Driver"))
+        .body("checks[0].data.databaseProductName", Matchers.equalTo("PostgreSQL"));
   }
 }

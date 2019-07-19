@@ -17,25 +17,25 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Entity
-@Table(name = "TAB_TWEET")
+@Table(name = "tab_tweet")
 public class Tweet extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TWEET_ID", nullable = false)
+    @Column(name = "tweet_id", nullable = false)
     private Long id;
 
     @NotNull
-    @Column(name = "TWEET_POST_TIME", nullable = false)
+    @Column(name = "tweet_post_time", nullable = false)
     private LocalDateTime postTime;
 
     @NotNull
-    @Column(name = "TWEET_MESSAGE", nullable = false)
+    @Column(name = "tweet_message", nullable = false)
     private String message;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "TWEET_AUTHOR")
+    @JoinColumn(name = "tweet_author")
     private User author;
 
     @ManyToMany(mappedBy = "likes")
@@ -45,7 +45,7 @@ public class Tweet extends AbstractEntity<Long> {
     private Set<Tweet> retweets;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "TWEET_ROOT_TWEET_ID")
+    @JoinColumn(name = "tweet_root_tweet_id")
     private Tweet rootTweet;
 
     /**

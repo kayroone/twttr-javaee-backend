@@ -40,4 +40,9 @@ public class TestUser {
 
         return DEFAULT_USER_PASSWORD;
     }
+
+    public static String getDefaultUsername() {
+
+        return DEFAULT_USER_NAME;
+    }
 }

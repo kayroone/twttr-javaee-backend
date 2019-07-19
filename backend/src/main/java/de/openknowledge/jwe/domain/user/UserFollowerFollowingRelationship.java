@@ -12,22 +12,22 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Entity
-@Table(name = "TAB_USER_FOLLOWER_FOLLOWING_RELATIONSHIP")
+@Table(name = "tab_user_follower_following_relationship")
 public class UserFollowerFollowingRelationship extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "USER_FOLLOWER_FOLLOWING_RELATIONSHIP_ID")
+    @Column(name = "user_follower_following_relationship_id")
     private long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_FOLLOWER_ID", referencedColumnName = "USER_ID")
+    @JoinColumn(name = "user_follower_id", referencedColumnName = "user_id")
     private User follower;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_FOLLOWING_ID", referencedColumnName = "USER_ID")
+    @JoinColumn(name = "user_following_id", referencedColumnName = "user_id")
     private User following;
 
     @Override

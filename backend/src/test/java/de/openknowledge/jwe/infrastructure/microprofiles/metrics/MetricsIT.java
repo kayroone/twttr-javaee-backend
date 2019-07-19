@@ -37,7 +37,7 @@ public class MetricsIT {
         .when()
         .get(UriBuilder.fromUri(uri).path("application").build())
         .then()
-        .statusCode(Response.Status.CREATED.getStatusCode());
+        .statusCode(Response.Status.NO_CONTENT.getStatusCode());
   }
 
   @Test

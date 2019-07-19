@@ -39,7 +39,7 @@ public class UserResourceIT {
     @BeforeClass
     public static void getKeyCloakAccessToken() throws IOException {
 
-        accessToken = new KeyCloakResourceLoader().getKeyCloakAccessToken();
+        accessToken = new KeyCloakResourceLoader().getKeyCloakAccessTokenForDefaultUser();
     }
 
     @Test

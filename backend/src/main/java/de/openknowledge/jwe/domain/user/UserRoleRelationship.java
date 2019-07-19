@@ -13,20 +13,20 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Entity
-@Table(name = "TAB_USER_ROLE_RELATIONSHIP")
+@Table(name = "tab_user_role_relationship")
 public class UserRoleRelationship extends AbstractEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ROLE_RELATIONSHIP_ID")
+    @Column(name = "user_role_relationship_id")
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Size(max = 20)
-    @Column(name = "USER_ROLE")
+    @Column(name = "user_role")
     private String role;
 
     @Override
