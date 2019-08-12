@@ -15,10 +15,11 @@
  */
 package de.openknowledge.jwe.infrastructure.microprofiles.health;
 
-import de.openknowledge.jwe.IntegrationTestUtil;
+import de.openknowledge.jwe.AbstractContainer;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,23 +27,37 @@ import javax.ws.rs.core.Response;
 /**
  * Integration test for the MP-Health {@link SystemHealthCheck}.
  */
-public class SystemHealthCheckIT {
 
-  private final String uri = IntegrationTestUtil.getHealthCheckURI();
+public class SystemHealthCheckIT extends AbstractContainer {
 
-  @Test
-  public void checkHealth() {
-    RestAssured.given()
-        .accept(MediaType.APPLICATION_JSON)
-        .when()
-        .get(uri)
-        .then()
-        .contentType(MediaType.APPLICATION_JSON)
-        .statusCode(Response.Status.OK.getStatusCode())
-        //.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("json/schema/HealthCheck-schema.json"))
-        .body("outcome", Matchers.equalTo("UP"))
-        .body("checks[1].name", Matchers.equalTo("system"))
-        .body("checks[1].state", Matchers.equalTo("UP"))
-        .body("checks[1].data", Matchers.notNullValue());
-  }
+    private static String apiUrl;
+
+    @BeforeAll
+    public static void setUp() {
+
+        apiUrl = getApiUrl("health");
+    }
+
+    @Test
+    public void checkHealth() {
+
+        RestAssured.given()
+                .accept(MediaType.APPLICATION_JSON)
+                .when()
+                .get(apiUrl)
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("outcome", Matchers.equalTo("UP"))
+                .rootPath("checks.find{ it.name == 'system' }")
+                .body("state", Matchers.equalTo("UP"))
+                .body("data.arch", Matchers.notNullValue())
+                .body("data.name", Matchers.notNullValue())
+                .body("data.loadAverage", Matchers.notNullValue())
+                .body("data.'loadAverage per processor'", Matchers.notNullValue())
+                .body("data.'memory free'", Matchers.notNullValue())
+                .body("data.'memory total'", Matchers.notNullValue())
+                .body("data.processors", Matchers.notNullValue())
+                .body("data.version", Matchers.notNullValue());
+    }
 }

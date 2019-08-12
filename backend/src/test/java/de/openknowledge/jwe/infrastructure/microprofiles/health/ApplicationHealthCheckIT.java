@@ -25,9 +25,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Integration test for the MP-Health {@link DatasourceHealthCheck}.
+ * Integration test for the MP-Health {@link ApplicationHealthCheck}.
  */
-public class DatasourceHealthCheckIT extends AbstractContainer {
+public class ApplicationHealthCheckIT extends AbstractContainer {
 
     private static String apiUrl;
 
@@ -47,11 +47,10 @@ public class DatasourceHealthCheckIT extends AbstractContainer {
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("outcome", Matchers.equalTo("UP"))
-                .rootPath("checks.find{ it.name == 'datasource' }")
+                .rootPath("checks.find{ it.name == 'application' }")
                 .body("state", Matchers.equalTo("UP"))
-                .body("data.driverName", Matchers.equalTo("H2 JDBC Driver"))
-                .body("data.driverVersion", Matchers.notNullValue())
-                .body("data.databaseProductName", Matchers.equalTo("H2"))
-                .body("data.databaseProductVersion", Matchers.notNullValue());
+                .body("data.buildVersion", Matchers.notNullValue())
+                .body("data.buildTimestamp", Matchers.notNullValue())
+                .body("data.name", Matchers.equalTo("base"));
     }
 }
