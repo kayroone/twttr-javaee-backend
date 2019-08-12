@@ -55,13 +55,14 @@
 
         <version.rest-assured>4.0.0</version.rest-assured>
         <version.wiremock>2.23.2</version.wiremock>
-
-        <version.archunit>0.10.2</version.archunit>
+        <version.testcontainers>1.11.3</version.testcontainers>
 
         <version.hibernate-validator>6.0.16.Final</version.hibernate-validator>
         <version.hibernate-core>5.4.2.Final</version.hibernate-core>
 
         <maven.versions.plugin>2.7</maven.versions.plugin>
+
+        <version.dockerfile-plugin>1.4.12</version.dockerfile-plugin>
     </properties>
 
     <build>
@@ -83,9 +84,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${version.maven-surefire-plugin}</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -99,14 +97,6 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <thorntail.test.host>${thorntail.bind.address}</thorntail.test.host>
-                                <thorntail.test.port>${thorntail.http.port}</thorntail.test.port>
-                                <thorntail.test.port-offset>${thorntail.port.offset}</thorntail.test.port-offset>
-                                <thorntail.test.context-path>${thorntail.context.path}</thorntail.test.context-path>
-                            </systemPropertyVariables>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -129,26 +119,32 @@
                             <goal>package</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>thorntail-start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>thorntail-stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>${maven.versions.plugin}</version>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${version.dockerfile-plugin}</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>twttr/api</repository>
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <JAR_FILE>${project.build.finalName}-thorntail.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -337,12 +333,16 @@
             <version>${version.rest-assured}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Architecture Testing -->
         <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit4</artifactId>
-            <version>${version.archunit}</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${version.testcontainers}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${version.testcontainers}</version>
             <scope>test</scope>
         </dependency>
 
