@@ -8,7 +8,7 @@
     <parent>
         <groupId>de.openknowledge.jwe</groupId>
         <artifactId>twttr</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <properties>

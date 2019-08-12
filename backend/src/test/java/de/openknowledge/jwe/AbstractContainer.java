@@ -5,7 +5,11 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.ws.rs.core.UriBuilder;
+
+import static junit.framework.TestCase.assertTrue;
 
 /**
  * Abstract class to setup integration test containers.
@@ -14,17 +18,7 @@ import javax.ws.rs.core.UriBuilder;
 @Testcontainers
 public abstract class AbstractContainer {
 
-    private static final int H2_TCP_PORT = 1521;
-    private static final int H2_WEB_PORT = 81;
-    private static final int THORNTAIL_WEB_PORT = 8080;
-
-    /**
-     * Database container based on a H2 docker image.
-     */
-
-    private static GenericContainer databaseContainer =
-            new GenericContainer("oscarfonts/h2:latest")
-                    .withExposedPorts(H2_TCP_PORT, H2_WEB_PORT);
+    private static final int THORNTAIL_WEB_PORT = 8081;
 
     /**
      * Database container based on the thorntail showcase docker image.
@@ -32,10 +26,10 @@ public abstract class AbstractContainer {
 
     @Container
     private static GenericContainer apiContainer =
-            new GenericContainer("archetype/thorntail:0")
+            new GenericContainer("twttr/api:1.0")
                     .withExposedPorts(THORNTAIL_WEB_PORT)
                     .waitingFor(
-                            Wait.forHttp("/base/api/hello")
+                            Wait.forHttp("/twttr-service/api/hello")
                     );
 
     /**
@@ -63,7 +57,12 @@ public abstract class AbstractContainer {
 
     protected static void startDatabaseContainer() {
 
-        databaseContainer.start();
+        EntityManager entityManager =
+                Persistence.createEntityManagerFactory("test-local").createEntityManager();
+
+        assertTrue(entityManager.isOpen());
+
+        //databaseContainer.start();
     }
 
     /**
@@ -78,17 +77,6 @@ public abstract class AbstractContainer {
     }
 
     /**
-     * Stop the database container manually.
-     * <p>
-     * The default behavior is that containers are shut down automatically after all tests have been run.
-     */
-
-    protected static void stopDatabaseContainer() {
-
-        databaseContainer.stop();
-    }
-
-    /**
      * Stop the API container manually.
      * <p>
      * The default behavior is that containers are shut down automatically after all tests have been run.
@@ -99,18 +87,10 @@ public abstract class AbstractContainer {
         apiContainer.stop();
     }
 
-    protected static void restartContainers() {
+    protected static void restartApiContainer() {
 
         stopApiContainer();
-        stopDatabaseContainer();
-
-        startDatabaseContainer();
         startApiContainer();
-    }
-
-    protected static boolean isDatabaseContainerRunning() {
-
-        return databaseContainer.isRunning();
     }
 
     protected static boolean isApiContainerRunning() {
