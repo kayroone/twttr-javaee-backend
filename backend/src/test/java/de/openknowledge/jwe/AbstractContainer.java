@@ -61,8 +61,6 @@ public abstract class AbstractContainer {
                 Persistence.createEntityManagerFactory("test-local").createEntityManager();
 
         assertTrue(entityManager.isOpen());
-
-        //databaseContainer.start();
     }
 
     /**

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -19,24 +18,6 @@ public class AbstractContainerIT extends AbstractContainer {
     public void startContainer() {
 
         startApiContainer();
-    }
-
-    @Test
-    public void testStartWithDatabase() {
-
-        startDatabaseContainer();
-
-        assertTrue(isApiContainerRunning());
-        assertTrue(isDatabaseContainerRunning());
-    }
-
-    @Test
-    public void testStartWithoutDatabase() {
-
-        stopDatabaseContainer();
-
-        assertTrue(isApiContainerRunning());
-        assertFalse(isDatabaseContainerRunning());
     }
 
     @Test
@@ -61,12 +42,10 @@ public class AbstractContainerIT extends AbstractContainer {
     }
 
     @Test
-    public void testStopContainersManually() {
+    public void testStopApiContainerManually() {
 
         stopApiContainer();
-        stopDatabaseContainer();
 
-        assertFalse(isDatabaseContainerRunning());
         assertFalse(isApiContainerRunning());
     }
 }
