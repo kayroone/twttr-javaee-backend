@@ -2,6 +2,7 @@ package de.openknowledge.jwe.infrastructure.security;
 
 import de.openknowledge.jwe.IntegrationTestUtil;
 import de.openknowledge.jwe.domain.user.TestUser;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -14,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -27,19 +29,19 @@ import java.util.Objects;
 
 public class KeyCloakResourceLoader {
 
-    private final String KEYCLOAK_ACCESS_TOKEN_PROPERTY = "access_token";
+    private static final String KEYCLOAK_ACCESS_TOKEN_PROPERTY = "access_token";
 
-    private final String KEYCLOAK_CONFIG_FILE = "keycloak.json";
+    private static final String KEYCLOAK_CONFIG_FILE = "src/test/resources/keycloak.json";
 
-    private final String KEYCLOAK_GRANT_TYPE_REQUEST_PARAMETER = "grant_type";
-    private final String KEYCLOAK_PASSWORD_REQUEST_PARAMETER = "password";
-    private final String KEYCLOAK_USERNAME_REQUEST_PARAMETER = "username";
-    private final String KEYCLOAK_REALM_REQUEST_PARAMETER = "realm";
-    private final String KEYCLOAK_CLIENT_ID_REQUEST_PARAMETER = "client_id";
-    private final String KEYCLOAK_CLIENT_SECRET_REQUEST_PARAMETER = "client_secret";
-    private final String KEYCLOAK_RESOURCE_REQUEST_PARAMETER = "resource";
-    private final String KEYCLOAK_CREDENTIALS_REQUEST_PARAMETER = "credentials";
-    private final String KEYCLOAK_SECRET_REQUEST_PARAMETER = "secret";
+    private static final String KEYCLOAK_GRANT_TYPE_REQUEST_PARAMETER = "grant_type";
+    private static final String KEYCLOAK_PASSWORD_REQUEST_PARAMETER = "password";
+    private static final String KEYCLOAK_USERNAME_REQUEST_PARAMETER = "username";
+    private static final String KEYCLOAK_REALM_REQUEST_PARAMETER = "realm";
+    private static final String KEYCLOAK_CLIENT_ID_REQUEST_PARAMETER = "client_id";
+    private static final String KEYCLOAK_CLIENT_SECRET_REQUEST_PARAMETER = "client_secret";
+    private static final String KEYCLOAK_RESOURCE_REQUEST_PARAMETER = "resource";
+    private static final String KEYCLOAK_CREDENTIALS_REQUEST_PARAMETER = "credentials";
+    private static final String KEYCLOAK_SECRET_REQUEST_PARAMETER = "secret";
 
     /**
      * Get the access token (signed JWT) for the test default user of this application.
@@ -48,7 +50,7 @@ public class KeyCloakResourceLoader {
      * @throws IOException
      */
 
-    public String getKeyCloakAccessTokenForDefaultUser() throws IOException {
+    public static String getKeyCloakAccessTokenForDefaultUser() throws IOException {
 
         JsonObject keyCloakConfig = getConfigFile();
         ArrayList<NameValuePair> postParameters = createAccessTokenRequestParameters(keyCloakConfig);
@@ -68,12 +70,11 @@ public class KeyCloakResourceLoader {
      * @throws IOException
      */
 
-    private JsonObject getConfigFile() throws IOException {
+    private static JsonObject getConfigFile() throws IOException {
 
         String jsonString;
 
-        try (InputStream inputStream = this.getClass().getClassLoader()
-                .getResourceAsStream(KEYCLOAK_CONFIG_FILE)) {
+        try (InputStream inputStream = FileUtils.openInputStream(new File(KEYCLOAK_CONFIG_FILE))) {
             jsonString = IOUtils.toString(Objects.requireNonNull(inputStream), StandardCharsets.UTF_8.name());
         }
 
@@ -87,7 +88,7 @@ public class KeyCloakResourceLoader {
      * @return A list holding key value pairs with parameters.
      */
 
-    private ArrayList<NameValuePair> createAccessTokenRequestParameters(final JsonObject keyCloakConfig) {
+    private static ArrayList<NameValuePair> createAccessTokenRequestParameters(final JsonObject keyCloakConfig) {
 
         ArrayList<NameValuePair> postParameters = new ArrayList<>();
 
@@ -116,7 +117,7 @@ public class KeyCloakResourceLoader {
      * @throws IOException
      */
 
-    private HttpResponse sendAccessTokenRequest(final ArrayList<NameValuePair> postParameters) throws IOException {
+    private static HttpResponse sendAccessTokenRequest(final ArrayList<NameValuePair> postParameters) throws IOException {
 
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(IntegrationTestUtil.getKeyCloakAccessTokenURL());

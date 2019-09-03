@@ -15,26 +15,35 @@
  */
 package de.openknowledge.jwe.infrastructure.microprofiles.health;
 
-import de.openknowledge.jwe.AbstractContainer;
+import de.openknowledge.jwe.IntegrationTestContainer;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * Integration test for the MP-Health {@link ApplicationHealthCheck}.
  */
-public class ApplicationHealthCheckIT extends AbstractContainer {
 
-    private static String apiUrl;
+@Testcontainers
+public class ApplicationHealthCheckIT {
+
+    @Container
+    private static GenericContainer testContainer = IntegrationTestContainer.getContainer();
+
+    private static String uri;
 
     @BeforeAll
     public static void setUp() {
 
-        apiUrl = getApiUrl("health");
+        uri = getApplicationUri();
     }
 
     @Test
@@ -42,7 +51,7 @@ public class ApplicationHealthCheckIT extends AbstractContainer {
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON)
                 .when()
-                .get(apiUrl)
+                .get(uri)
                 .then()
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
@@ -52,5 +61,15 @@ public class ApplicationHealthCheckIT extends AbstractContainer {
                 .body("data.buildVersion", Matchers.notNullValue())
                 .body("data.buildTimestamp", Matchers.notNullValue())
                 .body("data.name", Matchers.equalTo("base"));
+    }
+
+    private static String getApplicationUri() {
+
+        String uri = "http://{host}:{port}/{path}";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", testContainer.getContainerIpAddress())
+                .resolveTemplate("port", testContainer.getFirstMappedPort())
+                .resolveTemplate("path", "health")
+                .toTemplate();
     }
 }

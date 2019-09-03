@@ -29,7 +29,7 @@ thorntail:
       data-sources:
         TwttrDS:
           driver-name: org.postgresql
-          connection-url: jdbc:postgresql://localhost:5432/twttr
+          connection-url: jdbc:postgresql://db:5432/twttr
           user-name: keycloak
           password: password
 

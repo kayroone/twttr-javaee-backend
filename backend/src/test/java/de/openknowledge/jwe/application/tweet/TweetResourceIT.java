@@ -1,19 +1,19 @@
 package de.openknowledge.jwe.application.tweet;
 
-import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
-import com.github.database.rider.core.util.EntityManagerProvider;
-import de.openknowledge.jwe.IntegrationTestUtil;
+import de.openknowledge.jwe.IntegrationTestContainer;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import org.hamcrest.Matchers;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -27,24 +27,22 @@ import java.net.URI;
 /**
  * Integration test class for the resource {@link TweetResource}.
  */
+
+@Testcontainers
 public class TweetResourceIT {
 
-    private final String baseURI = IntegrationTestUtil.getBaseURI();
+    private static String uri;
+    private static String token;
 
-    private static String accessToken;
+    @Container
+    private static GenericContainer testContainer = IntegrationTestContainer.getContainer();
 
-    @BeforeClass
-    public static void init() throws IOException {
+    @BeforeAll
+    public static void setUp() throws IOException {
 
-        // Fetch valid access token from keycloak service:
-        accessToken = new KeyCloakResourceLoader().getKeyCloakAccessTokenForDefaultUser();
+        uri = getTweetsApiUri();
+        token = KeyCloakResourceLoader.getKeyCloakAccessTokenForDefaultUser();
     }
-
-    @Rule
-    public EntityManagerProvider entityManagerProvider = EntityManagerProvider.instance("test-local");
-
-    @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(entityManagerProvider.connection());
 
     @Test
     @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, disableConstraints = true)
@@ -60,11 +58,11 @@ public class TweetResourceIT {
                 .build();
 
         RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
+                .headers("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(tweetJsonObject.toString())
                 .when()
-                .post(getTweetsApiUri())
+                .post(uri)
                 .then()
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.CREATED.getStatusCode())
@@ -361,10 +359,15 @@ public class TweetResourceIT {
                 .body("size()", Matchers.equalTo(0));
     }*/
 
-    private URI getTweetsApiUri() {
+    private static String getTweetsApiUri() {
 
-        return UriBuilder.fromUri(baseURI).path(Constants.ROOT_API_URI)
-                .path(Constants.TWEETS_API_URI).build();
+        String uri = "http://{host}:{port}/{context}/{path}";
+        return UriBuilder.fromUri(uri)
+                .resolveTemplate("host", testContainer.getContainerIpAddress())
+                .resolveTemplate("port", testContainer.getFirstMappedPort())
+                .resolveTemplate("context", Constants.ROOT_API_URI)
+                .resolveTemplate("path", Constants.TWEETS_API_URI)
+                .toTemplate();
     }
 
     private URI getSingleItemUri(final Long tweetId) {
