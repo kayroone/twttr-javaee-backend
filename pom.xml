@@ -9,7 +9,7 @@
     <version>1.0</version>
     <packaging>pom</packaging>
 
-    <name>Twttr clone</name>
+    <name>Twttr Main</name>
     <description>A Twitter clone app by Jan Wiegmann</description>
 
     <properties>
@@ -18,7 +18,6 @@
     </properties>
 
     <modules>
-        <module>frontend</module>
         <module>backend</module>
     </modules>
 

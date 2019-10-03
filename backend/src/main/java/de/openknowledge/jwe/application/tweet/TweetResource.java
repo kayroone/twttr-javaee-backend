@@ -106,7 +106,7 @@ public class TweetResource {
 
             tweetRepository.delete(foundTweet);
 
-            LOG.info("Tweet deleted");
+            LOG.info("Tweet with id {} deleted", tweetId);
 
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (EntityNotFoundException e) {

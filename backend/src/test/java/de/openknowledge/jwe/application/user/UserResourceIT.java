@@ -2,7 +2,7 @@ package de.openknowledge.jwe.application.user;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
-import de.openknowledge.jwe.IntegrationTestContainer;
+import de.openknowledge.jwe.DockerComposeEnvironment;
 import de.openknowledge.jwe.domain.user.TestUser;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
@@ -10,7 +10,7 @@ import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -29,7 +29,7 @@ public class UserResourceIT {
     private static String token;
 
     @Container
-    private static GenericContainer testContainer = IntegrationTestContainer.getContainer();
+    private static DockerComposeContainer composeEnvironment = DockerComposeEnvironment.getEnvironment();
 
     @BeforeAll
     public static void setUp() throws IOException {
@@ -354,8 +354,8 @@ public class UserResourceIT {
 
         String uri = "http://{host}:{port}/{context}/{path}";
         return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", testContainer.getContainerIpAddress())
-                .resolveTemplate("port", testContainer.getFirstMappedPort())
+                .resolveTemplate("host", DockerComposeEnvironment.getTwttrHost())
+                .resolveTemplate("port", DockerComposeEnvironment.getTwttrPort())
                 .resolveTemplate("context", Constants.ROOT_API_URI)
                 .resolveTemplate("path", Constants.USERS_API_URI)
                 .toTemplate();

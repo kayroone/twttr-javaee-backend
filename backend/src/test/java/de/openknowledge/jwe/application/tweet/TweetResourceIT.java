@@ -3,7 +3,7 @@ package de.openknowledge.jwe.application.tweet;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
-import de.openknowledge.jwe.IntegrationTestContainer;
+import de.openknowledge.jwe.DockerComposeEnvironment;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
 import de.openknowledge.jwe.infrastructure.security.KeyCloakResourceLoader;
 import io.restassured.RestAssured;
@@ -11,7 +11,7 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -31,47 +31,47 @@ import java.net.URI;
 @Testcontainers
 public class TweetResourceIT {
 
-    private static String uri;
-    private static String token;
+  private static String uri;
+  private static String token;
 
-    @Container
-    private static GenericContainer testContainer = IntegrationTestContainer.getContainer();
+  @Container
+  private static DockerComposeContainer testEnvironment = DockerComposeEnvironment.getEnvironment();
 
-    @BeforeAll
-    public static void setUp() throws IOException {
+  @BeforeAll
+  public static void setUp() throws IOException {
 
-        uri = getTweetsApiUri();
-        token = KeyCloakResourceLoader.getKeyCloakAccessTokenForDefaultUser();
-    }
+    uri = getTweetsApiUri();
+    token = KeyCloakResourceLoader.getKeyCloakAccessTokenForDefaultUser();
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-expected.yml")
-    public void createTweetShouldReturn201() {
+  @Test
+  @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, disableConstraints = true)
+  @ExpectedDataSet(value = "datasets/tweets-create-expected.yml")
+  public void createTweetShouldReturn201() {
 
-        String message = "Today is a good day!";
-        String postTime = "2019-01-01T12:12:12.000Z";
+    String message = "Today is a good day!";
+    String postTime = "2019-01-01T12:12:12.000Z";
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", message)
-                .add("postTime", postTime)
-                .build();
+    JsonObject tweetJsonObject = Json.createObjectBuilder()
+            .add("message", message)
+            .add("postTime", postTime)
+            .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(uri)
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.CREATED.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
-                .body("id", Matchers.notNullValue())
-                .body("message", Matchers.equalTo(message))
-                .body("postTime", Matchers.equalTo(postTime))
-                .body("authorId", Matchers.notNullValue());
-    }
+    RestAssured.given()
+            .headers("Authorization", "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(tweetJsonObject.toString())
+            .when()
+            .post(uri)
+            .then()
+            .contentType(MediaType.APPLICATION_JSON)
+            .statusCode(Response.Status.CREATED.getStatusCode())
+            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+            .body("id", Matchers.notNullValue())
+            .body("message", Matchers.equalTo(message))
+            .body("postTime", Matchers.equalTo(postTime))
+            .body("authorId", Matchers.notNullValue());
+  }
 
     /*@Test
     @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
@@ -359,24 +359,24 @@ public class TweetResourceIT {
                 .body("size()", Matchers.equalTo(0));
     }*/
 
-    private static String getTweetsApiUri() {
+  private static String getTweetsApiUri() {
 
-        String uri = "http://{host}:{port}/{context}/{path}";
-        return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", testContainer.getContainerIpAddress())
-                .resolveTemplate("port", testContainer.getFirstMappedPort())
-                .resolveTemplate("context", Constants.ROOT_API_URI)
-                .resolveTemplate("path", Constants.TWEETS_API_URI)
-                .toTemplate();
-    }
+    String uri = "http://{host}:{port}/{context}/{path}";
+    return UriBuilder.fromUri(uri)
+            .resolveTemplate("host", DockerComposeEnvironment.getTwttrHost())
+            .resolveTemplate("port", DockerComposeEnvironment.getTwttrPort())
+            .resolveTemplate("context", Constants.ROOT_API_URI)
+            .resolveTemplate("path", Constants.TWEETS_API_URI)
+            .toTemplate();
+  }
 
-    private URI getSingleItemUri(final Long tweetId) {
+  private URI getSingleItemUri(final Long tweetId) {
 
-        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
-    }
+    return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
+  }
 
-    private URI getSingleItemUriWithPath(final String path, final Long userId) {
+  private URI getSingleItemUriWithPath(final String path, final Long userId) {
 
-        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").path(path).build(userId);
-    }
+    return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").path(path).build(userId);
+  }
 }

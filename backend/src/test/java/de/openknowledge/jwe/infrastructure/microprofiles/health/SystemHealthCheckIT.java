@@ -15,12 +15,12 @@
  */
 package de.openknowledge.jwe.infrastructure.microprofiles.health;
 
-import de.openknowledge.jwe.IntegrationTestContainer;
+import de.openknowledge.jwe.DockerComposeEnvironment;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -36,7 +36,7 @@ import javax.ws.rs.core.UriBuilder;
 public class SystemHealthCheckIT {
 
     @Container
-    private static GenericContainer testContainer = IntegrationTestContainer.getContainer();
+    private static DockerComposeContainer composeEnvironment = DockerComposeEnvironment.getEnvironment();
 
     private static String uri;
 
@@ -69,8 +69,8 @@ public class SystemHealthCheckIT {
 
         String uri = "http://{host}:{port}/{path}";
         return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", testContainer.getContainerIpAddress())
-                .resolveTemplate("port", testContainer.getFirstMappedPort())
+                .resolveTemplate("host", DockerComposeEnvironment.getTwttrHost())
+                .resolveTemplate("port", DockerComposeEnvironment.getTwttrPort())
                 .resolveTemplate("path", "health")
                 .toTemplate();
     }
