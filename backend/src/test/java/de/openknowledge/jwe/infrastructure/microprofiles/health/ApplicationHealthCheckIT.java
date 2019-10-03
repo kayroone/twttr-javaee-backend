@@ -67,8 +67,8 @@ public class ApplicationHealthCheckIT {
 
         String uri = "http://{host}:{port}/{path}";
         return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", DockerComposeEnvironment.getTwttrHost())
-                .resolveTemplate("port", DockerComposeEnvironment.getTwttrPort())
+                .resolveTemplate("host", DockerComposeEnvironment.getApiHost())
+                .resolveTemplate("port", DockerComposeEnvironment.getApiPort())
                 .resolveTemplate("path", "health")
                 .toTemplate();
     }

@@ -10,43 +10,43 @@ import java.io.File;
 
 public class DockerComposeEnvironment {
 
-  private static final int POSTGRES_DB__PORT = 5432;
-  private static final int TWTTR_API_WEB_PORT = 8080;
+    private static final int DB_PORT = 5432;
+    private static final int API_WEB_PORT = 8081;
 
-  private static final String POSTGRES_HOST_NAME = "postgres";
-  private static final String TWTTR_API_HOST_NAME = "twttr/api";
+    private static final String DB_HOST_NAME = "postgres";
+    private static final String API_HOST_NAME = "klex/api";
 
-  /**
-   * API container based on the thorntail showcase docker image.
-   */
+    /**
+     * Docker compose container based on local docker-compose.yml file.
+     */
 
-  public static DockerComposeContainer environment =
-          new DockerComposeContainer(new File("docker-compose.yml"))
-                  .withExposedService(POSTGRES_HOST_NAME, POSTGRES_DB__PORT)
-                  .withExposedService(TWTTR_API_HOST_NAME, TWTTR_API_WEB_PORT);
+    public static DockerComposeContainer environment =
+            new DockerComposeContainer(new File("docker-compose.yml"))
+                    .withExposedService(DB_HOST_NAME, DB_PORT)
+                    .withExposedService(API_HOST_NAME, API_WEB_PORT);
 
-  public static DockerComposeContainer getEnvironment() {
+    public static DockerComposeContainer getEnvironment() {
 
-    return environment;
-  }
+        return environment;
+    }
 
-  public static String getPostgresHost() {
+    public static String getDbHost() {
 
-    return environment.getServiceHost(POSTGRES_HOST_NAME, POSTGRES_DB__PORT);
-  }
+        return environment.getServiceHost(DB_HOST_NAME, DB_PORT);
+    }
 
-  public static int getPostgresPort() {
+    public static int getDbPort() {
 
-    return environment.getServicePort(POSTGRES_HOST_NAME, POSTGRES_DB__PORT);
-  }
+        return environment.getServicePort(DB_HOST_NAME, DB_PORT);
+    }
 
-  public static String getTwttrHost() {
+    public static String getApiHost() {
 
-    return environment.getServiceHost(TWTTR_API_HOST_NAME, TWTTR_API_WEB_PORT);
-  }
+        return environment.getServiceHost(API_HOST_NAME, API_WEB_PORT);
+    }
 
-  public static int getTwttrPort() {
+    public static int getApiPort() {
 
-    return environment.getServicePort(TWTTR_API_HOST_NAME, TWTTR_API_WEB_PORT);
-  }
+        return environment.getServicePort(API_HOST_NAME, API_WEB_PORT);
+    }
 }
