@@ -3,6 +3,9 @@
 *.iml
 *.iws
 
+# Postgres
+backend/src/main/resources/pg_data
+
 # Keycloak
 keycloak.mv.db
 keycloak.trace.db
