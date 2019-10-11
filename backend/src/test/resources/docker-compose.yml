@@ -1,18 +1,19 @@
-version: '3'
+version: '3.7'
 
 services:
 
-  postgres-database:
+  postgres:
     image: postgres
     volumes:
-      - ./pg_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pg:/var/lib/postgresql
+      - pg_data:/var/lib/postgresql/data
 
-  keycloak-service:
+  keycloak:
     image: jboss/keycloak
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: postgres-database
+      DB_ADDR: postgres
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_SCHEMA: public
@@ -22,10 +23,17 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - postgres-database
+      - postgres
 
-  twttr-api:
-    image: twttr/api:1.0
+  twttr:
+    image: registry.hub.docker.com/kayroone/twttr-api:latest
+    ports:
+      - 8081:8081
     depends_on:
-      - postgres-database
-      - keycloak-service
+      - postgres
+      - keycloak
+
+volumes:
+  pg:
+  pg_data:
+    driver: local
