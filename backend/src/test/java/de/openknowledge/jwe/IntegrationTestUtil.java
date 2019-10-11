@@ -79,6 +79,6 @@ public final class IntegrationTestUtil {
     }
 
     private static String getContextRoot() {
-        return System.getProperty("twttr.test.context-path", "twttr-service");
+      return System.getProperty("twttr.test.context-path", "/");
     }
 }

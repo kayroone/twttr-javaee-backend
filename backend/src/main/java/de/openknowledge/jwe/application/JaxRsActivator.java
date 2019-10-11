@@ -15,8 +15,8 @@
  */
 package de.openknowledge.jwe.application;
 
-import de.openknowledge.jwe.domain.user.UserRole;
 import de.openknowledge.jwe.infrastructure.constants.Constants;
+import org.eclipse.microprofile.auth.LoginConfig;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -32,16 +32,16 @@ import javax.ws.rs.core.Application;
  * JAX-RS Activator
  */
 
-@ApplicationPath(Constants.ROOT_API_URI)
-@DeclareRoles({UserRole.USER, UserRole.MODERATOR})
+@ApplicationPath(Constants.ROOT_SERVICE_URI)
+@LoginConfig(authMethod = "MP-JWT")
+@DeclareRoles({"user-role", "USER"})
 @OpenAPIDefinition(info =
 @Info(title = "Twttr Application", description = "Provides access to the API operations", version = "1.0",
         contact = @Contact(email = "jan.wiegmann@openknowledge.de"),
         license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")),
-        servers = @Server(url = "http://{host}:{port}/{context-root}", variables = {
+        servers = @Server(url = "http://{host}:{port}", variables = {
                 @ServerVariable(name = "host", defaultValue = "localhost"),
                 @ServerVariable(name = "port", defaultValue = "8081"),
-                @ServerVariable(name = "context-root", defaultValue = "/twttr-service")
         }))
 public class JaxRsActivator extends Application {
 }
