@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>backend</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <parent>
         <groupId>de.openknowledge.jwe</groupId>
@@ -19,22 +19,35 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-
         <timestamp>${maven.build.timestamp}</timestamp>
 
+        <!-- Docker Hub -->
+        <docker-hub-username>kayroone</docker-hub-username>
+
+        <!-- Thorntail Version -->
+        <version.thorntail>2.5.0.Final</version.thorntail>
+        <version.thorntail-fraction-plugin>97</version.thorntail-fraction-plugin>
+
+        <!-- Maven Resource Plugin -->
         <version.maven-rescource-plugin>3.1.0</version.maven-rescource-plugin>
+
+        <!-- Maven Surefire Plugin -->
         <version.maven-surefire-plugin>3.0.0-M3</version.maven-surefire-plugin>
+
+        <!-- Maven Failsafe Plugin -->
         <version.maven-failsafe-plugin>3.0.0-M3</version.maven-failsafe-plugin>
+
+        <!-- Maven Plugin -->
         <version.apache-maven-plugin>3.2.3</version.apache-maven-plugin>
 
-        <version.thorntail>2.5.0.Final</version.thorntail>
+        <!-- Dependencies -->
+        <version.microprofile>3.0</version.microprofile>
+
         <version.resteasy>3.6.3.SP1</version.resteasy>
         <version.postgresql>42.2.8.jre7</version.postgresql>
 
         <version.apache_commons-lang>3.9</version.apache_commons-lang>
 
-        <version.keycloak-wildfly-adapter>7.0.0</version.keycloak-wildfly-adapter>
         <version.jbcrypt>0.4.1</version.jbcrypt>
 
         <version.slf4j>1.7.26</version.slf4j>
@@ -60,6 +73,7 @@
         <version.dockerfile-plugin>1.4.12</version.dockerfile-plugin>
         <version.docker-compose-plugin>2.5.1</version.docker-compose-plugin>
 
+        <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
     <dependencyManagement>
@@ -67,7 +81,7 @@
             <dependency>
                 <groupId>io.thorntail</groupId>
                 <artifactId>bom-all</artifactId>
-                <version>2.4.0.Final</version>
+                <version>${version.thorntail}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -101,16 +115,6 @@
 
         <!-- Security -->
         <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>keycloak</artifactId>
-            <version>${version.thorntail}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-wildfly-adapter</artifactId>
-            <version>${version.keycloak-wildfly-adapter}</version>
-        </dependency>
-        <dependency>
             <groupId>de.svenkubiak</groupId>
             <artifactId>jBCrypt</artifactId>
             <version>${version.jbcrypt}</version>
@@ -119,28 +123,14 @@
         <!-- Microprofiles -->
         <dependency>
             <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-config</artifactId>
-            <version>${version.thorntail}</version>
+            <artifactId>microprofile</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-health</artifactId>
-            <version>${version.thorntail}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-metrics</artifactId>
-            <version>${version.thorntail}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-openapi</artifactId>
-            <version>${version.thorntail}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-jwt</artifactId>
-            <version>${version.thorntail}</version>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>${version.microprofile}</version>
+            <type>pom</type>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Database -->
@@ -296,7 +286,7 @@
                 <thorntail.bind.address>0.0.0.0</thorntail.bind.address>
                 <thorntail.http.port>8081</thorntail.http.port>
                 <thorntail.port.offset>0</thorntail.port.offset>
-                <thorntail.context.path>twttr-service</thorntail.context.path>
+                <thorntail.context.path>/</thorntail.context.path>
             </properties>
 
             <build>
@@ -347,21 +337,39 @@
                         </executions>
                     </plugin>
 
-                    <!-- Build docker image -->
+                    <!-- Build/Push docker image -->
                     <plugin>
                         <groupId>com.spotify</groupId>
                         <artifactId>dockerfile-maven-plugin</artifactId>
                         <version>${version.dockerfile-plugin}</version>
                         <executions>
                             <execution>
-                                <id>default</id>
+                                <id>tag-latest</id>
                                 <goals>
                                     <goal>build</goal>
+                                    <goal>tag</goal>
+                                    <goal>push</goal>
                                 </goals>
+                                <configuration>
+                                    <tag>latest</tag>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>tag-version</id>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>tag</goal>
+                                    <goal>push</goal>
+                                </goals>
+                                <configuration>
+                                    <tag>${project.version}</tag>
+                                </configuration>
                             </execution>
                         </executions>
                         <configuration>
-                            <repository>twttr/api</repository>
+                            <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                            <repository>registry.hub.docker.com/${docker-hub-username}/twttr-api</repository>
                             <tag>${project.version}</tag>
                             <buildArgs>
                                 <JAR_FILE>${project.build.finalName}-thorntail.jar</JAR_FILE>
@@ -369,26 +377,6 @@
                             <skipDockerInfo>true</skipDockerInfo>
                         </configuration>
                     </plugin>
-
-                    <!-- Docker compose -->
-                    <!--<plugin>
-                        <groupId>com.dkanejs.maven.plugins</groupId>
-                        <artifactId>docker-compose-maven-plugin</artifactId>
-                        <version>${version.docker-compose-plugin}</version>
-                        <executions>
-                            <execution>
-                                <id>up</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>up</goal>
-                                </goals>
-                                <configuration>
-                                    <composeFile>${project.basedir}/docker-compose.yml</composeFile>
-                                    <detachedMode>true</detachedMode>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>-->
 
                     <!-- Testing -->
                     <plugin>

@@ -4,7 +4,7 @@
 *.iws
 
 # Postgres
-backend/src/main/resources/pg_data
+backend/src/test/resources/pg_data
 
 # Keycloak
 keycloak.mv.db
