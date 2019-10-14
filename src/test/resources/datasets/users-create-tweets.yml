@@ -1,0 +1,22 @@
+TAB_TWEET:
+  - TWEET_ID: 1
+    TWEET_MESSAGE: Today is a good day!
+    TWEET_POST_TIME: 2019-01-01 12:12:12
+    TWEET_AUTHOR: 1
+  - TWEET_ID: 2
+    TWEET_MESSAGE: Today is a good day!
+    TWEET_POST_TIME: 2019-01-01 12:12:12
+    TWEET_AUTHOR: 1
+    TWEET_ROOT_TWEET_ID: 1
+  - TWEET_ID: 3
+    TWEET_MESSAGE: Today is a good day!
+    TWEET_POST_TIME: 2019-01-01 12:12:12
+    TWEET_AUTHOR: 2
+
+TAB_USER:
+  - USER_ID: 1
+    USER_PASSWORD: foobar
+    USER_NAME: jw
+  - USER_ID: 2
+    USER_PASSWORD: foobar
+    USER_NAME: barfoo

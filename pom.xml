@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.jwiegmann</groupId>
+    <artifactId>twttr</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Internal repo</name>
+            <url>file:///Users/jw/my_repos/app_deployment/klex</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Docker Hub -->
+        <docker-hub-username>kayroone</docker-hub-username>
+
+        <!-- Thorntail -->
+        <version.thorntail>2.5.0.Final</version.thorntail>
+
+        <!-- Service config -->
+        <service.name>twttr</service.name>
+        <service.http.port>8081</service.http.port>
+        <service.https.port>8443</service.https.port>
+
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+
+        <!-- Dependencies -->
+        <version.microprofile>3.0</version.microprofile>
+
+        <version.apache_commons-lang>3.9</version.apache_commons-lang>
+        <version.apache-io>2.6</version.apache-io>
+        <version.apache-http>4.5.10</version.apache-http>
+
+        <version.resteasy>3.6.3.SP1</version.resteasy>
+
+        <version.jbcrypt>0.4.1</version.jbcrypt>
+
+        <version.postgresql>42.2.8.jre7</version.postgresql>
+
+        <version.hibernate-validator>6.0.16.Final</version.hibernate-validator>
+        <version.hibernate-core>5.4.2.Final</version.hibernate-core>
+
+        <version.failsafe-plugin>3.0.0-M3</version.failsafe-plugin>
+        <version.surefire-plugin>3.0.0-M3</version.surefire-plugin>
+
+        <version.junit>5.5.2</version.junit>
+        <version.testcontainers>1.12.2</version.testcontainers>
+        <version.assertj>3.13.2</version.assertj>
+        <version.mockito>3.0.0</version.mockito>
+        <version.rest-assured>4.1.1</version.rest-assured>
+        <version.json-api>1.1.4</version.json-api>
+        <version.database-rider>1.7.3</version.database-rider>
+
+        <maven.versions.plugin>2.7</maven.versions.plugin>
+
+        <version.dockerfile-plugin>1.4.12</version.dockerfile-plugin>
+        <version.docker-compose-plugin>2.5.1</version.docker-compose-plugin>
+
+    </properties>
+
+    <dependencies>
+        <!-- Microprofile -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>${version.microprofile}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>${version.resteasy}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Security -->
+        <dependency>
+            <groupId>de.svenkubiak</groupId>
+            <artifactId>jBCrypt</artifactId>
+            <version>${version.jbcrypt}</version>
+        </dependency>
+
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${version.apache_commons-lang}</version>
+        </dependency>
+
+        <!-- Apache IO -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${version.apache-io}</version>
+        </dependency>
+
+        <!-- Apache HTTP -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${version.apache-http}</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${version.testcontainers}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${version.testcontainers}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${version.assertj}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${version.rest-assured}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${version.rest-assured}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>${version.json-api}</version>
+        </dependency>
+
+        <!-- Persistence Testing -->
+        <dependency>
+            <groupId>com.github.database-rider</groupId>
+            <artifactId>rider-core</artifactId>
+            <version>${version.database-rider}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Database -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${version.postgresql}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${version.hibernate-core}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Build -->
+        <dependency>
+            <groupId>com.spotify</groupId>
+            <artifactId>dockerfile-maven-plugin</artifactId>
+            <version>${version.dockerfile-plugin}</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Name of the WAR file -->
+    <build>
+        <finalName>${service.name}</finalName>
+    </build>
+
+    <profiles>
+
+        <profile>
+            <id>thorntail</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <properties>
+                <thorntail.bind.address>0.0.0.0</thorntail.bind.address>
+                <thorntail.http.port>8081</thorntail.http.port>
+                <thorntail.port.offset>0</thorntail.port.offset>
+                <thorntail.context.path>/</thorntail.context.path>
+            </properties>
+
+            <build>
+
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                        <filtering>true</filtering>
+                    </testResource>
+                </testResources>
+
+                <plugins>
+
+                    <!-- Versions plugin -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>${maven.versions.plugin}</version>
+                    </plugin>
+
+                    <!-- Thorntail plugin -->
+                    <plugin>
+                        <groupId>io.thorntail</groupId>
+                        <artifactId>thorntail-maven-plugin</artifactId>
+                        <version>${version.thorntail}</version>
+                        <configuration>
+                            <properties>
+                                <thorntail.bind.address>${thorntail.bind.address}</thorntail.bind.address>
+                                <thorntail.http.port>${thorntail.http.port}</thorntail.http.port>
+                                <thorntail.port.offset>${thorntail.port.offset}</thorntail.port.offset>
+                                <thorntail.context.path>${thorntail.context.path}</thorntail.context.path>
+                            </properties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Build/Push docker image -->
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>dockerfile-maven-plugin</artifactId>
+                        <version>${version.dockerfile-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>tag-latest</id>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>tag</goal>
+                                    <goal>push</goal>
+                                </goals>
+                                <configuration>
+                                    <tag>latest</tag>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>tag-version</id>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>tag</goal>
+                                    <goal>push</goal>
+                                </goals>
+                                <configuration>
+                                    <tag>${project.version}</tag>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                            <repository>registry.hub.docker.com/${docker-hub-username}/twttr-api</repository>
+                            <tag>${project.version}</tag>
+                            <buildArgs>
+                                <JAR_FILE>${project.build.finalName}-thorntail.jar</JAR_FILE>
+                            </buildArgs>
+                            <skipDockerInfo>true</skipDockerInfo>
+                        </configuration>
+                    </plugin>
+
+                    <!-- Testing -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.surefire-plugin}</version>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${version.failsafe-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.thorntail</groupId>
+                        <artifactId>bom-all</artifactId>
+                        <version>${version.thorntail}</version>
+                        <type>pom</type>
+                        <scope>import</scope>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+
+            <dependencies>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>microprofile</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>cdi</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>jaxrs</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>jaxrs-jsonb</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>jpa</artifactId>
+                </dependency>
+            </dependencies>
+
+        </profile>
+    </profiles>
+</project>

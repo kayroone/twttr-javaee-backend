@@ -1,0 +1,45 @@
+{
+  "definitions": {},
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "postTime",
+    "message"
+  ],
+  "properties": {
+    "postTime": {
+      "type": "string",
+      "title": "The Posttime Schema",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "message": {
+      "type": "string",
+      "title": "The Message Schema",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "id": {
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0
+    },
+    "authorId": {
+      "type": "integer",
+      "title": "The Author Schema",
+      "default": 0
+    },
+    "rootTweetId": {
+      "title": "The Author Schema",
+      "default": null
+    },
+    "liker": {
+      "type": "array",
+      "title": "The Liker Schema"
+    },
+    "retweeter": {
+      "type": "array",
+      "title": "The Retweeter Schema"
+    }
+  }
+}

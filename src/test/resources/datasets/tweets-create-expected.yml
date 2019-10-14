@@ -1,0 +1,5 @@
+tab_tweet:
+  - tweet_id: 1
+    tweet_message: Today is a good day!
+    tweet_post_time: 2019-01-01 12:12:12
+    tweet_author: 1

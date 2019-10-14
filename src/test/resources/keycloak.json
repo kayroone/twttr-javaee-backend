@@ -1,0 +1,15 @@
+{
+  "realm": "twttr",
+  "auth-server-url": "http://localhost:8080/auth",
+  "bearer-only": true,
+  "ssl-required": "none",
+  "resource": "twttr-test",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "c0f228c0-1d22-42d6-aceb-f1f5585a6154"
+  },
+  "confidential-port": 0,
+  "principal-attribute": "preferred_username",
+  "autodetect-bearer-only": true,
+  "enable-cors": true
+}
