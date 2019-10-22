@@ -39,7 +39,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Dependencies -->
-        <version.microprofile>3.0</version.microprofile>
+        <version.microprofile>3.1</version.microprofile>
 
         <version.apache_commons-lang>3.9</version.apache_commons-lang>
         <version.apache-io>2.6</version.apache-io>
@@ -61,7 +61,7 @@
         <version.testcontainers>1.12.2</version.testcontainers>
         <version.assertj>3.13.2</version.assertj>
         <version.mockito>3.0.0</version.mockito>
-        <version.rest-assured>4.1.1</version.rest-assured>
+        <version.rest-assured>4.1.2</version.rest-assured>
         <version.json-api>1.1.4</version.json-api>
         <version.database-rider>1.7.3</version.database-rider>
 
@@ -81,7 +81,6 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
@@ -280,7 +279,6 @@
                                     <tag>latest</tag>
                                 </configuration>
                             </execution>
-
                             <execution>
                                 <id>tag-version</id>
                                 <goals>
@@ -334,7 +332,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>io.thorntail</groupId>
-                        <artifactId>bom-all</artifactId>
+                        <artifactId>bom</artifactId>
                         <version>${version.thorntail}</version>
                         <type>pom</type>
                         <scope>import</scope>
@@ -346,6 +344,10 @@
                 <dependency>
                     <groupId>io.thorntail</groupId>
                     <artifactId>microprofile</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>keycloak</artifactId>
                 </dependency>
                 <dependency>
                     <groupId>io.thorntail</groupId>

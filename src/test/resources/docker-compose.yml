@@ -3,14 +3,14 @@ version: '3.7'
 services:
 
   postgres:
-    image: postgres
+    image: postgres:latest
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - pg:/var/lib/postgresql
       - pg_data:/var/lib/postgresql/data
 
   keycloak:
-    image: jboss/keycloak
+    image: jboss/keycloak:latest
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres

@@ -12,12 +12,12 @@ import java.io.File;
 public class DockerComposeEnvironment {
 
     private static final int DB_PORT = 5432;
-  private static final int KEYCLOAK_WEB_PORT = 8080;
+    private static final int KEYCLOAK_WEB_PORT = 8080;
     private static final int API_WEB_PORT = 8081;
 
     private static final String DB_HOST_NAME = "postgres";
-  private static final String KEYCLOAK_HOST_NAME = "keycloak";
-  private static final String API_HOST_NAME = "twttr";
+    private static final String KEYCLOAK_HOST_NAME = "keycloak";
+    private static final String API_HOST_NAME = "twttr";
 
     /**
      * Docker compose container based on local docker-compose.yml file.

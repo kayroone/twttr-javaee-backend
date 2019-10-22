@@ -1,6 +1,5 @@
 package de.jwiegmann.twttr.application;
 
-import org.eclipse.microprofile.auth.LoginConfig;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -12,12 +11,7 @@ import javax.annotation.security.DeclareRoles;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-/**
- *
- */
 @ApplicationPath("service")
-
-@LoginConfig(authMethod = "MP-JWT")
 @DeclareRoles({"user-role", "USER"})
 @OpenAPIDefinition(info =
 @Info(title = "Twttr Application", description = "Provides access to the API operations", version = "1.0",

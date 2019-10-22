@@ -6,33 +6,25 @@ thorntail:
   context:
     path: /
 
-  # Example of passing in token verification information via project file
-  microprofile:
-    jwtauth:
-      token:
-        issuedBy: "http://localhost:8080"
+  deployment:
+    twttr.war:
+      web:
+        login-config:
+          auth-method: KEYCLOAK
+        security-constraints:
+          - url-pattern: /service/tweets/*
+            methods: [user-role]
+            roles: [user-role]
+          - url-pattern: /service/users/*
+            methods: [user-role]
+            roles: [user-role]
+          - url-pattern: /service/protected
+            methods: [GET]
+            roles: [user-role]
 
-  security:
-    security-domains:
-      # name matches realm name used with LoginConfig
-      jwt-jaspi:
-        jaspi-authentication:
-          login-module-stacks:
-            roles-lm-stack:
-              login-modules:
-                # This stack performs the token verification and group to role mapping
-                - login-module: rm
-                  code: org.wildfly.swarm.microprofile.jwtauth.deployment.auth.jaas.JWTLoginModule
-                  flag: required
-                  module-options:
-                    rolesProperties: jwt-roles.properties
-          auth-modules:
-            # This module integrates the MP-JWT custom authentication mechanism into the web container
-            http:
-              code: org.wildfly.extension.undertow.security.jaspi.modules.HTTPSchemeServerAuthModule
-              module: org.wildfly.extension.undertow
-              flag: required
-              login-module-stack-ref: roles-lm-stack
+  keycloak:
+    json:
+      path: keycloak.json
 
   datasources:
     jdbc-drivers:
