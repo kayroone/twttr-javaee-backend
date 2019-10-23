@@ -13,13 +13,10 @@ thorntail:
           auth-method: KEYCLOAK
         security-constraints:
           - url-pattern: /service/tweets/*
-            methods: [user-role]
+            methods: [PUT, DELETE, POST]
             roles: [user-role]
           - url-pattern: /service/users/*
-            methods: [user-role]
-            roles: [user-role]
-          - url-pattern: /service/protected
-            methods: [GET]
+            methods: [PUT, DELETE, POST]
             roles: [user-role]
 
   keycloak:

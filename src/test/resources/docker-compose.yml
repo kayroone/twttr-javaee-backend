@@ -8,6 +8,8 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - pg:/var/lib/postgresql
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - jwiegmann.de
 
   keycloak:
     image: jboss/keycloak:latest
@@ -22,6 +24,10 @@ services:
       KEYCLOAK_PASSWORD: admin
     ports:
       - 8080:8080
+    networks:
+      jwiegmann.de:
+        aliases:
+          - auth.jwiegmann.de
     depends_on:
       - postgres
 
@@ -29,6 +35,8 @@ services:
     image: registry.hub.docker.com/kayroone/twttr-api:latest
     ports:
       - 8081:8081
+    networks:
+      - jwiegmann.de
     depends_on:
       - postgres
       - keycloak
@@ -37,3 +45,6 @@ volumes:
   pg:
   pg_data:
     driver: local
+
+networks:
+  jwiegmann.de:
