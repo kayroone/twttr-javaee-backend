@@ -15,7 +15,7 @@
  */
 package de.jwiegmann.twttr.infrastructure.microprofiles.health;
 
-import de.jwiegmann.twttr.DockerComposeEnvironment;
+import de.jwiegmann.twttr.TestContainers;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,7 +36,7 @@ import javax.ws.rs.core.UriBuilder;
 public class DatasourceHealthCheckIT {
 
     @Container
-    private static DockerComposeContainer composeEnvironment = DockerComposeEnvironment.getEnvironment();
+    private static DockerComposeContainer composeEnvironment = TestContainers.getEnvironment();
 
     private static String uri;
 
@@ -68,8 +68,8 @@ public class DatasourceHealthCheckIT {
 
         String uri = "http://{host}:{port}/{path}";
         return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", DockerComposeEnvironment.getApiHost())
-                .resolveTemplate("port", DockerComposeEnvironment.getApiPort())
+                .resolveTemplate("host", TestContainers.getApiHost())
+                .resolveTemplate("port", TestContainers.getApiPort())
                 .resolveTemplate("path", "health")
                 .toTemplate();
     }

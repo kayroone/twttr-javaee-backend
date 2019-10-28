@@ -1,10 +1,11 @@
 package de.jwiegmann.twttr.application.tweet;
 
-import de.jwiegmann.twttr.DockerComposeEnvironment;
+import de.jwiegmann.twttr.TestContainers;
 import de.jwiegmann.twttr.infrastructure.constants.Constants;
+import de.jwiegmann.twttr.infrastructure.security.KeyCloakResourceLoader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -14,360 +15,328 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 
+import static org.wildfly.common.Assert.assertTrue;
 
-/**
- * Integration test class for the resource {@link TweetResource}.
- */
-
+/** Integration test class for the resource {@link TweetResource}. */
 @Testcontainers
 public class TweetResourceIT {
 
-    private static String uri;
-    private static String token;
+  private static String apiUrl;
+  private static String authUrl;
+  private static String token;
 
-    @Container
-    private static DockerComposeContainer testEnvironment = DockerComposeEnvironment.getEnvironment();
+  @Container private static GenericContainer dbContainer = TestContainers.initDatabaseContainer();
+  @Container private static GenericContainer authContainer = TestContainers.initAuthContainer();
+  @Container private static GenericContainer apiContainer = TestContainers.initApiContainer();
 
-    @BeforeAll
-    public static void setUp() throws IOException {
+  @BeforeAll
+  public static void setUp() throws IOException {
 
-        uri = getTweetsApiUri();
-        //token = KeyCloakResourceLoader.getKeyCloakAccessTokenForDefaultUser();
-    }
+    assertTrue(dbContainer.isRunning());
+    assertTrue(authContainer.isRunning());
+    assertTrue(apiContainer.isRunning());
 
-    @Test
-    //@DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT, cleanBefore = true, disableConstraints = true)
-    //@ExpectedDataSet(value = "datasets/tweets-create-expected.yml")
-    public void createTweetShouldReturn201() {
+    apiUrl = getTweetsApiUri();
+    authUrl = getAuthUrl();
+    token = KeyCloakResourceLoader.getKeyCloakAccessToken(authUrl);
+  }
 
-        String message = "Today is a good day!";
-        String postTime = "2019-01-01T12:12:12.000Z";
+  @Test
+  public void createTweetShouldReturn201() {
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", message)
-                .add("postTime", postTime)
-                .build();
+    String message = "Today is a good day!";
+    String postTime = "2019-01-01T12:12:12.000Z";
+
+    JsonObject tweetJsonObject =
+        Json.createObjectBuilder().add("message", message).add("postTime", postTime).build();
 
     /*RestAssured.given()
-            .headers("Authorization", "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(uri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.CREATED.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
-            .body("id", Matchers.notNullValue())
-            .body("message", Matchers.equalTo(message))
-            .body("postTime", Matchers.equalTo(postTime))
-            .body("authorId", Matchers.notNullValue());*/
-    }
+    .headers("Authorization", "Bearer " + token)
+    .contentType(MediaType.APPLICATION_JSON)
+    .body(tweetJsonObject.toString())
+    .when()
+    .post(uri)
+    .then()
+    .contentType(MediaType.APPLICATION_JSON)
+    .statusCode(Response.Status.CREATED.getStatusCode())
+    .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+    .body("id", Matchers.notNullValue())
+    .body("message", Matchers.equalTo(message))
+    .body("postTime", Matchers.equalTo(postTime))
+    .body("authorId", Matchers.notNullValue());*/
+  }
 
-    /*@Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void createTweetShouldReturn400ForEmptyRequestBody() {
+  /*@Test
+  public void createTweetShouldReturn400ForEmptyRequestBody() {
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder().build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder().build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-                .body("size()", Matchers.is(2));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+              .body("size()", Matchers.is(2));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void createTweetShouldReturn400ForMissingMessage() {
+  @Test
+  public void createTweetShouldReturn400ForMissingMessage() {
 
-        LocalDateTime postTime = LocalDateTime.now();
+      LocalDateTime postTime = LocalDateTime.now();
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("postTime", postTime.toString())
-                .build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder()
+              .add("postTime", postTime.toString())
+              .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-                .body("size()", Matchers.is(1));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+              .body("size()", Matchers.is(1));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void createTweetShouldReturn400ForMissingPostTime() {
+  @Test
+  public void createTweetShouldReturn400ForMissingPostTime() {
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", "Today is a good day!")
-                .build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder()
+              .add("message", "Today is a good day!")
+              .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-                .body("size()", Matchers.is(1));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+              .body("size()", Matchers.is(1));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void createTweetShouldReturn400ForTooShortMessage() {
+  @Test
+  public void createTweetShouldReturn400ForTooShortMessage() {
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", "")
-                .add("postTime", LocalDateTime.now().toString())
-                .build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder()
+              .add("message", "")
+              .add("postTime", LocalDateTime.now().toString())
+              .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-                .body("size()", Matchers.is(1));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+              .body("size()", Matchers.is(1));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void createTweetShouldReturn400ForTooLongMessage() {
+  @Test
+  public void createTweetShouldReturn400ForTooLongMessage() {
 
-        String message = "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
-                "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
-                "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
-                "FoobarFoobarFoobarFoobar";
+      String message = "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
+              "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
+              "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar" +
+              "FoobarFoobarFoobarFoobar";
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", message)
-                .add("postTime", LocalDateTime.now().toString())
-                .build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder()
+              .add("message", message)
+              .add("postTime", LocalDateTime.now().toString())
+              .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-                .body("size()", Matchers.is(1));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+              .body("size()", Matchers.is(1));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-delete.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-delete-expected.yml")
-    public void deleteTweetShouldReturn204() {
+  @Test
+  public void deleteTweetShouldReturn204() {
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .when()
-                .delete(getSingleItemUri(1L))
-                .then()
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .when()
+              .delete(getSingleItemUri(1L))
+              .then()
+              .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-delete.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-delete.yml")
-    public void deleteTweetShouldReturn404() {
+  @Test
+  public void deleteTweetShouldReturn404() {
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .when()
-                .delete(getSingleItemUri(404L))
-                .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .when()
+              .delete(getSingleItemUri(404L))
+              .then()
+              .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-update.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-update-expected-like.yml")
-    public void likeTweetShouldReturn204() {
+  @Test
+  public void likeTweetShouldReturn204() {
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .when()
-                .put(getSingleItemUriWithPath("like", 1L))
-                .then()
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .when()
+              .put(getSingleItemUriWithPath("like", 1L))
+              .then()
+              .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-retweet.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-retweet-expected.yml")
-    public void retweetTweetShouldReturn201() {
+  @Test
+  public void retweetTweetShouldReturn201() {
 
-        String message = "Today is a good day!";
-        String postTime = "2019-01-01T12:12:12.000Z";
+      String message = "Today is a good day!";
+      String postTime = "2019-01-01T12:12:12.000Z";
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", message)
-                .add("postTime", postTime)
-                .build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder()
+              .add("message", message)
+              .add("postTime", postTime)
+              .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getSingleItemUri(1L))
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.CREATED.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
-                .body("id", Matchers.equalTo(2))
-                .body("message", Matchers.equalTo(message))
-                .body("postTime", Matchers.equalTo(postTime))
-                .body("authorId", Matchers.notNullValue())
-                .body("rootTweetId", Matchers.equalTo(1));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getSingleItemUri(1L))
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.CREATED.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+              .body("id", Matchers.equalTo(2))
+              .body("message", Matchers.equalTo(message))
+              .body("postTime", Matchers.equalTo(postTime))
+              .body("authorId", Matchers.notNullValue())
+              .body("rootTweetId", Matchers.equalTo(1));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void retweetTweetShouldReturn404() {
+  @Test
+  public void retweetTweetShouldReturn404() {
 
-        JsonObject tweetJsonObject = Json.createObjectBuilder()
-                .add("message", "Today is a good day!")
-                .add("postTime", "2019-01-01T12:12:12.000Z")
-                .build();
+      JsonObject tweetJsonObject = Json.createObjectBuilder()
+              .add("message", "Today is a good day!")
+              .add("postTime", "2019-01-01T12:12:12.000Z")
+              .build();
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(tweetJsonObject.toString())
-                .when()
-                .post(getSingleItemUri(404L))
-                .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(tweetJsonObject.toString())
+              .when()
+              .post(getSingleItemUri(404L))
+              .then()
+              .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
-    public void getTweetShouldReturn200() {
+  @Test
+  public void getTweetShouldReturn200() {
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .when()
-                .get(getSingleItemUri(2L))
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"));
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .when()
+              .get(getSingleItemUri(2L))
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.OK.getStatusCode())
+              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"));
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
-    public void getTweetShouldReturn404() {
+  @Test
+  public void getTweetShouldReturn404() {
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .when()
-                .get(getSingleItemUri(404L))
-                .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
-    }
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .when()
+              .get(getSingleItemUri(404L))
+              .then()
+              .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-get.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-get.yml")
-    public void getMainTimelineShouldReturn200() {
+  @Test
+  public void getMainTimelineShouldReturn200() {
 
-        io.restassured.response.Response response = RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .when()
-                .get(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .extract().response();
+      io.restassured.response.Response response = RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .when()
+              .get(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.OK.getStatusCode())
+              .extract().response();
 
-        String jsonAsString = response.asString();
-        System.out.println("Foo: " + jsonAsString);
+      String jsonAsString = response.asString();
+      System.out.println("Foo: " + jsonAsString);
 
-    }
+  }
 
-    @Test
-    @DataSet(value = "datasets/tweets-create-empty.yml", strategy = SeedStrategy.CLEAN_INSERT,
-            cleanBefore = true, transactional = true, disableConstraints = true)
-    @ExpectedDataSet(value = "datasets/tweets-create-empty.yml")
-    public void getMainTimelineShouldReturn204() {
+  @Test
+  public void getMainTimelineShouldReturn204() {
 
-        RestAssured.given()
-                .headers("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .when()
-                .get(getTweetsApiUri())
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode())
-                .body("size()", Matchers.equalTo(0));
-    }*/
+      RestAssured.given()
+              .headers("Authorization", "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .when()
+              .get(getTweetsApiUri())
+              .then()
+              .contentType(MediaType.APPLICATION_JSON)
+              .statusCode(Response.Status.NO_CONTENT.getStatusCode())
+              .body("size()", Matchers.equalTo(0));
+  }*/
 
-    private static String getTweetsApiUri() {
+  private static String getTweetsApiUri() {
 
-        String uri = "http://{host}:{port}/{context}/{path}";
-        return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", DockerComposeEnvironment.getApiHost())
-                .resolveTemplate("port", DockerComposeEnvironment.getApiPort())
-                .resolveTemplate("context", Constants.ROOT_SERVICE_URI)
-                .resolveTemplate("path", Constants.TWEETS_API_URI)
-                .toTemplate();
-    }
+    String uri = "http://{host}:{port}/{context}/{path}";
+    return UriBuilder.fromUri(uri)
+        .resolveTemplate("host", apiContainer.getContainerIpAddress())
+        .resolveTemplate("port", apiContainer.getFirstMappedPort())
+        .resolveTemplate("context", Constants.ROOT_SERVICE_URI)
+        .resolveTemplate("path", Constants.TWEETS_API_URI)
+        .toTemplate();
+  }
 
-    private URI getSingleItemUri(final Long tweetId) {
+  private static String getAuthUrl() {
 
-        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
-    }
+    String uri = "http://{host}:{port}";
+    return UriBuilder.fromUri(uri)
+        .resolveTemplate("host", authContainer.getContainerIpAddress())
+        .resolveTemplate("port", authContainer.getMappedPort(8080))
+        .toTemplate();
+  }
 
-    private URI getSingleItemUriWithPath(final String path, final Long userId) {
+  private URI getSingleItemUri(final Long tweetId) {
 
-        return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").path(path).build(userId);
-    }
+    return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
+  }
+
+  private URI getSingleItemUriWithPath(final String path, final Long userId) {
+
+    return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").path(path).build(userId);
+  }
 }

@@ -31,7 +31,7 @@ public final class IntegrationTestUtil {
         return UriBuilder.fromUri(uri)
                 .resolveTemplate("host", "localhost")
                 .resolveTemplate("port", "8080")
-                .resolveTemplate("realm", "twttr")
+                .resolveTemplate("realm", "public")
                 .toTemplate();
     }
 

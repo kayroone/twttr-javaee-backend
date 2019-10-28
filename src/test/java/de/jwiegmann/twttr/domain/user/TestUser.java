@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 public class TestUser {
 
     private static final String DEFAULT_USER_NAME = "jw";
-    private static final String DEFAULT_USER_PASSWORD = "password";
+    private static final String DEFAULT_USER_PASSWORD = "jw";
 
     public static User newDefaultUser() {
 
