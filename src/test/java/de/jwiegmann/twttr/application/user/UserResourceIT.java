@@ -19,15 +19,15 @@ import java.io.IOException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.wildfly.common.Assert.assertTrue;
 
 @Testcontainers
 public class UserResourceIT {
 
-  private static String apiUrl;
-  private static String authUrl;
-  private static String token;
+  private static String apiUri;
+  private static String authUri;
+  private static String authToken;
 
+  /* Start full test environment */
   @Container private static GenericContainer dbContainer = TestContainers.initDatabaseContainer();
   @Container private static GenericContainer authContainer = TestContainers.initAuthContainer();
   @Container private static GenericContainer apiContainer = TestContainers.initApiContainer();
@@ -35,13 +35,9 @@ public class UserResourceIT {
   @BeforeAll
   public static void setUp() throws IOException {
 
-    assertTrue(dbContainer.isRunning());
-    assertTrue(authContainer.isRunning());
-    assertTrue(apiContainer.isRunning());
-
-    apiUrl = getUsersApiUri();
-    authUrl = getAuthUrl();
-    token = KeyCloakResourceLoader.getKeyCloakAccessToken(authUrl);
+    apiUri = getApiUri();
+    authUri = getAuthUri();
+    authToken = KeyCloakResourceLoader.getKeyCloakAccessToken(authUri);
   }
 
   @Test
@@ -53,7 +49,7 @@ public class UserResourceIT {
         RestAssured.given()
             .param("keyword", keyword)
             .when()
-            .get(apiUrl)
+            .get(apiUri)
             .then()
             .contentType(MediaType.APPLICATION_JSON)
             .statusCode(Response.Status.OK.getStatusCode())
@@ -73,7 +69,7 @@ public class UserResourceIT {
     RestAssured.given()
         .param("keyword", keyword)
         .when()
-        .get(getUsersApiUri())
+        .get(getApiUri())
         .then()
         .statusCode(Response.Status.NO_CONTENT.getStatusCode());
   }
@@ -88,7 +84,7 @@ public class UserResourceIT {
     RestAssured.given()
         .param("keyword", keyword)
         .when()
-        .get(getUsersApiUri())
+        .get(getApiUri())
         .then()
         .contentType(MediaType.APPLICATION_JSON)
         .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -104,7 +100,7 @@ public class UserResourceIT {
     RestAssured.given()
         .param("keyword", keyword)
         .when()
-        .get(getUsersApiUri())
+        .get(getApiUri())
         .then()
         .contentType(MediaType.APPLICATION_JSON)
         .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -116,10 +112,10 @@ public class UserResourceIT {
   public void followUserShouldReturn200() {
 
     RestAssured.given()
-        .headers("Authorization", "Bearer " + token)
+        .headers("Authorization", "Bearer " + authToken)
         .param("id", 2L)
         .when()
-        .put(getUsersApiUri())
+        .put(getApiUri())
         .then()
         .statusCode(Response.Status.OK.getStatusCode());
   }
@@ -347,7 +343,7 @@ public class UserResourceIT {
               .statusCode(Response.Status.NOT_FOUND.getStatusCode());
   }*/
 
-  private static String getUsersApiUri() {
+  private static String getApiUri() {
 
     String uri = "http://{host}:{port}/{context}/{path}";
     return UriBuilder.fromUri(uri)
@@ -358,9 +354,9 @@ public class UserResourceIT {
         .toTemplate();
   }
 
-  private static String getAuthUrl() {
+  private static String getAuthUri() {
 
-    String uri = "http://{host}:{port}";
+    String uri = "http://{host}:{port}/auth/";
     return UriBuilder.fromUri(uri)
         .resolveTemplate("host", authContainer.getContainerIpAddress())
         .resolveTemplate("port", authContainer.getMappedPort(8080))
@@ -369,11 +365,11 @@ public class UserResourceIT {
 
   private URI getSingleItemUri(final Long userId) {
 
-    return UriBuilder.fromUri(getUsersApiUri()).path("{id}").build(userId);
+    return UriBuilder.fromUri(getApiUri()).path("{id}").build(userId);
   }
 
   private URI getSingleItemUriWithPath(final String path, final Long userId) {
 
-    return UriBuilder.fromUri(getUsersApiUri()).path("{id}").path(path).build(userId);
+    return UriBuilder.fromUri(getApiUri()).path("{id}").path(path).build(userId);
   }
 }

@@ -15,14 +15,12 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 
-import static org.wildfly.common.Assert.assertTrue;
-
 /** Integration test class for the resource {@link TweetResource}. */
 @Testcontainers
 public class TweetResourceIT {
 
   private static String apiUrl;
-  private static String authUrl;
+  private static String authHost;
   private static String token;
 
   @Container private static GenericContainer dbContainer = TestContainers.initDatabaseContainer();
@@ -32,13 +30,9 @@ public class TweetResourceIT {
   @BeforeAll
   public static void setUp() throws IOException {
 
-    assertTrue(dbContainer.isRunning());
-    assertTrue(authContainer.isRunning());
-    assertTrue(apiContainer.isRunning());
-
     apiUrl = getTweetsApiUri();
-    authUrl = getAuthUrl();
-    token = KeyCloakResourceLoader.getKeyCloakAccessToken(authUrl);
+    authHost = getAuthHost();
+    token = KeyCloakResourceLoader.getKeyCloakAccessToken(authHost);
   }
 
   @Test
@@ -321,9 +315,9 @@ public class TweetResourceIT {
         .toTemplate();
   }
 
-  private static String getAuthUrl() {
+  private static String getAuthHost() {
 
-    String uri = "http://{host}:{port}";
+    String uri = "http://{host}:{port}/auth/";
     return UriBuilder.fromUri(uri)
         .resolveTemplate("host", authContainer.getContainerIpAddress())
         .resolveTemplate("port", authContainer.getMappedPort(8080))

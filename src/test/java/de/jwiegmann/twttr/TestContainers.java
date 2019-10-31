@@ -10,6 +10,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Setup integration test container. */
 public class TestContainers {
@@ -26,7 +28,7 @@ public class TestContainers {
   public static GenericContainer initDatabaseContainer() {
 
     return new PostgreSQLContainer()
-        .withInitScript("src/test/resources/init.sql")
+        // .withInitScript("init.sql")
         .withDatabaseName("twttr")
         .withUsername("twttr")
         .withPassword("twttr")
@@ -38,19 +40,24 @@ public class TestContainers {
 
     GenericContainer authContainer =
         new GenericContainer(AUTH_IMAGE)
-            .withExposedPorts(AUTH_WEB_PORT)
+            /*.withExposedPorts(AUTH_WEB_PORT)*/
             .withEnv("KEYCLOAK_USER", "admin")
             .withEnv("KEYCLOAK_PASSWORD", "admin")
-            .withEnv("KEYCLOAK_IMPORT", "/tmp/keycloak-realm-export.json")
+            .withEnv("KEYCLOAK_IMPORT", "/tmp/realm.json")
             .withClasspathResourceMapping(
-                "src/test/resources/keycloak-realm-export.json",
-                "/tmp/realm.json",
-                BindMode.READ_ONLY)
+                "keycloak-realm-export.json", "/tmp/realm.json", BindMode.READ_ONLY)
             .withCopyFileToContainer(
-                MountableFile.forClasspathResource(
-                    "src/test/resources/keycloak-create-user.sh", 700),
+                MountableFile.forClasspathResource("keycloak-create-user.sh", 700),
                 "/opt/jboss/keycloak-create-user.sh")
             .waitingFor(Wait.forHttp("/auth"));
+
+    /* Add fix port binding */
+    List<String> portBinding = new ArrayList<>();
+    portBinding.add(AUTH_WEB_PORT + ":" + AUTH_WEB_PORT);
+    authContainer.setPortBindings(portBinding);
+
+    /* Executing create user script only possible in running container */
+    authContainer.start();
 
     /* Create keycloak test user */
     try {

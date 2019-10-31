@@ -20,7 +20,7 @@ import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -35,8 +35,9 @@ import javax.ws.rs.core.UriBuilder;
 @Testcontainers
 class ApplicationHealthCheckIT {
 
-    @Container
-    private static DockerComposeContainer composeEnvironment = TestContainers.getEnvironment();
+    @Container private static GenericContainer dbContainer = TestContainers.initDatabaseContainer();
+    @Container private static GenericContainer authContainer = TestContainers.initAuthContainer();
+    @Container private static GenericContainer apiContainer = TestContainers.initApiContainer();
 
     private static String uri;
 
@@ -67,8 +68,8 @@ class ApplicationHealthCheckIT {
 
         String uri = "http://{host}:{port}/{path}";
         return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", TestContainers.getApiHost())
-                .resolveTemplate("port", TestContainers.getApiPort())
+                .resolveTemplate("host", apiContainer.getContainerIpAddress())
+                .resolveTemplate("port", apiContainer.getFirstMappedPort())
                 .resolveTemplate("path", "health")
                 .toTemplate();
     }
