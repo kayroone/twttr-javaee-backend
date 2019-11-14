@@ -15,63 +15,46 @@
  */
 package de.jwiegmann.twttr.infrastructure.microprofiles.health;
 
-import de.jwiegmann.twttr.TestContainers;
+import de.jwiegmann.twttr.IntegrationTestContainers;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
-/**
- * Integration test for the MP-Health.
- */
-
+/** Integration test for the MP-Health. */
 @Testcontainers
 public class DatasourceHealthCheckIT {
 
-    @Container private static GenericContainer dbContainer = TestContainers.initDatabaseContainer();
-    @Container private static GenericContainer authContainer = TestContainers.initAuthContainer();
-    @Container private static GenericContainer apiContainer = TestContainers.initApiContainer();
+  private static String uri;
 
-    private static String uri;
+  @BeforeAll
+  public static void setUp() {
 
-    @BeforeAll
-    public static void setUp() {
+    IntegrationTestContainers integrationTestContainers =
+        IntegrationTestContainers.newTestEnvironment().withAuthContainer().withApiContainer();
 
-        uri = getDatasourceUri();
-    }
+    uri = integrationTestContainers.getApiUri(null);
+  }
 
-    @Test
-    public void checkHealth() {
-        RestAssured.given()
-                .accept(MediaType.APPLICATION_JSON)
-                .when()
-                .get(uri)
-                .then()
-                .contentType(MediaType.APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body("outcome", Matchers.equalTo("UP"))
-                .rootPath("checks.find{ it.name == 'datasource' }")
-                .body("state", Matchers.equalTo("UP"))
-                .body("data.driverName", Matchers.equalTo("H2 JDBC Driver"))
-                .body("data.driverVersion", Matchers.notNullValue())
-                .body("data.databaseProductName", Matchers.equalTo("H2"))
-                .body("data.databaseProductVersion", Matchers.notNullValue());
-    }
-
-    private static String getDatasourceUri() {
-
-        String uri = "http://{host}:{port}/{path}";
-        return UriBuilder.fromUri(uri)
-                .resolveTemplate("host", apiContainer.getContainerIpAddress())
-                .resolveTemplate("port", apiContainer.getFirstMappedPort())
-                .resolveTemplate("path", "health")
-                .toTemplate();
-    }
+  @Test
+  public void checkHealth() {
+    RestAssured.given()
+        .accept(MediaType.APPLICATION_JSON)
+        .when()
+        .get(uri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.OK.getStatusCode())
+        .body("outcome", Matchers.equalTo("UP"))
+        .rootPath("checks.find{ it.name == 'datasource' }")
+        .body("state", Matchers.equalTo("UP"))
+        .body("data.driverName", Matchers.equalTo("H2 JDBC Driver"))
+        .body("data.driverVersion", Matchers.notNullValue())
+        .body("data.databaseProductName", Matchers.equalTo("H2"))
+        .body("data.databaseProductVersion", Matchers.notNullValue());
+  }
 }

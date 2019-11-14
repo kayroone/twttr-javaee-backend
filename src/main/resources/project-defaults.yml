@@ -32,7 +32,7 @@ thorntail:
     data-sources:
       TwttrDS:
         driver-name: org.postgresql
-        connection-url: 'jdbc:postgresql://localhost:5432/twttr'
+        connection-url: 'jdbc:postgresql://twttr.database:5432/twttr'
         user-name: twttr
         password: twttr
 
@@ -44,7 +44,7 @@ thorntail:
       CONSOLE:
         named-formatter: PATTERN
     root-logger:
-      level: INFO
+      level: FINE
       handlers:
         - CONSOLE
 

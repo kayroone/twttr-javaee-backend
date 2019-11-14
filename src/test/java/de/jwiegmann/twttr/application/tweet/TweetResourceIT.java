@@ -1,38 +1,30 @@
 package de.jwiegmann.twttr.application.tweet;
 
-import de.jwiegmann.twttr.TestContainers;
+import de.jwiegmann.twttr.IntegrationTestContainers;
 import de.jwiegmann.twttr.infrastructure.constants.Constants;
-import de.jwiegmann.twttr.infrastructure.security.KeyCloakResourceLoader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
-import java.net.URI;
 
 /** Integration test class for the resource {@link TweetResource}. */
 @Testcontainers
 public class TweetResourceIT {
 
-  private static String apiUrl;
-  private static String authHost;
-  private static String token;
-
-  @Container private static GenericContainer dbContainer = TestContainers.initDatabaseContainer();
-  @Container private static GenericContainer authContainer = TestContainers.initAuthContainer();
-  @Container private static GenericContainer apiContainer = TestContainers.initApiContainer();
+  private static String apiUri;
+  private static String authToken;
 
   @BeforeAll
   public static void setUp() throws IOException {
 
-    apiUrl = getTweetsApiUri();
-    authHost = getAuthHost();
-    token = KeyCloakResourceLoader.getKeyCloakAccessToken(authHost);
+    IntegrationTestContainers integrationTestContainers =
+        IntegrationTestContainers.newTestEnvironment().withAuthContainer().withApiContainer();
+
+    apiUri = integrationTestContainers.getApiUri(Constants.TWEETS_API_URI);
+    authToken = integrationTestContainers.getAuthToken();
   }
 
   @Test
@@ -303,34 +295,4 @@ public class TweetResourceIT {
               .statusCode(Response.Status.NO_CONTENT.getStatusCode())
               .body("size()", Matchers.equalTo(0));
   }*/
-
-  private static String getTweetsApiUri() {
-
-    String uri = "http://{host}:{port}/{context}/{path}";
-    return UriBuilder.fromUri(uri)
-        .resolveTemplate("host", apiContainer.getContainerIpAddress())
-        .resolveTemplate("port", apiContainer.getFirstMappedPort())
-        .resolveTemplate("context", Constants.ROOT_SERVICE_URI)
-        .resolveTemplate("path", Constants.TWEETS_API_URI)
-        .toTemplate();
-  }
-
-  private static String getAuthHost() {
-
-    String uri = "http://{host}:{port}/auth/";
-    return UriBuilder.fromUri(uri)
-        .resolveTemplate("host", authContainer.getContainerIpAddress())
-        .resolveTemplate("port", authContainer.getMappedPort(8080))
-        .toTemplate();
-  }
-
-  private URI getSingleItemUri(final Long tweetId) {
-
-    return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").build(tweetId);
-  }
-
-  private URI getSingleItemUriWithPath(final String path, final Long userId) {
-
-    return UriBuilder.fromUri(getTweetsApiUri()).path("{id}").path(path).build(userId);
-  }
 }

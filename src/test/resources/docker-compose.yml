@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+
+  postgres:
+    image: postgres:latest
+    network_mode: host
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pg:/var/lib/postgresql
+      - pg_data:/var/lib/postgresql/data
+
+  twttr:
+    image: registry.hub.docker.com/kayroone/twttr-api:latest
+    network_mode: host
+    depends_on:
+      - postgres
+
+volumes:
+  pg:
+  pg_data:
+    driver: local

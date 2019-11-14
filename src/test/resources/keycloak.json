@@ -1,11 +1,10 @@
 {
   "realm": "public",
-  "auth-server-url": "http://localhost:8080/auth",
-  "bearer-only": false,
-  "ssl-required": "none",
-  "verify-token-audience": true,
-  "principal-attribute": "preferred-username",
-  "enable-cors": true,
+  "resource": "microprofile-jwt-client",
+  "auth-server-url": "http://keycloak.service:8080/auth",
+  "bearer-only": true,
   "public-client": true,
-  "resource": "microprofile-jwt-client"
+  "principal-attribute": "preferred-username",
+  "enable-cors": false,
+  "ssl-required": "none"
 }

@@ -46,21 +46,23 @@ public class KeyCloakResourceLoader {
    * @return The JWT as string.
    * @throws IOException
    */
-  public static String getKeyCloakAccessToken(String keycloakHost) throws IOException {
+  public static String getKeyCloakAccessToken(final String keycloakServerUrl) throws IOException {
 
     JsonObject keyCloakConfig = getConfigFile();
     ArrayList<NameValuePair> postParameters = createAccessTokenRequestParameters(keyCloakConfig);
 
-    String keycloakUrl = keycloakHost + KEYCLOAK_TOKEN_URI;
+    String keycloakTokenUrl = keycloakServerUrl + KEYCLOAK_TOKEN_URI;
 
-    HttpResponse httpResponse = sendAccessTokenRequest(keycloakUrl, postParameters);
+    HttpResponse httpResponse = sendAccessTokenRequest(keycloakTokenUrl, postParameters);
 
     String responseJSON =
         EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8.name());
     JsonObject keyCloakResponse = Json.createReader(new StringReader(responseJSON)).readObject();
 
     if (keyCloakResponse.containsKey("error")) {
-      LOG.warn("Failed to fetch keycloak access token: " + keyCloakResponse.getString("error_description"));
+      LOG.warn(
+          "Failed to fetch keycloak access token: "
+              + keyCloakResponse.getString("error_description"));
     }
 
     return keyCloakResponse.getString(KEYCLOAK_ACCESS_TOKEN_PROPERTY);

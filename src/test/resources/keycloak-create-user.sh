@@ -2,7 +2,7 @@
 
 #* Keycloak data *#
 REALM='public'
-TEST_USERNAME='jw'
+TEST_USERNAME='foo'
 KEYCLOAK_SERVER='http://localhost:8080/auth'
 
 #* Navigate to admin CLI *#

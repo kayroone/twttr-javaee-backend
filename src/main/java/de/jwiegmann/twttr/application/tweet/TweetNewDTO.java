@@ -7,7 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 
 @Schema
-class TweetNewDTO extends AbstractTweet {
+public class TweetNewDTO extends AbstractTweet {
 
     public TweetNewDTO() {
         super();
