@@ -45,6 +45,8 @@
         <version.apache-io>2.6</version.apache-io>
         <version.apache-http>4.5.10</version.apache-http>
 
+        <version.jackson-java-8-datetime-module>2.10.1</version.jackson-java-8-datetime-module>
+
         <version.resteasy>3.6.3.SP1</version.resteasy>
 
         <version.jbcrypt>0.4.1</version.jbcrypt>
@@ -63,6 +65,7 @@
         <version.mockito>3.0.0</version.mockito>
         <version.rest-assured>4.1.2</version.rest-assured>
         <version.json-api>1.1.4</version.json-api>
+        <version.hikari-db-connection-pool>2.6.1</version.hikari-db-connection-pool>
 
         <maven.versions.plugin>2.7</maven.versions.plugin>
 
@@ -113,6 +116,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${version.apache-http}</version>
+        </dependency>
+
+        <!-- Java 8 date parsing with jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${version.jackson-java-8-datetime-module}</version>
         </dependency>
 
         <!-- Testing -->
@@ -172,7 +182,12 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>2.6.1</version>
+            <version>${version.hikari-db-connection-pool}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${version.hibernate-validator}</version>
         </dependency>
 
         <!-- Database -->

@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 public class UserResourceIT {
 
+  private static final String testPostTime = "2019-05-11T17:32:20.897";
+
   private static IntegrationTestContainers integrationTestContainers;
   private static String apiUri;
   private static String authToken;
@@ -64,6 +66,8 @@ public class UserResourceIT {
   @AfterEach
   public void clearDatabase() {
 
+    integrationTestContainers.performQuery(
+            "TRUNCATE tab_user_follower_following_relationship CASCADE");
     integrationTestContainers.performQuery("TRUNCATE tab_user CASCADE");
     integrationTestContainers.performQuery("TRUNCATE tab_tweet CASCADE");
   }
@@ -199,22 +203,7 @@ public class UserResourceIT {
   @Test
   public void getTimelineForUserShouldReturn200() {
 
-    String message = "Today is a good day!";
-    String postTime = "2019-01-01 12:12:12";
-    String tweetApiUri = integrationTestContainers.getApiUri(Constants.TWEETS_API_URI);
-
-    JsonObject tweetJsonObject =
-        Json.createObjectBuilder().add("message", message).add("postTime", postTime).build();
-
-    RestAssured.given()
-        .headers("Authorization", "Bearer " + authToken)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(tweetJsonObject.toString())
-        .when()
-        .post(tweetApiUri)
-        .then()
-        .contentType(MediaType.APPLICATION_JSON)
-        .statusCode(Response.Status.CREATED.getStatusCode());
+    createTestTweet();
 
     RestAssured.given()
         .param("offset", 0)
@@ -334,6 +323,32 @@ public class UserResourceIT {
         .get(getSingleItemUri(5L))
         .then()
         .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+  }
+
+  private Long createTestTweet() {
+
+    String tweetApiUri = integrationTestContainers.getApiUri(Constants.TWEETS_API_URI);
+
+    String message = "Today is a good day!";
+
+    JsonObject tweetJsonObject =
+            Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
+
+    String id =
+            RestAssured.given()
+                    .headers("Authorization", "Bearer " + authToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(tweetJsonObject.toString())
+                    .when()
+                    .post(tweetApiUri)
+                    .then()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .statusCode(Response.Status.CREATED.getStatusCode())
+                    .extract()
+                    .jsonPath()
+                    .getString("id");
+
+    return Long.parseLong(id);
   }
 
   private URI getSingleItemUri(final Long userId) {

@@ -246,7 +246,9 @@ public class UserResourceTest {
         timelineTweets.add(tweet1);
 
         Mockito.doReturn(user1).when(userRepository).find(anyLong());
-        Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(), anyList());
+        Mockito.doReturn(timelineTweets)
+                .when(tweetRepository)
+                .findPartialByIdsOrderByDate(anyInt(), anyInt(), anyList());
 
         Response response = resource.getTimeLineForUser(user1.getId(), 0, 100);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -264,8 +266,9 @@ public class UserResourceTest {
         List<Tweet> timelineTweets = new ArrayList<>();
 
         Mockito.doReturn(user1).when(userRepository).find(anyLong());
-        Mockito.doReturn(timelineTweets).when(tweetRepository).findPartialByIdsOrderByDate(anyInt(), anyInt(),
-                anyList());
+        Mockito.doReturn(timelineTweets)
+                .when(tweetRepository)
+                .findPartialByIdsOrderByDate(anyInt(), anyInt(), anyList());
 
         Response response = resource.getTimeLineForUser(user1.getId(), 0, 100);
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());

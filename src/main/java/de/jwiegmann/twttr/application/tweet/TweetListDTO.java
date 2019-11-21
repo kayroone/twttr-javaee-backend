@@ -24,7 +24,7 @@ public class TweetListDTO extends AbstractTweet {
   @Schema(example = "11")
   private Long rootTweetId;
 
-  TweetListDTO() {
+  public TweetListDTO() {
     super();
   }
 
@@ -34,6 +34,8 @@ public class TweetListDTO extends AbstractTweet {
 
     this.id = tweet.getId();
     this.authorId = tweet.getAuthor().getId();
+    this.message = tweet.getMessage();
+    this.postTime = tweet.getPostTime();
     this.rootTweetId = tweet.getRootTweet() != null ? tweet.getRootTweet().getId() : null;
   }
 

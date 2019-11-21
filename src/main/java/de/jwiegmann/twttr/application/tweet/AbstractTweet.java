@@ -5,7 +5,6 @@ import de.jwiegmann.twttr.domain.tweet.TweetValidationErrorCodes;
 import de.jwiegmann.twttr.infrastructure.domain.value.AbstractValueObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-import javax.json.bind.annotation.JsonbDateFormat;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ public class AbstractTweet extends AbstractValueObject {
 
   @Schema(example = "2018-01-01 12:34:56", required = true, format = "date-time")
   @NotNull(payload = TweetValidationErrorCodes.PostTimeIsNull.class)
-  @JsonbDateFormat(value = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime postTime;
 
   @Schema(example = "Today is a good day!", required = true, minLength = 1, maxLength = 280)
@@ -23,7 +21,7 @@ public class AbstractTweet extends AbstractValueObject {
   @Size(min = 1, max = 280, payload = TweetValidationErrorCodes.InvalidMessageSize.class)
   private String message;
 
-  AbstractTweet() {
+  public AbstractTweet() {
     super();
   }
 
