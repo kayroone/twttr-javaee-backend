@@ -15,13 +15,9 @@
  */
 package de.jwiegmann.twttr.infrastructure.domain.entity;
 
-/**
- * Provides identifiable behavior for an entity.
- */
+/** Provides identifiable behavior for an entity. */
 public interface Identifiable<I> {
 
-    /**
-     * @return The primary key, or ID of this entity
-     */
-    I getId();
+  /** @return The primary key, or ID of this entity */
+  I getId();
 }

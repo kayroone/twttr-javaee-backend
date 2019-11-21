@@ -23,9 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
-/**
- * CDI producer that provides the {@link EntityManager}.
- */
+/** CDI producer that provides the {@link EntityManager}. */
 @Dependent
 public class EntityManagerProducer {
 

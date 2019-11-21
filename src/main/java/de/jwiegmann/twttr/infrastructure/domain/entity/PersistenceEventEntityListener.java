@@ -29,16 +29,17 @@ import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
 
-/**
- * Entity listener that fires a CDI event after persisting an entity.
- */
+/** Entity listener that fires a CDI event after persisting an entity. */
 class PersistenceEventEntityListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(PersistenceEventEntityListener.class);
 
   @PostPersist
   public <E extends AbstractEntity> void postPersist(final E entity) {
-    LOG.info("Fire created event for entity {} with id {}", entity.getClass().getSimpleName(), entity.getId());
+    LOG.info(
+        "Fire created event for entity {} with id {}",
+        entity.getClass().getSimpleName(),
+        entity.getId());
 
     CDI.current()
         .select(new TypeLiteral<Event<E>>() {}, new AnnotationLiteral<Created>() {})
@@ -48,7 +49,10 @@ class PersistenceEventEntityListener {
 
   @PostRemove
   public <E extends AbstractEntity> void postRemove(final E entity) {
-    LOG.info("Fire created event for entity {} with id {}", entity.getClass().getSimpleName(), entity.getId());
+    LOG.info(
+        "Fire created event for entity {} with id {}",
+        entity.getClass().getSimpleName(),
+        entity.getId());
 
     CDI.current()
         .select(new TypeLiteral<Event<E>>() {}, new AnnotationLiteral<Deleted>() {})
@@ -58,7 +62,10 @@ class PersistenceEventEntityListener {
 
   @PostUpdate
   public <E extends AbstractEntity> void postUpdate(final E entity) {
-    LOG.info("Fire updated event for entity {} with id {}", entity.getClass().getSimpleName(), entity.getId());
+    LOG.info(
+        "Fire updated event for entity {} with id {}",
+        entity.getClass().getSimpleName(),
+        entity.getId());
 
     CDI.current()
         .select(new TypeLiteral<Event<E>>() {}, new AnnotationLiteral<Updated>() {})

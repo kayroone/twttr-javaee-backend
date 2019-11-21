@@ -27,58 +27,60 @@ import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Test class for the exception mapper {@link DefaultExceptionMapper}.
- */
+/** Test class for the exception mapper {@link DefaultExceptionMapper}. */
 public class DefaultExceptionMapperTest {
 
-    private DefaultExceptionMapper exceptionMapper;
+  private DefaultExceptionMapper exceptionMapper;
 
-    @Before
-    public void setUp() {
-        exceptionMapper = new DefaultExceptionMapper();
-    }
+  @Before
+  public void setUp() {
+    exceptionMapper = new DefaultExceptionMapper();
+  }
 
-    @Test
-    public void toResponseShouldReturn401ForNonApplicationException() {
-        Response response = exceptionMapper.toResponse(new NotAuthorizedException("Unauthorized access"));
-        assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
-        assertThat(response.hasEntity()).isFalse();
-    }
+  @Test
+  public void toResponseShouldReturn401ForNonApplicationException() {
+    Response response =
+        exceptionMapper.toResponse(new NotAuthorizedException("Unauthorized access"));
+    assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
+    assertThat(response.hasEntity()).isFalse();
+  }
 
-    @Test
-    public void toResponseShouldReturn403ForForbiddenException() {
-        Response response = exceptionMapper.toResponse(new ForbiddenException());
-        assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
-        assertThat(response.hasEntity()).isFalse();
-    }
+  @Test
+  public void toResponseShouldReturn403ForForbiddenException() {
+    Response response = exceptionMapper.toResponse(new ForbiddenException());
+    assertThat(response.getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
+    assertThat(response.hasEntity()).isFalse();
+  }
 
-    @Test
-    public void toResponseShouldReturn404ForNotFoundException() {
-        Response response = exceptionMapper.toResponse(new NotFoundException());
-        assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        assertThat(response.hasEntity()).isFalse();
-    }
+  @Test
+  public void toResponseShouldReturn404ForNotFoundException() {
+    Response response = exceptionMapper.toResponse(new NotFoundException());
+    assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
+    assertThat(response.hasEntity()).isFalse();
+  }
 
-    @Test
-    public void toResponseShouldReturn500ForNonApplicationException() {
-        Response response = exceptionMapper.toResponse(new IllegalStateException("Illegal state occurred"));
-        assertThat(response.getStatus()).isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        assertThat(response.hasEntity()).isTrue();
+  @Test
+  public void toResponseShouldReturn500ForNonApplicationException() {
+    Response response =
+        exceptionMapper.toResponse(new IllegalStateException("Illegal state occurred"));
+    assertThat(response.getStatus())
+        .isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+    assertThat(response.hasEntity()).isTrue();
 
-        ApplicationErrorDTO error = (ApplicationErrorDTO) response.getEntity();
-        assertThat(error.getCode()).isEqualTo("UNKNOWN");
-        assertThat(error.getMessage()).isEqualTo("An unknown error occurred");
-    }
+    ApplicationErrorDTO error = (ApplicationErrorDTO) response.getEntity();
+    assertThat(error.getCode()).isEqualTo("UNKNOWN");
+    assertThat(error.getMessage()).isEqualTo("An unknown error occurred");
+  }
 
-    @Test
-    public void toResponseShouldReturn500ForWebApplicationException() {
-        Response response = exceptionMapper.toResponse(new InternalServerErrorException());
-        assertThat(response.getStatus()).isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        assertThat(response.hasEntity()).isTrue();
+  @Test
+  public void toResponseShouldReturn500ForWebApplicationException() {
+    Response response = exceptionMapper.toResponse(new InternalServerErrorException());
+    assertThat(response.getStatus())
+        .isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+    assertThat(response.hasEntity()).isTrue();
 
-        ApplicationErrorDTO error = (ApplicationErrorDTO) response.getEntity();
-        assertThat(error.getCode()).isEqualTo("UNKNOWN");
-        assertThat(error.getMessage()).isEqualTo("An unknown error occurred");
-    }
+    ApplicationErrorDTO error = (ApplicationErrorDTO) response.getEntity();
+    assertThat(error.getCode()).isEqualTo("UNKNOWN");
+    assertThat(error.getMessage()).isEqualTo("An unknown error occurred");
+  }
 }

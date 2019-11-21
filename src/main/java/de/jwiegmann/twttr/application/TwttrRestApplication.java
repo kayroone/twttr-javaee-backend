@@ -13,13 +13,22 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("service")
 @DeclareRoles({"user-role", "USER"})
-@OpenAPIDefinition(info =
-@Info(title = "Twttr Application", description = "Provides access to the API operations", version = "1.0",
-        contact = @Contact(email = "jw@jwiegmann.de"),
-        license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")),
-        servers = @Server(url = "http://{host}:{port}", variables = {
-                @ServerVariable(name = "host", defaultValue = "localhost"),
-                @ServerVariable(name = "port", defaultValue = "8081"),
-        }))
-public class TwttrRestApplication extends Application {
-}
+@OpenAPIDefinition(
+    info =
+        @Info(
+            title = "Twttr Application",
+            description = "Provides access to the API operations",
+            version = "1.0",
+            contact = @Contact(email = "jw@jwiegmann.de"),
+            license =
+                @License(
+                    name = "Apache 2.0",
+                    url = "http://www.apache.org/licenses/LICENSE-2.0.html")),
+    servers =
+        @Server(
+            url = "http://{host}:{port}",
+            variables = {
+              @ServerVariable(name = "host", defaultValue = "localhost"),
+              @ServerVariable(name = "port", defaultValue = "8081"),
+            }))
+public class TwttrRestApplication extends Application {}

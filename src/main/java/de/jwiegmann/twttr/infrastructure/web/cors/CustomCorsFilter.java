@@ -24,35 +24,35 @@ import static javax.ws.rs.HttpMethod.*;
 import static javax.ws.rs.core.HttpHeaders.*;
 import static org.jboss.resteasy.spi.CorsHeaders.ORIGIN;
 
-/**
- * JAX-RS Filter that handles CORS requests both preflight and simple CORS requests.
- */
+/** JAX-RS Filter that handles CORS requests both preflight and simple CORS requests. */
 @Provider
 @PreMatching
 public class CustomCorsFilter extends CorsFilter {
 
-    private static final String[] ALLOWED_HEADERS = new String[]{ACCEPT, AUTHORIZATION, CONTENT_TYPE, ORIGIN};
-    private static final String[] ALLOWED_METHODS = new String[]{GET, POST, PUT, DELETE, OPTIONS, HEAD};
+  private static final String[] ALLOWED_HEADERS =
+      new String[] {ACCEPT, AUTHORIZATION, CONTENT_TYPE, ORIGIN};
+  private static final String[] ALLOWED_METHODS =
+      new String[] {GET, POST, PUT, DELETE, OPTIONS, HEAD};
 
-    private final static int MAX_AGE = 42 * 60 * 60;
+  private static final int MAX_AGE = 42 * 60 * 60;
 
-    public CustomCorsFilter() {
-        this.getAllowedOrigins().add("*");
-        this.setAllowCredentials(true);
-        this.setAllowedHeaders(createList(ALLOWED_HEADERS));
-        this.setAllowedMethods(createList(ALLOWED_METHODS));
-        this.setCorsMaxAge(MAX_AGE);
+  public CustomCorsFilter() {
+    this.getAllowedOrigins().add("*");
+    this.setAllowCredentials(true);
+    this.setAllowedHeaders(createList(ALLOWED_HEADERS));
+    this.setAllowedMethods(createList(ALLOWED_METHODS));
+    this.setCorsMaxAge(MAX_AGE);
+  }
+
+  private String createList(final String... values) {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (String value : values) {
+      sb.append(value);
+      sb.append(',');
     }
 
-    private String createList(final String... values) {
-
-        StringBuilder sb = new StringBuilder();
-
-        for (String value : values) {
-            sb.append(value);
-            sb.append(',');
-        }
-
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 }

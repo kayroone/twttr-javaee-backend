@@ -21,64 +21,61 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
-/**
- * Test class for the repository superclass {@link AbstractRepository}.
- */
+/** Test class for the repository superclass {@link AbstractRepository}. */
 public class RepositoryTest {
 
-    private TestRepository repository;
+  private TestRepository repository;
 
-    @Before
-    public void setUp() {
-        repository = new TestRepository();
+  @Before
+  public void setUp() {
+    repository = new TestRepository();
+  }
+
+  @Test
+  public void createShouldFailForMissingValue() {
+    assertThatNullPointerException()
+        .isThrownBy(() -> repository.create(null))
+        .withMessage("entity must not be null")
+        .withNoCause();
+  }
+
+  @Test
+  public void deleteShouldFailForMissingValue() {
+    assertThatNullPointerException()
+        .isThrownBy(() -> repository.delete(null))
+        .withMessage("entity must not be null")
+        .withNoCause();
+  }
+
+  @Test
+  public void findShouldFailForMissingValue() {
+    assertThatNullPointerException()
+        .isThrownBy(() -> repository.find(null))
+        .withMessage("identifier must not be null")
+        .withNoCause();
+  }
+
+  @Test
+  public void updateShouldFailForMissingValue() {
+    assertThatNullPointerException()
+        .isThrownBy(() -> repository.update(null))
+        .withMessage("entity must not be null")
+        .withNoCause();
+  }
+
+  private static class TestRepository extends AbstractRepository<TestEntity> {}
+
+  private static class TestEntity extends AbstractEntity<Long> {
+
+    private Long id;
+
+    @Override
+    public Long getId() {
+      return id;
     }
 
-    @Test
-    public void createShouldFailForMissingValue() {
-        assertThatNullPointerException()
-                .isThrownBy(() -> repository.create(null))
-                .withMessage("entity must not be null")
-                .withNoCause();
+    void setId(final Long id) {
+      this.id = id;
     }
-
-    @Test
-    public void deleteShouldFailForMissingValue() {
-        assertThatNullPointerException()
-                .isThrownBy(() -> repository.delete(null))
-                .withMessage("entity must not be null")
-                .withNoCause();
-    }
-
-    @Test
-    public void findShouldFailForMissingValue() {
-        assertThatNullPointerException()
-                .isThrownBy(() -> repository.find(null))
-                .withMessage("identifier must not be null")
-                .withNoCause();
-    }
-
-    @Test
-    public void updateShouldFailForMissingValue() {
-        assertThatNullPointerException()
-                .isThrownBy(() -> repository.update(null))
-                .withMessage("entity must not be null")
-                .withNoCause();
-    }
-
-    private static class TestRepository extends AbstractRepository<TestEntity> {
-    }
-
-    private static class TestEntity extends AbstractEntity<Long> {
-
-        private Long id;
-
-        @Override
-        public Long getId() {
-            return id;
-        }
-
-        void setId(final Long id) {
-            this.id = id;
-        }
-    }
+  }
 }

@@ -34,10 +34,10 @@ public class TweetResourceIT {
   public static void init() throws IOException {
 
     integrationTestContainers =
-            IntegrationTestContainers.newTestEnvironment()
-                    .withAuthContainer()
-                    .withApiContainer()
-                    .init();
+        IntegrationTestContainers.newTestEnvironment()
+            .withAuthContainer()
+            .withApiContainer()
+            .init();
 
     apiUri = integrationTestContainers.getApiUri(Constants.TWEETS_API_URI);
     authToken = integrationTestContainers.getAuthToken();
@@ -53,20 +53,20 @@ public class TweetResourceIT {
   public void initDatabase() {
 
     integrationTestContainers.performQuery(
-            "INSERT INTO tab_user(user_id, user_name, user_password) VALUES ('2', 'foo', 'foo')");
+        "INSERT INTO tab_user(user_id, user_name, user_password) VALUES ('2', 'foo', 'foo')");
     integrationTestContainers.performQuery(
-            "INSERT INTO tab_user_role_relationship(user_id, user_role) VALUES ('2', 'user-role')");
+        "INSERT INTO tab_user_role_relationship(user_id, user_role) VALUES ('2', 'user-role')");
     integrationTestContainers.performQuery(
-            "INSERT INTO tab_user(user_id, user_name, user_password) VALUES ('3', 'bar', 'bar')");
+        "INSERT INTO tab_user(user_id, user_name, user_password) VALUES ('3', 'bar', 'bar')");
     integrationTestContainers.performQuery(
-            "INSERT INTO tab_user_role_relationship(user_id, user_role) VALUES ('3', 'user-role')");
+        "INSERT INTO tab_user_role_relationship(user_id, user_role) VALUES ('3', 'user-role')");
   }
 
   @AfterEach
   public void clearDatabase() {
 
     integrationTestContainers.performQuery(
-            "TRUNCATE tab_user_follower_following_relationship CASCADE");
+        "TRUNCATE tab_user_follower_following_relationship CASCADE");
     integrationTestContainers.performQuery("TRUNCATE tab_user CASCADE");
     integrationTestContainers.performQuery("TRUNCATE tab_tweet CASCADE");
   }
@@ -77,22 +77,22 @@ public class TweetResourceIT {
     String message = "Today is a good day!";
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
+        Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.CREATED.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
-            .body("id", Matchers.notNullValue())
-            .body("message", Matchers.equalTo(message))
-            .body("postTime", Matchers.equalTo(testPostTime))
-            .body("authorId", Matchers.notNullValue());
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.CREATED.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+        .body("id", Matchers.notNullValue())
+        .body("message", Matchers.equalTo(message))
+        .body("postTime", Matchers.equalTo(testPostTime))
+        .body("authorId", Matchers.notNullValue());
   }
 
   @Test
@@ -101,16 +101,16 @@ public class TweetResourceIT {
     JsonObject tweetJsonObject = Json.createObjectBuilder().build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-            .body("size()", Matchers.is(2));
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+        .body("size()", Matchers.is(2));
   }
 
   @Test
@@ -119,79 +119,79 @@ public class TweetResourceIT {
     JsonObject tweetJsonObject = Json.createObjectBuilder().add("postTime", testPostTime).build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-            .body("size()", Matchers.is(1));
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+        .body("size()", Matchers.is(1));
   }
 
   @Test
   public void createTweetShouldReturn400ForMissingPostTime() {
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder().add("message", "Today is a good day!").build();
+        Json.createObjectBuilder().add("message", "Today is a good day!").build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-            .body("size()", Matchers.is(1));
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+        .body("size()", Matchers.is(1));
   }
 
   @Test
   public void createTweetShouldReturn400ForTooShortMessage() {
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder().add("message", "").add("postTime", testPostTime).build();
+        Json.createObjectBuilder().add("message", "").add("postTime", testPostTime).build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-            .body("size()", Matchers.is(1));
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+        .body("size()", Matchers.is(1));
   }
 
   @Test
   public void createTweetShouldReturn400ForTooLongMessage() {
 
     String message =
-            "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar"
-                    + "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar"
-                    + "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar"
-                    + "FoobarFoobarFoobarFoobar";
+        "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar"
+            + "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar"
+            + "FoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobarFoobar"
+            + "FoobarFoobarFoobarFoobar";
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
+        Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
-            .body("size()", Matchers.is(1));
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/ErrorResponses-schema.json"))
+        .body("size()", Matchers.is(1));
   }
 
   @Test
@@ -200,22 +200,22 @@ public class TweetResourceIT {
     Long testTweetId = createTestTweet();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .when()
-            .delete(getSingleItemUri(testTweetId))
-            .then()
-            .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+        .headers("Authorization", "Bearer " + authToken)
+        .when()
+        .delete(getSingleItemUri(testTweetId))
+        .then()
+        .statusCode(Response.Status.NO_CONTENT.getStatusCode());
   }
 
   @Test
   public void deleteTweetShouldReturn404() {
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .when()
-            .delete(getSingleItemUri(404L))
-            .then()
-            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+        .headers("Authorization", "Bearer " + authToken)
+        .when()
+        .delete(getSingleItemUri(404L))
+        .then()
+        .statusCode(Response.Status.NOT_FOUND.getStatusCode());
   }
 
   @Test
@@ -224,11 +224,11 @@ public class TweetResourceIT {
     Long testTweetId = createTestTweet();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .when()
-            .put(getSingleItemUriWithPath(testTweetId, "like"))
-            .then()
-            .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+        .headers("Authorization", "Bearer " + authToken)
+        .when()
+        .put(getSingleItemUriWithPath(testTweetId, "like"))
+        .then()
+        .statusCode(Response.Status.NO_CONTENT.getStatusCode());
   }
 
   @Test
@@ -240,42 +240,42 @@ public class TweetResourceIT {
     String message = "Today was a good day!";
 
     JsonObject retweetJsonObject =
-            Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
+        Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(retweetJsonObject.toString())
-            .when()
-            .post(getSingleItemUri(testTweetId))
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.CREATED.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
-            .body("id", Matchers.notNullValue())
-            .body("message", Matchers.equalTo(message))
-            .body("postTime", Matchers.equalTo(testPostTime))
-            .body("authorId", Matchers.notNullValue())
-            .body("rootTweetId", Matchers.equalTo(testTweetIdForAssertion));
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(retweetJsonObject.toString())
+        .when()
+        .post(getSingleItemUri(testTweetId))
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.CREATED.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"))
+        .body("id", Matchers.notNullValue())
+        .body("message", Matchers.equalTo(message))
+        .body("postTime", Matchers.equalTo(testPostTime))
+        .body("authorId", Matchers.notNullValue())
+        .body("rootTweetId", Matchers.equalTo(testTweetIdForAssertion));
   }
 
   @Test
   public void retweetTweetShouldReturn404() {
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder()
-                    .add("message", "Today is a good day!")
-                    .add("postTime", testPostTime)
-                    .build();
+        Json.createObjectBuilder()
+            .add("message", "Today is a good day!")
+            .add("postTime", testPostTime)
+            .build();
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(tweetJsonObject.toString())
-            .when()
-            .post(getSingleItemUri(404L))
-            .then()
-            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(tweetJsonObject.toString())
+        .when()
+        .post(getSingleItemUri(404L))
+        .then()
+        .statusCode(Response.Status.NOT_FOUND.getStatusCode());
   }
 
   @Test
@@ -284,25 +284,25 @@ public class TweetResourceIT {
     Long testTweetId = createTestTweet();
 
     RestAssured.given()
-            .contentType(MediaType.APPLICATION_JSON)
-            .when()
-            .get(getSingleItemUri(testTweetId))
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.OK.getStatusCode())
-            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"));
+        .contentType(MediaType.APPLICATION_JSON)
+        .when()
+        .get(getSingleItemUri(testTweetId))
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.OK.getStatusCode())
+        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/Tweet-schema.json"));
   }
 
   @Test
   public void getTweetShouldReturn404() {
 
     RestAssured.given()
-            .headers("Authorization", "Bearer " + authToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .when()
-            .get(getSingleItemUri(404L))
-            .then()
-            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+        .headers("Authorization", "Bearer " + authToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .when()
+        .get(getSingleItemUri(404L))
+        .then()
+        .statusCode(Response.Status.NOT_FOUND.getStatusCode());
   }
 
   @Test
@@ -311,23 +311,23 @@ public class TweetResourceIT {
     createTestTweet();
 
     RestAssured.given()
-            .contentType(MediaType.APPLICATION_JSON)
-            .when()
-            .get(apiUri)
-            .then()
-            .contentType(MediaType.APPLICATION_JSON)
-            .statusCode(Response.Status.OK.getStatusCode());
+        .contentType(MediaType.APPLICATION_JSON)
+        .when()
+        .get(apiUri)
+        .then()
+        .contentType(MediaType.APPLICATION_JSON)
+        .statusCode(Response.Status.OK.getStatusCode());
   }
 
   @Test
   public void getMainTimelineShouldReturn204() {
 
     RestAssured.given()
-            .contentType(MediaType.APPLICATION_JSON)
-            .when()
-            .get(apiUri)
-            .then()
-            .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+        .contentType(MediaType.APPLICATION_JSON)
+        .when()
+        .get(apiUri)
+        .then()
+        .statusCode(Response.Status.NO_CONTENT.getStatusCode());
   }
 
   private Long createTestTweet() {
@@ -335,21 +335,21 @@ public class TweetResourceIT {
     String message = "Today is a good day!";
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
+        Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
 
     String id =
-            RestAssured.given()
-                    .headers("Authorization", "Bearer " + authToken)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(tweetJsonObject.toString())
-                    .when()
-                    .post(apiUri)
-                    .then()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .statusCode(Response.Status.CREATED.getStatusCode())
-                    .extract()
-                    .jsonPath()
-                    .getString("id");
+        RestAssured.given()
+            .headers("Authorization", "Bearer " + authToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(tweetJsonObject.toString())
+            .when()
+            .post(apiUri)
+            .then()
+            .contentType(MediaType.APPLICATION_JSON)
+            .statusCode(Response.Status.CREATED.getStatusCode())
+            .extract()
+            .jsonPath()
+            .getString("id");
 
     return Long.parseLong(id);
   }

@@ -42,9 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * A resource that provides access to the {@link Tweet} entity.
- */
+/** A resource that provides access to the {@link Tweet} entity. */
 @Path(Constants.TWEETS_API_URI)
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
@@ -52,47 +50,45 @@ public class TweetResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(TweetResource.class);
 
-  @Inject
-  private TweetRepository tweetRepository;
+  @Inject private TweetRepository tweetRepository;
 
-  @Inject
-  private UserRepository userRepository;
+  @Inject private UserRepository userRepository;
 
-  @Context
-  private SecurityContext securityContext;
+  @Context private SecurityContext securityContext;
 
   @POST
   @Transactional
   @RolesAllowed(UserRole.USER)
   @Operation(description = "Create a new tweet")
   @APIResponses({
-          @APIResponse(
-                  responseCode = "201",
-                  description = "Tweet created",
-                  content = @Content(schema = @Schema(implementation = Tweet.class))),
-          @APIResponse(
-                  responseCode = "400",
-                  description = "Invalid request data",
-                  content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
+    @APIResponse(
+        responseCode = "201",
+        description = "Tweet created",
+        content = @Content(schema = @Schema(implementation = Tweet.class))),
+    @APIResponse(
+        responseCode = "400",
+        description = "Invalid request data",
+        content = @Content(schema = @Schema(implementation = ApplicationErrorDTO.class)))
   })
   public Response createTweet(
-          @RequestBody(
-                  description = "New tweet",
-                  required = true,
-                  content = @Content(schema = @Schema(implementation = TweetNewDTO.class)))
-          @Valid final TweetNewDTO tweetNewDTO) {
+      @RequestBody(
+              description = "New tweet",
+              required = true,
+              content = @Content(schema = @Schema(implementation = TweetNewDTO.class)))
+          @Valid
+          final TweetNewDTO tweetNewDTO) {
 
     LOG.info("Going to create tweet with message '{}'", tweetNewDTO.getMessage());
 
     User author =
-            userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
+        userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
 
     Tweet tweet =
-            Tweet.newBuilder()
-                    .withPostTime(tweetNewDTO.getPostTime())
-                    .withMessage(tweetNewDTO.getMessage())
-                    .withAuthor(author)
-                    .build();
+        Tweet.newBuilder()
+            .withPostTime(tweetNewDTO.getPostTime())
+            .withMessage(tweetNewDTO.getMessage())
+            .withAuthor(author)
+            .build();
 
     Tweet createdTweet = tweetRepository.create(tweet);
 
@@ -108,11 +104,12 @@ public class TweetResource {
   @RolesAllowed(UserRole.USER)
   @Operation(description = "Delete a tweet")
   @APIResponses({
-          @APIResponse(responseCode = "204", description = "Tweet deleted"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "204", description = "Tweet deleted"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response deleteTweet(
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     LOG.info("Going to delete tweet with id {}", tweetId);
 
@@ -136,11 +133,12 @@ public class TweetResource {
   @RolesAllowed(UserRole.USER)
   @Operation(description = "Like an unliked tweet")
   @APIResponses({
-          @APIResponse(responseCode = "200", description = "Tweet liked/unliked"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "200", description = "Tweet liked/unliked"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response likeTweet(
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     User user = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
@@ -167,11 +165,12 @@ public class TweetResource {
   @RolesAllowed(UserRole.USER)
   @Operation(description = "Unlike an liked tweet")
   @APIResponses({
-          @APIResponse(responseCode = "200", description = "Tweet unliked"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "200", description = "Tweet unliked"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response unlikeTweet(
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     User user = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
@@ -198,16 +197,18 @@ public class TweetResource {
   @RolesAllowed(UserRole.USER)
   @Operation(description = "Retweet an tweet")
   @APIResponses({
-          @APIResponse(responseCode = "201", description = "Tweet retweeted"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "201", description = "Tweet retweeted"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response retweetTweet(
-          @RequestBody(
-                  description = "New retweet",
-                  required = true,
-                  content = @Content(schema = @Schema(implementation = TweetNewDTO.class)))
-          @Valid final TweetNewDTO tweetNewDTO,
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @RequestBody(
+              description = "New retweet",
+              required = true,
+              content = @Content(schema = @Schema(implementation = TweetNewDTO.class)))
+          @Valid
+          final TweetNewDTO tweetNewDTO,
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     User user = userRepository.getReferenceByUsername(securityContext.getUserPrincipal().getName());
 
@@ -215,12 +216,12 @@ public class TweetResource {
       Tweet rootTweet = tweetRepository.find(tweetId);
 
       Tweet tweet =
-              new Tweet.TweetBuilder()
-                      .withMessage(tweetNewDTO.getMessage())
-                      .withAuthor(user)
-                      .withPostTime(tweetNewDTO.getPostTime())
-                      .withRootTweet(rootTweet)
-                      .build();
+          new Tweet.TweetBuilder()
+              .withMessage(tweetNewDTO.getMessage())
+              .withAuthor(user)
+              .withPostTime(tweetNewDTO.getPostTime())
+              .withRootTweet(rootTweet)
+              .build();
 
       LOG.info("Going to create retweet with id {} by user {}", tweet.getId(), user);
       Tweet createdRetweet = tweetRepository.create(tweet);
@@ -241,22 +242,23 @@ public class TweetResource {
   @PermitAll
   @Operation(description = "Get a tweet")
   @APIResponses({
-          @APIResponse(responseCode = "200", description = "Successful fetched tweet"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "200", description = "Successful fetched tweet"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response getTweet(
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     try {
       Tweet foundTweet = tweetRepository.find(tweetId);
 
       List<UserListDTO> liker =
-              foundTweet.getLiker().stream().map(UserListDTO::new).collect(Collectors.toList());
+          foundTweet.getLiker().stream().map(UserListDTO::new).collect(Collectors.toList());
 
       List<UserListDTO> retweeter =
-              foundTweet.getRetweets().stream()
-                      .map(t -> new UserListDTO(t.getAuthor()))
-                      .collect(Collectors.toList());
+          foundTweet.getRetweets().stream()
+              .map(t -> new UserListDTO(t.getAuthor()))
+              .collect(Collectors.toList());
 
       TweetFullDTO tweetFullDTO = new TweetFullDTO(foundTweet, liker, retweeter);
 
@@ -274,17 +276,18 @@ public class TweetResource {
   @PermitAll
   @Operation(description = "Get a list of all tweets liker")
   @APIResponses({
-          @APIResponse(responseCode = "200", description = "Successful fetched tweets liker list"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "200", description = "Successful fetched tweets liker list"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response getTweetLiker(
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     try {
       Tweet foundTweet = tweetRepository.find(tweetId);
 
       Set<UserListDTO> liker =
-              foundTweet.getLiker().stream().map(UserListDTO::new).collect(Collectors.toSet());
+          foundTweet.getLiker().stream().map(UserListDTO::new).collect(Collectors.toSet());
 
       LOG.info("Tweet liker list {} successfully fetched", liker);
       return Response.status(Response.Status.OK).entity(liker).build();
@@ -300,19 +303,20 @@ public class TweetResource {
   @PermitAll
   @Operation(description = "Get a list of all tweet retweeter")
   @APIResponses({
-          @APIResponse(responseCode = "200", description = "Successful fetched tweets retweeter list"),
-          @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
+    @APIResponse(responseCode = "200", description = "Successful fetched tweets retweeter list"),
+    @APIResponse(responseCode = "404", description = "Tweet with given id does not exist")
   })
   public Response getTweetRetweeter(
-          @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000) final Long tweetId) {
+      @Parameter(description = "tweet identifier") @PathParam("id") @Min(1) @Max(10000)
+          final Long tweetId) {
 
     try {
       Tweet foundTweet = tweetRepository.find(tweetId);
 
       Set<UserListDTO> retweeter =
-              foundTweet.getRetweets().stream()
-                      .map(t -> new UserListDTO(t.getAuthor()))
-                      .collect(Collectors.toSet());
+          foundTweet.getRetweets().stream()
+              .map(t -> new UserListDTO(t.getAuthor()))
+              .collect(Collectors.toSet());
 
       LOG.info("Tweet retweeter list {} successfully fetched", retweeter);
       return Response.status(Response.Status.OK).entity(retweeter).build();
@@ -327,15 +331,15 @@ public class TweetResource {
   @PermitAll
   @Operation(description = "Get the main timeline consisting of the latest tweets")
   @APIResponses({
-          @APIResponse(responseCode = "200", description = "Successful fetched latest tweets list"),
-          @APIResponse(responseCode = "204", description = "No tweets available yet")
+    @APIResponse(responseCode = "200", description = "Successful fetched latest tweets list"),
+    @APIResponse(responseCode = "204", description = "No tweets available yet")
   })
   public Response getMainTimeLine() {
 
     List<Tweet> tweets = tweetRepository.findPartialOrderByDate(0, 100);
 
     List<TweetListDTO> timelineDTOs =
-            tweets.stream().map(TweetListDTO::new).collect(Collectors.toList());
+        tweets.stream().map(TweetListDTO::new).collect(Collectors.toList());
 
     LOG.info("Main timeline tweets list {} successfully fetched", timelineDTOs);
 

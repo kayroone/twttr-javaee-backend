@@ -22,9 +22,7 @@ import org.eclipse.microprofile.openapi.models.media.Schema;
 
 import java.util.Map;
 
-/**
- * Custom OpenAPI Spec Filter
- */
+/** Custom OpenAPI Spec Filter */
 class CustomOASFilter implements OASFilter {
 
   private static final String PATH_RESTEASY_REGISTRY = "/api/resteasy/registry";
@@ -34,11 +32,11 @@ class CustomOASFilter implements OASFilter {
   @Override
   public void filterOpenAPI(final OpenAPI openAPI) {
     Paths paths = openAPI.getPaths();
-    if (paths.keySet().contains(PATH_RESTEASY_REGISTRY)) {
+    if (paths.containsKey(PATH_RESTEASY_REGISTRY)) {
       paths.removePathItem(PATH_RESTEASY_REGISTRY);
     }
 
     Map<String, Schema> schemas = openAPI.getComponents().getSchemas();
-      schemas.keySet().remove(SCHEMA_REGISTRY_DATA);
+    schemas.keySet().remove(SCHEMA_REGISTRY_DATA);
   }
 }

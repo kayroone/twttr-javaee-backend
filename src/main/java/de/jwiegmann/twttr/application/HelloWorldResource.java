@@ -20,36 +20,37 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * A resource that provides access to the world.
- */
+/** A resource that provides access to the world. */
 @Path("hello")
 @Produces(MediaType.TEXT_PLAIN)
-@Timed(name = "HelloWorld", displayName = "HelloWorld", unit = MetricUnits.MILLISECONDS, description = "Metrics of the HelloWorldResource", absolute = true)
+@Timed(
+    name = "HelloWorld",
+    displayName = "HelloWorld",
+    unit = MetricUnits.MILLISECONDS,
+    description = "Metrics of the HelloWorldResource",
+    absolute = true)
 public class HelloWorldResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HelloWorldResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HelloWorldResource.class);
 
-    @GET
-    @Path("{name}")
-    @Operation(description = "Say hello to someone")
-    @APIResponse(responseCode = "200", description = "Ok")
-    public Response sayHello(@Parameter(description = "name") @PathParam("name") final String name) {
-        LOG.info("Say 'Hello' to {}", name);
+  @GET
+  @Path("{name}")
+  @Operation(description = "Say hello to someone")
+  @APIResponse(responseCode = "200", description = "Ok")
+  public Response sayHello(@Parameter(description = "name") @PathParam("name") final String name) {
+    LOG.info("Say 'Hello' to {}", name);
 
-        String hello = String.format("Hello %s!", name);
+    String hello = String.format("Hello %s!", name);
 
-        LOG.info(hello);
+    LOG.info(hello);
 
-        return Response.status(Response.Status.OK)
-                .entity(hello)
-                .build();
-    }
+    return Response.status(Response.Status.OK).entity(hello).build();
+  }
 
-    @GET
-    @Operation(description = "Say hello world")
-    @APIResponse(responseCode = "200", description = "Ok")
-    public Response sayHelloWorld() {
-        return sayHello("World");
-    }
+  @GET
+  @Operation(description = "Say hello world")
+  @APIResponse(responseCode = "200", description = "Ok")
+  public Response sayHelloWorld() {
+    return sayHello("World");
+  }
 }

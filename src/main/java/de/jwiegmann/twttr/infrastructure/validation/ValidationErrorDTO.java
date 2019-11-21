@@ -29,16 +29,15 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-/**
- * A DTO that represents a validation error.
- */
+/** A DTO that represents a validation error. */
 public class ValidationErrorDTO extends ApplicationErrorDTO {
 
   private static final Logger LOG = LoggerFactory.getLogger(ValidationErrorDTO.class);
 
   public ValidationErrorDTO(final ConstraintViolation constraintViolation) {
-    super(extractErrorCode(notNull(constraintViolation, "constraintViolation must not be null")),
-          extractErrorMessage(notNull(constraintViolation, "constraintViolation must not be null")));
+    super(
+        extractErrorCode(notNull(constraintViolation, "constraintViolation must not be null")),
+        extractErrorMessage(notNull(constraintViolation, "constraintViolation must not be null")));
   }
 
   @SuppressWarnings("unchecked")
@@ -46,7 +45,8 @@ public class ValidationErrorDTO extends ApplicationErrorDTO {
     ApplicationError errorPayload = () -> "UNKNOWN";
 
     try {
-      Set<Class<? extends Payload>> payload = constraintViolation.getConstraintDescriptor().getPayload();
+      Set<Class<? extends Payload>> payload =
+          constraintViolation.getConstraintDescriptor().getPayload();
       if (!payload.isEmpty()) {
         Class<? extends Payload> clazz = payload.iterator().next();
         errorPayload = (ValidationErrorPayload) clazz.newInstance();
@@ -62,7 +62,8 @@ public class ValidationErrorDTO extends ApplicationErrorDTO {
     String propertyPath = getPropertyPath(constraintViolation);
 
     StringBuilder sb = new StringBuilder();
-    if (StringUtils.isNotBlank(propertyPath) && constraintViolation.getMessageTemplate().startsWith("{javax.validation.constraints")) {
+    if (StringUtils.isNotBlank(propertyPath)
+        && constraintViolation.getMessageTemplate().startsWith("{javax.validation.constraints")) {
       sb.append(propertyPath).append(' ');
     }
 

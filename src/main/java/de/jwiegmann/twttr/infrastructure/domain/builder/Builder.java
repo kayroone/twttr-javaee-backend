@@ -22,10 +22,10 @@ package de.jwiegmann.twttr.infrastructure.domain.builder;
  */
 interface Builder<E> {
 
-    /**
-     * Build new entity instance.
-     *
-     * @return new entity instance
-     */
-    E build();
+  /**
+   * Build new entity instance.
+   *
+   * @return new entity instance
+   */
+  E build();
 }

@@ -20,9 +20,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-/**
- * A DTO that represents an application error.
- */
+/** A DTO that represents an application error. */
 @Schema
 public class ApplicationErrorDTO extends AbstractValueObject {
 
@@ -52,14 +50,11 @@ public class ApplicationErrorDTO extends AbstractValueObject {
 
   @Override
   protected Object[] values() {
-    return new Object[]{code, message};
+    return new Object[] {code, message};
   }
 
   @Override
   public String toString() {
-    return "ApplicationErrorDTO{"
-           + "code='" + code + '\''
-           + ", message='" + message + '\''
-           + '}';
+    return "ApplicationErrorDTO{" + "code='" + code + '\'' + ", message='" + message + '\'' + '}';
   }
 }

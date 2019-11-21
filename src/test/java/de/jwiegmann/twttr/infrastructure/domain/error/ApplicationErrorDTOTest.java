@@ -20,9 +20,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
-/**
- * Test class for the DTO {@link ApplicationErrorDTO}.
- */
+/** Test class for the DTO {@link ApplicationErrorDTO}. */
 public class ApplicationErrorDTOTest {
 
   @Test
@@ -43,7 +41,8 @@ public class ApplicationErrorDTOTest {
 
   @Test
   public void instantiationShouldSucceed() {
-    ApplicationErrorDTO applicationError = new ApplicationErrorDTO(() -> "UNKNOWN", "An unknown error occurred");
+    ApplicationErrorDTO applicationError =
+        new ApplicationErrorDTO(() -> "UNKNOWN", "An unknown error occurred");
     assertThat(applicationError.getCode()).isEqualTo("UNKNOWN");
     assertThat(applicationError.getMessage()).isEqualTo("An unknown error occurred");
   }

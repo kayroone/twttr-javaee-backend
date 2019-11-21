@@ -30,9 +30,7 @@ import java.util.Set;
 import static java.util.Locale.ENGLISH;
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Test class for {@link ConstraintViolationFormat}.
- */
+/** Test class for {@link ConstraintViolationFormat}. */
 public class ConstraintViolationFormatTest {
 
   private Validator validator;
@@ -50,8 +48,10 @@ public class ConstraintViolationFormatTest {
 
   @Test
   public void format() {
-    Set<ConstraintViolation<TestEntity>> constraintViolations = validator.validate(new TestEntity());
-    assertThat(ConstraintViolationFormat.format(constraintViolations)).isEqualTo("TestEntity.value may not be null");
+    Set<ConstraintViolation<TestEntity>> constraintViolations =
+        validator.validate(new TestEntity());
+    assertThat(ConstraintViolationFormat.format(constraintViolations))
+        .isEqualTo("TestEntity.value may not be null");
   }
 
   @Test(expected = NullPointerException.class)
@@ -61,7 +61,6 @@ public class ConstraintViolationFormatTest {
 
   private static class TestEntity {
 
-    @NotNull
-    private Integer value;
+    @NotNull private Integer value;
   }
 }

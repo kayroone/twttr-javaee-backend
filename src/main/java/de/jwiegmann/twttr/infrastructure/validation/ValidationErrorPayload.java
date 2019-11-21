@@ -21,9 +21,7 @@ import javax.validation.Payload;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-/**
- * Provides means for validation error payload.
- */
+/** Provides means for validation error payload. */
 public abstract class ValidationErrorPayload implements ApplicationError, Payload {
 
   private final String errorCode;

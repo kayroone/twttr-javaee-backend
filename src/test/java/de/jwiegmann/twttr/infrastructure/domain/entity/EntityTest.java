@@ -22,9 +22,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Test class for the entity superclass {@link AbstractEntity}.
- */
+/** Test class for the entity superclass {@link AbstractEntity}. */
 public class EntityTest {
 
   @Test
@@ -32,7 +30,7 @@ public class EntityTest {
     AbstractEntity entity = new TestEntityA();
     assertThat(entity.getId()).isNull();
 
-    ((TestEntityA)entity).setId(1L);
+    ((TestEntityA) entity).setId(1L);
     assertThat(entity.getId()).isEqualTo(1L);
   }
 
@@ -44,7 +42,7 @@ public class EntityTest {
   @Test
   public void testEquals() {
     AbstractEntity entityA = new TestEntityA();
-    ((TestEntityA)entityA).setId(1L);
+    ((TestEntityA) entityA).setId(1L);
     assertThat(entityA.equals(entityA)).isTrue();
     assertThat(Objects.equals(entityA, null)).isFalse();
 
@@ -52,7 +50,7 @@ public class EntityTest {
     assertThat(entityA.equals(entityAChild)).isFalse();
     assertThat(entityAChild.equals(entityA)).isFalse();
 
-    ((TestEntityAChild)entityAChild).setId(1L);
+    ((TestEntityAChild) entityAChild).setId(1L);
     assertThat(entityA.equals(entityAChild)).isFalse();
     assertThat(entityAChild.equals(entityA)).isFalse();
 
@@ -60,7 +58,7 @@ public class EntityTest {
     assertThat(entityA.equals(entityB)).isFalse();
     assertThat(entityB.equals(entityA)).isFalse();
 
-    ((TestEntityB)entityB).setId(1L);
+    ((TestEntityB) entityB).setId(1L);
     assertThat(entityA.equals(entityB)).isFalse();
     assertThat(entityB.equals(entityA)).isFalse();
 
@@ -68,7 +66,7 @@ public class EntityTest {
     assertThat(entityA.equals(entityC)).isFalse();
     assertThat(entityC.equals(entityA)).isFalse();
 
-    ((TestEntityA)entityC).setId(1L);
+    ((TestEntityA) entityC).setId(1L);
     assertThat(entityA.equals(entityC)).isTrue();
     assertThat(entityC.equals(entityA)).isTrue();
   }
@@ -77,19 +75,19 @@ public class EntityTest {
   public void testHashCode() {
     AbstractEntity entityA = new TestEntityA();
     int hashCodeBeforeIdWasSet = entityA.hashCode();
-    ((TestEntityA)entityA).setId(1L);
+    ((TestEntityA) entityA).setId(1L);
     assertThat(entityA.hashCode()).isNotEqualTo(hashCodeBeforeIdWasSet);
 
     entityA = new TestEntityA();
     AbstractEntity entityB = new TestEntityB();
-    ((TestEntityA)entityA).setId(1L);
-    ((TestEntityB)entityB).setId(1L);
+    ((TestEntityA) entityA).setId(1L);
+    ((TestEntityB) entityB).setId(1L);
     assertThat(entityA.hashCode()).isEqualTo(entityB.hashCode());
 
     entityA = new TestEntityA();
     entityB = new TestEntityB();
-    ((TestEntityA)entityA).setId(1L);
-    ((TestEntityB)entityB).setId(2L);
+    ((TestEntityA) entityA).setId(1L);
+    ((TestEntityB) entityB).setId(2L);
     assertThat(entityA.hashCode()).isNotEqualTo(entityB.hashCode());
   }
 
@@ -98,7 +96,7 @@ public class EntityTest {
     AbstractEntity entity = new TestEntityA();
     assertThat(entity.toString()).isEqualTo(entity.getClass().getSimpleName() + "#null");
 
-    ((TestEntityA)entity).setId(1L);
+    ((TestEntityA) entity).setId(1L);
     assertThat(entity.toString()).isEqualTo(entity.getClass().getSimpleName() + "#1");
   }
 
@@ -130,7 +128,5 @@ public class EntityTest {
     }
   }
 
-  private static class TestEntityAChild extends TestEntityA {
-
-  }
+  private static class TestEntityAChild extends TestEntityA {}
 }

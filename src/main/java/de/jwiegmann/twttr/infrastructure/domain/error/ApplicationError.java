@@ -15,9 +15,7 @@
  */
 package de.jwiegmann.twttr.infrastructure.domain.error;
 
-/**
- * Provides means for custom application errors.
- */
+/** Provides means for custom application errors. */
 public interface ApplicationError {
 
   String getErrorCode();

@@ -26,58 +26,55 @@ import static org.apache.commons.lang3.Validate.notNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-/**
- * Test class for the builder superclass {@link DefaultBuilder}.
- */
+/** Test class for the builder superclass {@link DefaultBuilder}. */
 public class DefaultBuilderTest {
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        Locale.setDefault(Locale.ENGLISH);
+  @BeforeClass
+  public static void setUpBeforeClass() {
+    Locale.setDefault(Locale.ENGLISH);
+  }
+
+  @Test
+  public void build() {
+    TestEntity entity = TestEntity.newBuilder().withValue(1).build();
+    assertThat(entity).isNotNull();
+    assertThat(entity.getId()).isNull();
+    assertThat(entity.getValue()).isEqualTo(1);
+  }
+
+  @Test
+  public void buildShouldFailForConstraintViolation() {
+    assertThatIllegalArgumentException()
+        .isThrownBy(() -> TestEntity.newBuilder().build())
+        .withMessage("BeanValidation failed, reasons: [TestEntity.value may not be null]")
+        .withNoCause();
+  }
+
+  private static class TestEntity extends AbstractEntity<Long> {
+
+    private Long id;
+
+    @NotNull private Integer value;
+
+    @Override
+    public Long getId() {
+      return id;
     }
 
-    @Test
-    public void build() {
-        TestEntity entity = TestEntity.newBuilder().withValue(1).build();
-        assertThat(entity).isNotNull();
-        assertThat(entity.getId()).isNull();
-        assertThat(entity.getValue()).isEqualTo(1);
+    Integer getValue() {
+      return value;
     }
 
-    @Test
-    public void buildShouldFailForConstraintViolation() {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> TestEntity.newBuilder().build())
-                .withMessage("BeanValidation failed, reasons: [TestEntity.value may not be null]")
-                .withNoCause();
+    private static TestBuilder newBuilder() {
+      return new TestBuilder();
     }
+  }
 
-    private static class TestEntity extends AbstractEntity<Long> {
+  private static class TestBuilder extends DefaultBuilder<TestEntity> {
 
-        private Long id;
-
-        @NotNull
-        private Integer value;
-
-        @Override
-        public Long getId() {
-            return id;
-        }
-
-        Integer getValue() {
-            return value;
-        }
-
-        private static TestBuilder newBuilder() {
-            return new TestBuilder();
-        }
+    private TestBuilder withValue(final Integer value) {
+      this.instance.value = notNull(value, "value must not be null");
+      return this;
     }
-
-    private static class TestBuilder extends DefaultBuilder<TestEntity> {
-
-        private TestBuilder withValue(final Integer value) {
-            this.instance.value = notNull(value, "value must not be null");
-            return this;
-        }
-    }
+  }
 }

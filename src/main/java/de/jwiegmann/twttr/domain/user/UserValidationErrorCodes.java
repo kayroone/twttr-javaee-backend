@@ -4,10 +4,10 @@ import de.jwiegmann.twttr.infrastructure.validation.ValidationErrorPayload;
 
 class UserValidationErrorCodes {
 
-    private static class UsernameIsNull extends ValidationErrorPayload {
+  private static class UsernameIsNull extends ValidationErrorPayload {
 
-        public UsernameIsNull() {
-            super("USERNAME_IS_NULL");
-        }
+    public UsernameIsNull() {
+      super("USERNAME_IS_NULL");
     }
+  }
 }

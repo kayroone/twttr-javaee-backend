@@ -25,9 +25,7 @@ import java.util.Locale;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-/**
- * Test class for the builder superclass {@link AbstractBuilder}.
- */
+/** Test class for the builder superclass {@link AbstractBuilder}. */
 public class BuilderTest {
 
   @BeforeClass
@@ -55,8 +53,7 @@ public class BuilderTest {
 
     private Long id;
 
-    @NotNull
-    private Integer value;
+    @NotNull private Integer value;
 
     @Override
     public Long getId() {

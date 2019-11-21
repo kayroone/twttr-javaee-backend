@@ -29,26 +29,19 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-/**
- * Test class for the resource {@link TweetResource}.
- */
+/** Test class for the resource {@link TweetResource}. */
 @SuppressWarnings("ALL")
 public class TweetResourceTest {
 
-  @Rule
-  public MockitoRule mockitoRule = MockitoJUnit.rule();
+  @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private TweetRepository tweetRepository = new TweetRepository();
+  @Mock private TweetRepository tweetRepository = new TweetRepository();
 
-  @Mock
-  private UserRepository userRepository = new UserRepository();
+  @Mock private UserRepository userRepository = new UserRepository();
 
-  @Mock
-  private SecurityContext securityContext;
+  @Mock private SecurityContext securityContext;
 
-  @InjectMocks
-  private TweetResource resource;
+  @InjectMocks private TweetResource resource;
 
   @Test
   public void createTweetShouldReturn201() {
@@ -101,7 +94,7 @@ public class TweetResourceTest {
 
   @Test
   public void deleteTweetShouldReturn404ForEntityNotFoundException()
-          throws EntityNotFoundException {
+      throws EntityNotFoundException {
 
     Tweet tweet1 = TestTweet.newDefaultTweet();
     User user1 = tweet1.getAuthor();
@@ -216,9 +209,9 @@ public class TweetResourceTest {
     assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 
     assertThatNullPointerException()
-            .isThrownBy(() -> new EntityNotFoundException(null))
-            .withMessage("identifier must not be null")
-            .withNoCause();
+        .isThrownBy(() -> new EntityNotFoundException(null))
+        .withMessage("identifier must not be null")
+        .withNoCause();
   }
 
   @Test
@@ -244,9 +237,9 @@ public class TweetResourceTest {
     assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 
     assertThatNullPointerException()
-            .isThrownBy(() -> new EntityNotFoundException(null))
-            .withMessage("identifier must not be null")
-            .withNoCause();
+        .isThrownBy(() -> new EntityNotFoundException(null))
+        .withMessage("identifier must not be null")
+        .withNoCause();
   }
 
   @Test
@@ -282,9 +275,9 @@ public class TweetResourceTest {
     assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 
     assertThatNullPointerException()
-            .isThrownBy(() -> new EntityNotFoundException(null))
-            .withMessage("identifier must not be null")
-            .withNoCause();
+        .isThrownBy(() -> new EntityNotFoundException(null))
+        .withMessage("identifier must not be null")
+        .withNoCause();
   }
 
   @Test
@@ -320,9 +313,9 @@ public class TweetResourceTest {
     assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 
     assertThatNullPointerException()
-            .isThrownBy(() -> new EntityNotFoundException(null))
-            .withMessage("identifier must not be null")
-            .withNoCause();
+        .isThrownBy(() -> new EntityNotFoundException(null))
+        .withMessage("identifier must not be null")
+        .withNoCause();
   }
 
   @Test
@@ -334,8 +327,8 @@ public class TweetResourceTest {
     timelineTweets.add(tweet1);
 
     Mockito.doReturn(timelineTweets)
-            .when(tweetRepository)
-            .findPartialOrderByDate(anyInt(), anyInt());
+        .when(tweetRepository)
+        .findPartialOrderByDate(anyInt(), anyInt());
 
     Response response = resource.getMainTimeLine();
     assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -350,8 +343,8 @@ public class TweetResourceTest {
     List<Tweet> timelineTweets = new ArrayList<>();
 
     Mockito.doReturn(timelineTweets)
-            .when(tweetRepository)
-            .findPartialOrderByDate(anyInt(), anyInt());
+        .when(tweetRepository)
+        .findPartialOrderByDate(anyInt(), anyInt());
 
     Response response = resource.getMainTimeLine();
     assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());

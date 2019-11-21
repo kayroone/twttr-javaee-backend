@@ -27,9 +27,7 @@ import javax.enterprise.inject.spi.CDIProvider;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.enterprise.util.TypeLiteral;
 
-/**
- * Test class for the entity listener {@link PersistenceEventEntityListener}.
- */
+/** Test class for the entity listener {@link PersistenceEventEntityListener}. */
 @SuppressWarnings("unchecked")
 public class PersistenceEventEntityListenerTest {
 
@@ -50,7 +48,9 @@ public class PersistenceEventEntityListenerTest {
     Mockito.doReturn(cdi).when(cdiProvider).getCDI();
 
     instance = Mockito.mock(Instance.class);
-    Mockito.doReturn(instance).when(cdi).select(Mockito.any(TypeLiteral.class), Mockito.any(AnnotationLiteral.class));
+    Mockito.doReturn(instance)
+        .when(cdi)
+        .select(Mockito.any(TypeLiteral.class), Mockito.any(AnnotationLiteral.class));
 
     event = Mockito.mock(Event.class);
     Mockito.doReturn(event).when(instance).get();
@@ -61,7 +61,8 @@ public class PersistenceEventEntityListenerTest {
 
   @After
   public void tearDown() {
-    Mockito.verify(cdi).select(Mockito.any(TypeLiteral.class), Mockito.any(AnnotationLiteral.class));
+    Mockito.verify(cdi)
+        .select(Mockito.any(TypeLiteral.class), Mockito.any(AnnotationLiteral.class));
     Mockito.verify(event).fire(Mockito.any(AbstractEntity.class));
     Mockito.verify(instance).get();
     Mockito.verifyNoMoreInteractions(cdi, event, instance);

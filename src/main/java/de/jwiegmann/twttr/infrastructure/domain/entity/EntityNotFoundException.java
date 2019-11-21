@@ -17,9 +17,7 @@ package de.jwiegmann.twttr.infrastructure.domain.entity;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-/**
- * Exception to be thrown when an entity is not found.
- */
+/** Exception to be thrown when an entity is not found. */
 public class EntityNotFoundException extends Exception {
 
   private final Long identifier;

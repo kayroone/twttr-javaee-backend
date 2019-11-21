@@ -16,10 +16,11 @@
 package de.jwiegmann.twttr.infrastructure.domain.builder;
 
 /**
- * A base class for builders, that does not support deep subclassing and handles creation an building of objects via reflection. Subclasses
- * may access the protected attribute {@link #instance} to construct the object.
+ * A base class for builders, that does not support deep subclassing and handles creation an
+ * building of objects via reflection. Subclasses may access the protected attribute {@link
+ * #instance} to construct the object.
  *
- * <p> Example for a builder: </p>
+ * <p>Example for a builder:
  *
  * <pre>
  * public class MyBuilder extends DefaultBuilder<MyEntity> {

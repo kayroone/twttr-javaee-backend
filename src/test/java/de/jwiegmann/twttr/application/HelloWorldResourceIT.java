@@ -19,7 +19,8 @@ public class HelloWorldResourceIT {
   @BeforeAll
   public static void setUp() {
 
-    IntegrationTestContainers integrationTestContainers = IntegrationTestContainers.newTestEnvironment().withApiContainer();
+    IntegrationTestContainers integrationTestContainers =
+        IntegrationTestContainers.newTestEnvironment().withApiContainer();
 
     apiUri = integrationTestContainers.getApiUri(Constants.HELLO_WORLD_URI);
   }

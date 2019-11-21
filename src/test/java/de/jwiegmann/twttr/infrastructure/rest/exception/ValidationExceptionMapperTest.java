@@ -39,70 +39,70 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test class for the the exception mapper {@link ValidationExceptionMapper} which handles {@link ConstraintViolationException}s.
+ * Test class for the the exception mapper {@link ValidationExceptionMapper} which handles {@link
+ * ConstraintViolationException}s.
  */
 public class ValidationExceptionMapperTest {
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        Locale.setDefault(Locale.ENGLISH);
+  @BeforeClass
+  public static void setUpBeforeClass() {
+    Locale.setDefault(Locale.ENGLISH);
+  }
+
+  @AfterClass
+  public static void tearDown() {
+    Locale.setDefault(Locale.getDefault());
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void toResponse() {
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    Validator validator = validatorFactory.getValidator();
+
+    TestEntity entity = new TestEntity();
+
+    Set<ConstraintViolation<TestEntity>> constraintViolations = validator.validate(entity);
+    ConstraintViolationException exception = new ConstraintViolationException(constraintViolations);
+
+    ValidationExceptionMapper exceptionMapper = new ValidationExceptionMapper();
+    Response response = exceptionMapper.toResponse(exception);
+
+    assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
+    List<ValidationErrorDTO> validationErrors = (List<ValidationErrorDTO>) response.getEntity();
+    assertThat(validationErrors).hasSize(2);
+
+    Collections.sort(validationErrors, Comparator.comparing(ValidationErrorDTO::getCode));
+
+    ValidationErrorDTO validationError = validationErrors.get(0);
+    Assertions.assertThat(validationError.getCode()).isEqualTo("UNKNOWN");
+    Assertions.assertThat(validationError.getMessage()).isEqualTo("value1 may not be null");
+
+    validationError = validationErrors.get(1);
+    Assertions.assertThat(validationError.getCode()).isEqualTo("VALUE_IS_NULL");
+    Assertions.assertThat(validationError.getMessage()).isEqualTo("value2 may not be null");
+  }
+
+  private static class TestEntity extends AbstractEntity<Long> {
+
+    private Long id;
+
+    @NotNull private String value1;
+
+    @NotNull(payload = TestValueIsNull.class)
+    private String value2;
+
+    @Override
+    public Long getId() {
+      return id;
     }
 
-    @AfterClass
-    public static void tearDown() {
-        Locale.setDefault(Locale.getDefault());
+    public String getValue1() {
+      return value1;
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void toResponse() {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-
-        TestEntity entity = new TestEntity();
-
-        Set<ConstraintViolation<TestEntity>> constraintViolations = validator.validate(entity);
-        ConstraintViolationException exception = new ConstraintViolationException(constraintViolations);
-
-        ValidationExceptionMapper exceptionMapper = new ValidationExceptionMapper();
-        Response response = exceptionMapper.toResponse(exception);
-
-        assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
-        List<ValidationErrorDTO> validationErrors = (List<ValidationErrorDTO>) response.getEntity();
-        assertThat(validationErrors).hasSize(2);
-
-        Collections.sort(validationErrors, Comparator.comparing(ValidationErrorDTO::getCode));
-
-        ValidationErrorDTO validationError = validationErrors.get(0);
-        Assertions.assertThat(validationError.getCode()).isEqualTo("UNKNOWN");
-        Assertions.assertThat(validationError.getMessage()).isEqualTo("value1 may not be null");
-
-        validationError = validationErrors.get(1);
-        Assertions.assertThat(validationError.getCode()).isEqualTo("VALUE_IS_NULL");
-        Assertions.assertThat(validationError.getMessage()).isEqualTo("value2 may not be null");
+    public String getValue2() {
+      return value2;
     }
-
-    private static class TestEntity extends AbstractEntity<Long> {
-
-        private Long id;
-
-        @NotNull
-        private String value1;
-
-        @NotNull(payload = TestValueIsNull.class)
-        private String value2;
-
-        @Override
-        public Long getId() {
-            return id;
-        }
-
-        public String getValue1() {
-            return value1;
-        }
-
-        public String getValue2() {
-            return value2;
-        }
-    }
+  }
 }

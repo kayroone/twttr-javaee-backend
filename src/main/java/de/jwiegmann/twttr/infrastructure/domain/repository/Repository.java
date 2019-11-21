@@ -23,13 +23,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * Stereotype for a stateless component that provides database/datasource access.
- */
+/** Stereotype for a stateless component that provides database/datasource access. */
 @Stereotype
 @ApplicationScoped
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface Repository {
-
-}
+public @interface Repository {}

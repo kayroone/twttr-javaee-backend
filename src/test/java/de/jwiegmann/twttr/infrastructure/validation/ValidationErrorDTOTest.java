@@ -36,81 +36,81 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
  */
 public class ValidationErrorDTOTest {
 
-    @Before
-    public void setUp() {
-        Locale.setDefault(Locale.ENGLISH);
+  @Before
+  public void setUp() {
+    Locale.setDefault(Locale.ENGLISH);
+  }
+
+  @Test
+  public void instantiationShouldFailForMissingConstraintViolation() {
+    assertThatNullPointerException()
+        .isThrownBy(() -> new ValidationErrorDTO(null))
+        .withMessage("constraintViolation must not be null")
+        .withNoCause();
+  }
+
+  @Test
+  public void instantiationShouldSucceedWithPayload() {
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    Validator validator = validatorFactory.getValidator();
+
+    TestEntityA entity = new TestEntityA();
+
+    Set<ConstraintViolation<TestEntityA>> constraintViolations = validator.validate(entity);
+    assertThat(constraintViolations).hasSize(1);
+
+    ValidationErrorDTO validationError =
+        new ValidationErrorDTO(constraintViolations.iterator().next());
+    Assertions.assertThat(validationError.getCode()).isEqualTo("VALUE_IS_NULL");
+    Assertions.assertThat(validationError.getMessage()).isEqualTo("value may not be null");
+  }
+
+  @Test
+  public void instantiationShouldSucceedWithoutPayload() {
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    Validator validator = validatorFactory.getValidator();
+
+    TestEntityB entity = new TestEntityB();
+
+    Set<ConstraintViolation<TestEntityB>> constraintViolations = validator.validate(entity);
+    assertThat(constraintViolations).hasSize(1);
+
+    ValidationErrorDTO validationError =
+        new ValidationErrorDTO(constraintViolations.iterator().next());
+    Assertions.assertThat(validationError.getCode()).isEqualTo("UNKNOWN");
+    Assertions.assertThat(validationError.getMessage()).isEqualTo("value may not be null");
+  }
+
+  private static class TestEntityA extends AbstractEntity<Long> {
+
+    private Long id;
+
+    @NotNull(payload = TestValueIsNull.class)
+    private String value;
+
+    @Override
+    public Long getId() {
+      return id;
     }
 
-    @Test
-    public void instantiationShouldFailForMissingConstraintViolation() {
-        assertThatNullPointerException()
-                .isThrownBy(() -> new ValidationErrorDTO(null))
-                .withMessage("constraintViolation must not be null")
-                .withNoCause();
+    public String getValue() {
+      return value;
+    }
+  }
+
+  private static class TestEntityB extends AbstractEntity<Long> {
+
+    private Long id;
+
+    @NotNull private String value;
+
+    @Override
+    public Long getId() {
+      return id;
     }
 
-    @Test
-    public void instantiationShouldSucceedWithPayload() {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-
-        TestEntityA entity = new TestEntityA();
-
-        Set<ConstraintViolation<TestEntityA>> constraintViolations = validator.validate(entity);
-        assertThat(constraintViolations).hasSize(1);
-
-        ValidationErrorDTO validationError = new ValidationErrorDTO(constraintViolations.iterator().next());
-        Assertions.assertThat(validationError.getCode()).isEqualTo("VALUE_IS_NULL");
-        Assertions.assertThat(validationError.getMessage()).isEqualTo("value may not be null");
+    public String getValue() {
+      return value;
     }
-
-    @Test
-    public void instantiationShouldSucceedWithoutPayload() {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-
-        TestEntityB entity = new TestEntityB();
-
-        Set<ConstraintViolation<TestEntityB>> constraintViolations = validator.validate(entity);
-        assertThat(constraintViolations).hasSize(1);
-
-        ValidationErrorDTO validationError = new ValidationErrorDTO(constraintViolations.iterator().next());
-        Assertions.assertThat(validationError.getCode()).isEqualTo("UNKNOWN");
-        Assertions.assertThat(validationError.getMessage()).isEqualTo("value may not be null");
-    }
-
-    private static class TestEntityA extends AbstractEntity<Long> {
-
-        private Long id;
-
-        @NotNull(payload = TestValueIsNull.class)
-        private String value;
-
-        @Override
-        public Long getId() {
-            return id;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
-    private static class TestEntityB extends AbstractEntity<Long> {
-
-        private Long id;
-
-        @NotNull
-        private String value;
-
-        @Override
-        public Long getId() {
-            return id;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
+  }
 }

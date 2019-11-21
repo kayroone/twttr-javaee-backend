@@ -15,9 +15,7 @@
  */
 package de.jwiegmann.twttr.infrastructure.validation;
 
-/**
- * Test bean validation payload.
- */
+/** Test bean validation payload. */
 public class TestValueIsNull extends ValidationErrorPayload {
 
   public TestValueIsNull() {

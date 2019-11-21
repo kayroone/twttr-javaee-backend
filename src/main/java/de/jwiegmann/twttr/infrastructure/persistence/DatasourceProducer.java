@@ -20,9 +20,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 
-/**
- * CDI producer that provides the {@link DataSource}.
- */
+/** CDI producer that provides the {@link DataSource}. */
 @ApplicationScoped
 public class DatasourceProducer {
 
@@ -30,7 +28,7 @@ public class DatasourceProducer {
   private DataSource dataSource;
 
   @Produces
-  public DataSource getDataSource(){
+  public DataSource getDataSource() {
     return dataSource;
   }
 }

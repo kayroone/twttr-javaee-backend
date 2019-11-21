@@ -24,9 +24,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
-/**
- * Test class for the value object superclass {@link AbstractSimpleValueObject}.
- */
+/** Test class for the value object superclass {@link AbstractSimpleValueObject}. */
 public class SimpleValueObjectTest {
 
   @Test

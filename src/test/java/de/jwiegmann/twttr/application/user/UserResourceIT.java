@@ -67,7 +67,7 @@ public class UserResourceIT {
   public void clearDatabase() {
 
     integrationTestContainers.performQuery(
-            "TRUNCATE tab_user_follower_following_relationship CASCADE");
+        "TRUNCATE tab_user_follower_following_relationship CASCADE");
     integrationTestContainers.performQuery("TRUNCATE tab_user CASCADE");
     integrationTestContainers.performQuery("TRUNCATE tab_tweet CASCADE");
   }
@@ -332,21 +332,21 @@ public class UserResourceIT {
     String message = "Today is a good day!";
 
     JsonObject tweetJsonObject =
-            Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
+        Json.createObjectBuilder().add("message", message).add("postTime", testPostTime).build();
 
     String id =
-            RestAssured.given()
-                    .headers("Authorization", "Bearer " + authToken)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(tweetJsonObject.toString())
-                    .when()
-                    .post(tweetApiUri)
-                    .then()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .statusCode(Response.Status.CREATED.getStatusCode())
-                    .extract()
-                    .jsonPath()
-                    .getString("id");
+        RestAssured.given()
+            .headers("Authorization", "Bearer " + authToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(tweetJsonObject.toString())
+            .when()
+            .post(tweetApiUri)
+            .then()
+            .contentType(MediaType.APPLICATION_JSON)
+            .statusCode(Response.Status.CREATED.getStatusCode())
+            .extract()
+            .jsonPath()
+            .getString("id");
 
     return Long.parseLong(id);
   }

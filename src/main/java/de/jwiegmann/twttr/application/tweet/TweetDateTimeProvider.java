@@ -10,16 +10,16 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class TweetDateTimeProvider implements ContextResolver<ObjectMapper> {
 
-    private final ObjectMapper MAPPER;
+  private final ObjectMapper MAPPER;
 
-    public TweetDateTimeProvider() {
-        MAPPER = new ObjectMapper();
-        MAPPER.registerModule(new JavaTimeModule());
-        MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
+  public TweetDateTimeProvider() {
+    MAPPER = new ObjectMapper();
+    MAPPER.registerModule(new JavaTimeModule());
+    MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+  }
 
-    @Override
-    public ObjectMapper getContext(Class<?> type) {
-        return MAPPER;
-    }
+  @Override
+  public ObjectMapper getContext(Class<?> type) {
+    return MAPPER;
+  }
 }

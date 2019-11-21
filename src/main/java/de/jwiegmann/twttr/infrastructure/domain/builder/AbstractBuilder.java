@@ -24,12 +24,11 @@ import java.util.Set;
 import static org.apache.commons.lang3.Validate.isTrue;
 
 /**
- * A base class for builders, that handles creation an building of objects and supports deep subclassing hierarchies. Subclasses may access
- * the protected attribute {@link #instance} to construct the object.
+ * A base class for builders, that handles creation an building of objects and supports deep
+ * subclassing hierarchies. Subclasses may access the protected attribute {@link #instance} to
+ * construct the object.
  *
- * <p>
- * Example for a builder with deep subclassing hierarchy:
- * </p>
+ * <p>Example for a builder with deep subclassing hierarchy:
  *
  * <pre>
  *
@@ -84,20 +83,20 @@ import static org.apache.commons.lang3.Validate.isTrue;
  */
 public abstract class AbstractBuilder<E, B extends AbstractBuilder<E, B>> implements Builder<E> {
 
-  /**
-   * The instance to be constructed
-   */
+  /** The instance to be constructed */
   protected E instance;
 
   /**
-   * Constructs the builder using {@link #newInstance()} to create an empty instance of the type to be constructed
+   * Constructs the builder using {@link #newInstance()} to create an empty instance of the type to
+   * be constructed
    */
   AbstractBuilder() {
     instance = newInstance();
   }
 
   /**
-   * Constructs the builder using the parameter to initialize the instance of the type to be constructed
+   * Constructs the builder using the parameter to initialize the instance of the type to be
+   * constructed
    */
   AbstractBuilder(final E v) {
     instance = v;
@@ -125,7 +124,8 @@ public abstract class AbstractBuilder<E, B extends AbstractBuilder<E, B>> implem
   }
 
   /**
-   * Subclasses have to implement this and return an empty instance of the type that is constructed by this builder.
+   * Subclasses have to implement this and return an empty instance of the type that is constructed
+   * by this builder.
    *
    * @return an empty instance
    */

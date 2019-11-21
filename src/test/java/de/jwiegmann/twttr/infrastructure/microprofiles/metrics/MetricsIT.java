@@ -23,9 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-/**
- * Integration test for the MP-Metrics API.
- */
+/** Integration test for the MP-Metrics API. */
 public class MetricsIT {
 
   private final String uri = IntegrationTestUtil.getMetricsURI();

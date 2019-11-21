@@ -24,9 +24,7 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-/**
- * Integration test for the CORS filter {@link CustomCorsFilter}.
- */
+/** Integration test for the CORS filter {@link CustomCorsFilter}. */
 public class CustomCorsFilterIT {
 
   private static final String uri = IntegrationTestUtil.getBaseURI();
@@ -39,7 +37,9 @@ public class CustomCorsFilterIT {
         .options(UriBuilder.fromUri(uri).path("api").build())
         .then()
         .statusCode(Response.Status.OK.getStatusCode())
-        .header(CorsHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Origin, X-Requested-With, Content-Type, Accept")
+        .header(
+            CorsHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
+            "Origin, X-Requested-With, Content-Type, Accept")
         .header(CorsHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS")
         .header(CorsHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, Matchers.notNullValue())
         .header(CorsHeaders.ACCESS_CONTROL_MAX_AGE, Matchers.notNullValue());

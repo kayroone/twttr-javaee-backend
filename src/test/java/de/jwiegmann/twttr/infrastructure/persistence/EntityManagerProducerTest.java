@@ -27,20 +27,15 @@ import javax.persistence.EntityManagerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Test class for the producer {@link EntityManagerProducer}.
- */
+/** Test class for the producer {@link EntityManagerProducer}. */
 @RunWith(MockitoJUnitRunner.class)
 public class EntityManagerProducerTest {
 
-  @InjectMocks
-  private EntityManagerProducer producer;
+  @InjectMocks private EntityManagerProducer producer;
 
-  @Mock
-  private EntityManager entityManager;
+  @Mock private EntityManager entityManager;
 
-  @Mock
-  private EntityManagerFactory entityManagerFactory;
+  @Mock private EntityManagerFactory entityManagerFactory;
 
   @Test
   public void close() {

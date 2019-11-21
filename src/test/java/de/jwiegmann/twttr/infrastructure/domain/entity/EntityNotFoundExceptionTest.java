@@ -20,9 +20,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
-/**
- * Test class for the exception {@link EntityNotFoundException}.
- */
+/** Test class for the exception {@link EntityNotFoundException}. */
 public class EntityNotFoundExceptionTest {
 
   @Test

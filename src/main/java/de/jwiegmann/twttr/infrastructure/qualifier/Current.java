@@ -22,12 +22,8 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * CDI qualifier.
- */
+/** CDI qualifier. */
 @Qualifier
 @Retention(RUNTIME)
 @Target({FIELD, METHOD, PARAMETER})
-public @interface Current {
-
-}
+public @interface Current {}

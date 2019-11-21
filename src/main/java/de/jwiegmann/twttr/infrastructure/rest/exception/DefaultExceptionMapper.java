@@ -28,7 +28,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * Default exception mapper. Handles all uncaught Exceptions. Prevents leaking internal details to the client.
+ * Default exception mapper. Handles all uncaught Exceptions. Prevents leaking internal details to
+ * the client.
  */
 @Provider
 public class DefaultExceptionMapper implements ExceptionMapper<Exception> {
@@ -51,7 +52,8 @@ public class DefaultExceptionMapper implements ExceptionMapper<Exception> {
       return Response.status(Status.NOT_FOUND).build();
     }
 
-    ApplicationErrorDTO error = new ApplicationErrorDTO(() -> "UNKNOWN", "An unknown error occurred");
+    ApplicationErrorDTO error =
+        new ApplicationErrorDTO(() -> "UNKNOWN", "An unknown error occurred");
     return Response.status(Status.INTERNAL_SERVER_ERROR).entity(error).build();
   }
 }
