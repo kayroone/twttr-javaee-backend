@@ -99,6 +99,16 @@ public abstract class AbstractTestContainers {
     this.api.start();
   }
 
+  /**
+   * This method performs the following tasks:
+   *
+   * 1. Init keycloak container based on latest keycloak docker image.
+   * 2. Add database configuration to the container.
+   * 3. Add a custom keycloak realm configuration.
+   * 4. Add a custom shell script to add a custom user to keycloak for testing.
+   * 5. Start the container with the custom realm config and execute the user create shell script.
+   * 5. Start the container with the custom realm config and execute the user create shell script.
+   */
   void initAuthContainer() {
 
     this.keycloak =
@@ -154,7 +164,7 @@ public abstract class AbstractTestContainers {
 
     this.postgres.withExposedPorts(DB_TCP_PORT);
 
-    /* This container must be reachable from host system */
+    /* This container needs a fixed port binding because db must be reachable from api container */
     List<String> portBinding = new ArrayList<>();
     portBinding.add(DB_TCP_PORT + ":" + DB_TCP_PORT);
     this.postgres.setPortBindings(portBinding);

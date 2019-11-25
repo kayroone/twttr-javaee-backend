@@ -5,6 +5,7 @@
  */
 package de.jwiegmann.twttr.application;
 
+import io.swagger.annotations.Api;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -29,6 +30,7 @@ import javax.ws.rs.core.Response;
     unit = MetricUnits.MILLISECONDS,
     description = "Metrics of the HelloWorldResource",
     absolute = true)
+@Api(value = "/hello", tags = "hello")
 public class HelloWorldResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(HelloWorldResource.class);

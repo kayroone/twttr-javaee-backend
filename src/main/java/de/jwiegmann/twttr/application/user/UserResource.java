@@ -9,6 +9,7 @@ import de.jwiegmann.twttr.domain.user.UserRole;
 import de.jwiegmann.twttr.infrastructure.constants.Constants;
 import de.jwiegmann.twttr.infrastructure.domain.entity.EntityNotFoundException;
 import de.jwiegmann.twttr.infrastructure.domain.error.ApplicationErrorDTO;
+import io.swagger.annotations.Api;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 
 @Path(Constants.USERS_API_URI)
 @Produces({MediaType.APPLICATION_JSON})
+@Api(value = "/users", tags = "users")
 public class UserResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(UserResource.class);

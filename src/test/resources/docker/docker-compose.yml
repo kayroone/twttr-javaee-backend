@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  postgres:
+  twttr.database:
     image: postgres:latest
     ports:
       - 5432:5432
@@ -11,13 +11,13 @@ services:
       - pg:/var/lib/postgresql
       - pg_data:/var/lib/postgresql/data
     networks:
-      - jwiegmann.de
+      - keycloak.service
 
-  keycloak:
+  keycloak.service:
     image: jboss/keycloak:latest
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
+      DB_ADDR: twttr.database
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_SCHEMA: public
@@ -27,21 +27,21 @@ services:
     ports:
       - 8080:8080
     networks:
-      jwiegmann.de:
+      keycloak.service:
         aliases:
-          - auth.jwiegmann.de
+          - keycloak.service
     depends_on:
-      - postgres
+      - twttr.database
 
-  twttr:
+  twttr.service:
     image: registry.hub.docker.com/kayroone/twttr-api:latest
     ports:
       - 8081:8081
     networks:
-      - jwiegmann.de
+      - keycloak.service
     depends_on:
-      - postgres
-      - keycloak
+      - twttr.database
+      - keycloak.service
 
 volumes:
   pg:
@@ -49,4 +49,4 @@ volumes:
     driver: local
 
 networks:
-  jwiegmann.de:
+  keycloak.service:

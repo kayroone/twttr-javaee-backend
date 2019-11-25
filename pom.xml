@@ -41,6 +41,11 @@
         <!-- Dependencies -->
         <version.microprofile>3.1</version.microprofile>
 
+        <version.swagger-maven-plugin>3.1.8</version.swagger-maven-plugin>
+        <version.swagger-ui>3.24.3</version.swagger-ui>
+
+        <version.replacer-plugin>1.5.3</version.replacer-plugin>
+
         <version.apache_commons-lang>3.9</version.apache_commons-lang>
         <version.apache-io>2.6</version.apache-io>
         <version.apache-http>4.5.10</version.apache-http>
@@ -257,6 +262,107 @@
                         <version>${maven.versions.plugin}</version>
                     </plugin>
 
+                    <!-- Generate swagger.json -->
+                    <plugin>
+                        <groupId>com.github.kongchen</groupId>
+                        <artifactId>swagger-maven-plugin</artifactId>
+                        <version>${version.swagger-maven-plugin}</version>
+                        <configuration>
+                            <apiSources>
+                                <apiSource>
+                                    <locations>de.jwiegmann.twttr.application</locations>
+                                    <locations>de.jwiegmann.twttr.application.tweet</locations>
+                                    <locations>de.jwiegmann.twttr.application.user</locations>
+                                    <info>
+                                        <title>${project.name}</title>
+                                        <version>${project.version}</version>
+                                    </info>
+                                    <swaggerDirectory>${project.build.directory}/swagger</swaggerDirectory>
+                                    <outputFormats>json</outputFormats>
+                                </apiSource>
+                            </apiSources>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Download Swagger UI webjar -->
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>swagger ui</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.webjars</groupId>
+                                            <artifactId>swagger-ui</artifactId>
+                                            <version>${version.swagger-ui}</version>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/swagger-ui</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Add Swagger-ui Resources to the WAR -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webResources combine.children="append">
+                                <resource>
+                                    <directory>
+                                        ${project.build.directory}/swagger-ui/META-INF/resources/webjars/swagger-ui/${version.swagger-ui}
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.*</include>
+                                    </includes>
+                                    <targetPath>swagger-ui</targetPath>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+
+                    <!-- Replace default application in swagger-ui -->
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>${version.replacer-plugin}</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <file>
+                                ${project.build.directory}/swagger-ui/META-INF/resources/webjars/swagger-ui/${version.swagger-ui}/index.html
+                            </file>
+                            <replacements>
+                                <replacement>
+                                    <token>https://petstore.swagger.io/v2/swagger.json</token>
+                                    <value>
+                                        http://${thorntail.bind.address}:${thorntail.http.port}/service/swagger.json
+                                    </value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </plugin>
+
                     <!-- Thorntail plugin -->
                     <plugin>
                         <groupId>io.thorntail</groupId>
@@ -349,7 +455,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>io.thorntail</groupId>
-                        <artifactId>bom</artifactId>
+                        <artifactId>bom-all</artifactId>
                         <version>${version.thorntail}</version>
                         <type>pom</type>
                         <scope>import</scope>
@@ -373,6 +479,10 @@
                 <dependency>
                     <groupId>io.thorntail</groupId>
                     <artifactId>jaxrs</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.thorntail</groupId>
+                    <artifactId>swagger</artifactId>
                 </dependency>
                 <dependency>
                     <groupId>io.thorntail</groupId>
