@@ -1,5 +1,7 @@
 # twttr RESTful API
 
+![](https://github.com/kayroone/twttr/workflows/twttr/badge.svg)
+
 ## Configure the application
 
 Since we're going to start the application with a full environment including a postgres database and a keycloak auth 
