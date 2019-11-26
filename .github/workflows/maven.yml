@@ -1,4 +1,4 @@
-name: twttr RESTful API CI
+name: twttr
 
 on: [push]
 
