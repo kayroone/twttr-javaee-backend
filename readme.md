@@ -2,6 +2,24 @@
 
 ![](https://github.com/kayroone/twttr/workflows/twttr/badge.svg)
 
+## Introduction
+
+This is basically a backend clone for the famous microblogging service Twitter implemented in Java Enterprise with
+the following tech stack:
+
+- Thorntail
+- PostgreSQL
+- Keycloak
+
+Frameworks:
+
+- MicroProfile
+- RESTEasy
+- Swagger
+- TestContainers
+
+and many more - just Java things.
+
 ## Configure the application
 
 Since we're going to start the application with a full environment including a postgres database and a keycloak auth 
