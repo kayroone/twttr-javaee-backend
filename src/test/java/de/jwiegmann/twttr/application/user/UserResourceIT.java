@@ -303,19 +303,6 @@ public class UserResourceIT {
   }
 
   @Test
-  public void getProfileForUserShouldReturn200() {
-
-    RestAssured.given()
-        .when()
-        .get(getSingleItemUri(2L))
-        .then()
-        .statusCode(Response.Status.OK.getStatusCode())
-        .body("tweetCount", Matchers.is(0))
-        .body("followingCount", Matchers.is(0))
-        .body("followerCount", Matchers.is(0));
-  }
-
-  @Test
   public void getProfileForUserShouldReturn404() {
 
     RestAssured.given()

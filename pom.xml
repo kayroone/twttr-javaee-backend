@@ -41,6 +41,8 @@
         <!-- Dependencies -->
         <version.microprofile>3.1</version.microprofile>
 
+        <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
+
         <version.swagger-maven-plugin>3.1.8</version.swagger-maven-plugin>
         <version.swagger-ui>3.24.3</version.swagger-ui>
 
@@ -58,7 +60,7 @@
 
         <version.postgresql>42.2.8.jre7</version.postgresql>
 
-        <version.hibernate-validator>6.0.16.Final</version.hibernate-validator>
+        <version.hibernate-validator>6.1.0.Final</version.hibernate-validator>
         <version.hibernate-core>5.4.2.Final</version.hibernate-core>
 
         <version.failsafe-plugin>3.0.0-M3</version.failsafe-plugin>
@@ -190,7 +192,7 @@
             <version>${version.hikari-db-connection-pool}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${version.hibernate-validator}</version>
         </dependency>
@@ -297,7 +299,7 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>swagger ui</id>
+                                <id>swagger-ui</id>
                                 <phase>prepare-package</phase>
                                 <goals>
                                     <goal>unpack</goal>
@@ -320,6 +322,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
+                        <version>${version.maven-war-plugin}</version>
                         <configuration>
                             <webResources combine.children="append">
                                 <resource>
@@ -386,7 +389,7 @@
                     </plugin>
 
                     <!-- Build/Push docker image -->
-                    <plugin>
+                    <!--<plugin>
                         <groupId>com.spotify</groupId>
                         <artifactId>dockerfile-maven-plugin</artifactId>
                         <version>${version.dockerfile-plugin}</version>
@@ -423,7 +426,7 @@
                             </buildArgs>
                             <skipDockerInfo>true</skipDockerInfo>
                         </configuration>
-                    </plugin>
+                    </plugin>-->
 
                     <!-- Testing -->
                     <plugin>

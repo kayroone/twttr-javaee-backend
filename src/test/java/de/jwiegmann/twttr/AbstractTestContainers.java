@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractTestContainers {
 
   private static final Logger LOG = LoggerFactory.getLogger(IntegrationTestContainers.class);
@@ -52,7 +53,7 @@ public abstract class AbstractTestContainers {
     this.network = Network.newNetwork();
   }
 
-  public ResultSet performQuery(String sqlStatement) {
+  public ResultSet performQuery(final String sqlStatement) {
 
     try (Connection dbConnection = this.dataSource.getConnection()) {
 
@@ -90,7 +91,9 @@ public abstract class AbstractTestContainers {
 
     /* This container must be reachable from host system for testing authentication with keycloak */
     List<String> portBinding = new ArrayList<>();
-    portBinding.add(API_WEB_PORT + ":" + API_WEB_PORT);
+    String binding = String.format("%d:%d", API_WEB_PORT, API_WEB_PORT);
+
+    portBinding.add(binding);
     this.api.setPortBindings(portBinding);
 
     /* Network configuration */
@@ -102,12 +105,11 @@ public abstract class AbstractTestContainers {
   /**
    * This method performs the following tasks:
    *
-   * 1. Init keycloak container based on latest keycloak docker image.
-   * 2. Add database configuration to the container.
-   * 3. Add a custom keycloak realm configuration.
-   * 4. Add a custom shell script to add a custom user to keycloak for testing.
-   * 5. Start the container with the custom realm config and execute the user create shell script.
-   * 5. Start the container with the custom realm config and execute the user create shell script.
+   * <p>1. Init keycloak container based on latest keycloak docker image. 2. Add database
+   * configuration to the container. 3. Add a custom keycloak realm configuration. 4. Add a custom
+   * shell script to add a custom user to keycloak for testing. 5. Start the container with the
+   * custom realm config and execute the user create shell script. 5. Start the container with the
+   * custom realm config and execute the user create shell script.
    */
   void initAuthContainer() {
 
@@ -127,7 +129,9 @@ public abstract class AbstractTestContainers {
 
     /* This container must be reachable from host system for oauth lifecycle with api container */
     List<String> portBinding = new ArrayList<>();
-    portBinding.add(AUTH_WEB_PORT + ":" + AUTH_WEB_PORT);
+    String binding = String.format("%d:%d", AUTH_WEB_PORT, AUTH_WEB_PORT);
+
+    portBinding.add(binding);
     this.keycloak.setPortBindings(portBinding);
 
     /* Network configuration */
@@ -166,7 +170,9 @@ public abstract class AbstractTestContainers {
 
     /* This container needs a fixed port binding because db must be reachable from api container */
     List<String> portBinding = new ArrayList<>();
-    portBinding.add(DB_TCP_PORT + ":" + DB_TCP_PORT);
+    String binding = String.format("%d:%d", DB_TCP_PORT, DB_TCP_PORT);
+
+    portBinding.add(binding);
     this.postgres.setPortBindings(portBinding);
 
     /* Network configuration */
