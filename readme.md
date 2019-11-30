@@ -29,7 +29,7 @@ service we need to define the following hostnames inside the hostsystems hosts f
     keycloak.service
     
 This is necessary because the keycloak auth service will redirect the user to the keycloak containers hostname within 
-OAuth2 Lifecycle after a successful login. Also the database has a default configured hostname inside the API service 
+OAuth2 lifecycle after a successful login. Also the database has a default configured hostname inside the API service 
 container.   
 
 ## Starting the application
