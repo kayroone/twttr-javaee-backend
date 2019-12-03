@@ -66,6 +66,20 @@ public class IntegrationTestContainers extends AbstractTestContainers {
         .toTemplate();
   }
 
+  public String getHostUri(String endpoint) {
+
+    if (null == endpoint) {
+      endpoint = "";
+    }
+
+    String uri = "http://{host}:{port}/{path}";
+    return UriBuilder.fromUri(uri)
+            .resolveTemplate("host", this.api.getContainerIpAddress())
+            .resolveTemplate("port", this.api.getFirstMappedPort())
+            .resolveTemplate("path", endpoint)
+            .toTemplate();
+  }
+
   private String getAuthUrl() {
 
     String uri = "http://{host}:{port}/auth/";

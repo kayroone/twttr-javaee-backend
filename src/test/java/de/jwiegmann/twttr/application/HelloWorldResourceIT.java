@@ -4,29 +4,35 @@ import de.jwiegmann.twttr.IntegrationTestContainers;
 import de.jwiegmann.twttr.application.tweet.TweetResource;
 import de.jwiegmann.twttr.infrastructure.constants.Constants;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.ws.rs.core.Response;
 
 /** Integration test class for the resource {@link TweetResource}. */
-@Testcontainers
 public class HelloWorldResourceIT {
 
+  private static IntegrationTestContainers integrationTestContainers;
   private static String apiUri;
 
   @BeforeAll
-  public static void setUp() {
+  public static void init() {
 
-    IntegrationTestContainers integrationTestContainers =
-        IntegrationTestContainers.newTestEnvironment().withApiContainer();
+    integrationTestContainers =
+        IntegrationTestContainers.newTestEnvironment().withApiContainer().init();
 
     apiUri = integrationTestContainers.getApiUri(Constants.HELLO_WORLD_URI);
   }
 
+  @AfterAll
+  public static void teardown() {
+
+    integrationTestContainers.teardownContainers();
+  }
+
   @Test
-  public void createTweetShouldReturn201() {
+  public void sayHelloShouldReturn200() {
 
     RestAssured.given().when().get(apiUri).then().statusCode(Response.Status.OK.getStatusCode());
   }

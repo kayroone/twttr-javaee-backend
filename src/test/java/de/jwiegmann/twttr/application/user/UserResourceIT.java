@@ -10,7 +10,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -22,7 +21,6 @@ import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
 public class UserResourceIT {
 
   private static final String testPostTime = "2019-05-11T17:32:20.897";
@@ -48,6 +46,7 @@ public class UserResourceIT {
   public static void teardown() {
 
     integrationTestContainers.teardownDataSources();
+    integrationTestContainers.teardownContainers();
   }
 
   @BeforeEach

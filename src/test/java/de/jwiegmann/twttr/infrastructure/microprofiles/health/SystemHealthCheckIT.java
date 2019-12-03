@@ -16,28 +16,35 @@
 package de.jwiegmann.twttr.infrastructure.microprofiles.health;
 
 import de.jwiegmann.twttr.IntegrationTestContainers;
+import de.jwiegmann.twttr.infrastructure.constants.Constants;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /** Integration test for the MP-Health. */
-@Testcontainers
 public class SystemHealthCheckIT {
 
-  private static String uri;
+  private static IntegrationTestContainers integrationTestContainers;
+  private static String apiUri;
 
   @BeforeAll
-  public static void setUp() {
+  public static void init() {
 
-    IntegrationTestContainers integrationTestContainers =
-        IntegrationTestContainers.newTestEnvironment().withAuthContainer().withApiContainer();
+    integrationTestContainers =
+        IntegrationTestContainers.newTestEnvironment().withApiContainer().init();
 
-    uri = integrationTestContainers.getApiUri(null);
+    apiUri = integrationTestContainers.getHostUri(Constants.HEALTH_API_URI);
+  }
+
+  @AfterAll
+  public static void teardown() {
+
+    integrationTestContainers.teardownContainers();
   }
 
   @Test
@@ -46,13 +53,13 @@ public class SystemHealthCheckIT {
     RestAssured.given()
         .accept(MediaType.APPLICATION_JSON)
         .when()
-        .get(uri)
+        .get(apiUri)
         .then()
         .contentType(MediaType.APPLICATION_JSON)
         .statusCode(Response.Status.OK.getStatusCode())
-        .body("outcome", Matchers.equalTo("UP"))
+        .body("status", Matchers.equalTo("UP"))
         .rootPath("checks.find{ it.name == 'system' }")
-        .body("state", Matchers.equalTo("UP"))
+        .body("status", Matchers.equalTo("UP"))
         .body("data.arch", Matchers.notNullValue())
         .body("data.name", Matchers.notNullValue())
         .body("data.loadAverage", Matchers.notNullValue())

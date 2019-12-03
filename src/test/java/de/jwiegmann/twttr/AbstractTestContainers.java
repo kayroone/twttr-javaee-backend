@@ -77,7 +77,9 @@ public abstract class AbstractTestContainers {
 
   public void teardownDataSources() {
 
-    this.dataSourcesForCleanup.forEach(HikariDataSource::close);
+    if (!this.dataSourcesForCleanup.isEmpty()) {
+      this.dataSourcesForCleanup.forEach(HikariDataSource::close);
+    }
   }
 
   void initApiContainer() {
@@ -105,11 +107,11 @@ public abstract class AbstractTestContainers {
   /**
    * This method performs the following tasks:
    *
-   * <p>1. Init keycloak container based on latest keycloak docker image. 2. Add database
-   * configuration to the container. 3. Add a custom keycloak realm configuration. 4. Add a custom
-   * shell script to add a custom user to keycloak for testing. 5. Start the container with the
-   * custom realm config and execute the user create shell script. 5. Start the container with the
-   * custom realm config and execute the user create shell script.
+   * 1. Init keycloak container based on latest keycloak docker image.
+   * 2. Add database configuration to the container.
+   * 3. Add a custom keycloak realm configuration.
+   * 4. Add a custom shell script to add a custom user to keycloak for testing.
+   * 5. Start the container with the custom realm config and execute the user create shell script.
    */
   void initAuthContainer() {
 
@@ -156,6 +158,23 @@ public abstract class AbstractTestContainers {
     } catch (IOException | InterruptedException e) {
       LOG.error("Failed to execute keycloak-create-user.sh: " + e.getMessage());
     }
+  }
+
+  public void teardownContainers() {
+
+    if (null != this.keycloak && this.keycloak.isRunning()) {
+      LOG.info("Stopping keycloak container.");
+      this.keycloak.stop();
+    }
+    if (null != this.api && this.api.isRunning()) {
+      LOG.info("Stopping twttr container.");
+      this.api.stop();
+    }
+    if (null != this.postgres && this.postgres.isRunning()) {
+      LOG.info("Stopping postgres container.");
+      this.postgres.stop();
+    }
+    this.network.close();
   }
 
   private void initDatabaseContainer() {
