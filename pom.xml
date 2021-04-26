@@ -49,7 +49,7 @@
         <version.replacer-plugin>1.5.3</version.replacer-plugin>
 
         <version.apache_commons-lang>3.9</version.apache_commons-lang>
-        <version.apache-io>2.6</version.apache-io>
+        <version.apache-io>2.7</version.apache-io>
         <version.apache-http>4.5.10</version.apache-http>
 
         <version.jackson-java-8-datetime-module>2.10.1</version.jackson-java-8-datetime-module>
