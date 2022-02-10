@@ -61,7 +61,7 @@
         <version.postgresql>42.2.8.jre7</version.postgresql>
 
         <version.hibernate-validator>6.1.0.Final</version.hibernate-validator>
-        <version.hibernate-core>5.4.2.Final</version.hibernate-core>
+        <version.hibernate-core>5.4.24.Final</version.hibernate-core>
 
         <version.failsafe-plugin>3.0.0-M3</version.failsafe-plugin>
         <version.surefire-plugin>3.0.0-M3</version.surefire-plugin>
